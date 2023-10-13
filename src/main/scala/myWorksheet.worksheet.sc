@@ -19,9 +19,6 @@ def changeField(field: Array[Array[Int]], x: Int, y: Int, inhalt: Int): Array[Ar
     field.updated(x, field(x).updated(y, inhalt))
 }
 
-@main def main: Unit =
-    val field = Array.ofDim[Int](height, width).map(_ => Array.fill(width)(1)) // Use _ => to fill with 1
-    val field2 = changeField(field, 5, 4, 0)
-    val fieldString = createFieldString(field2)
-
-    println(fieldString) // Print the resulting fieldString
+val field = Array.ofDim[Int](height, width).map(_ => Array.fill(width)(1)) // Use _ => to fill with 1
+val field2 = changeField(field, 5, 4, 0)
+val fieldString = createFieldString(field2)
