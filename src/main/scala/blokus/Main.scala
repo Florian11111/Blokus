@@ -3,9 +3,8 @@ package blokus
 import models.Field
 
 @main def main: Unit =
-  val field = new Field(20, 20)
-  field.changeField(5, 4, 0)
-  val reihe = field.rowToString(field.getFieldVector(0))
-  val fieldString = field.createFieldString
+  val field = Field(5, 5) // Verwende das Begleitobjekt Field.apply, um ein Field-Objekt zu erstellen
+  val updatedField = field.changeField(2, 2, 0)
+  val fieldString = updatedField.createFieldString
 
   println(fieldString) // Drucke den resultierenden fieldString

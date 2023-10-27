@@ -7,7 +7,7 @@ class FieldSpec extends AnyWordSpec with Matchers {
 
   "Field" should {
 
-    val testField = new Field(5, 5)
+    val testField = Field(5, 5)
 
     "convert a row of integers to characters correctly" in {
       val row = Vector(0, 1, 2, 1, 0)
@@ -20,10 +20,11 @@ class FieldSpec extends AnyWordSpec with Matchers {
     }
 
     "change the field correctly" in {
-      testField.changeField(2, 2, 0)
-      val changedVector = testField.getFieldVector
+      val updatedField = testField.changeField(2, 2, 0) // Create a new Field with the updated state
+      val changedVector = updatedField.getFieldVector
       changedVector(2)(2) shouldBe 0
     }
+
 
     "throw an assertion error for invalid x and y coordinates" in {
       assertThrows[AssertionError] {

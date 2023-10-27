@@ -1,7 +1,8 @@
 package blokus.models
 
-class Field(val width: Int, val height: Int) {
-    private var fieldVector: Vector[Vector[Int]] = Vector.fill(height, width)(1)
+class Field(private val fieldVector: Vector[Vector[Int]]) {
+    val width: Int = fieldVector.headOption.map(_.size).getOrElse(0)
+    val height: Int = fieldVector.size
 
     def getFieldVector: Vector[Vector[Int]] = fieldVector
 
@@ -19,9 +20,17 @@ class Field(val width: Int, val height: Int) {
         getFieldVector.map(rowToString).mkString("\n")
     }
 
-    // Ändert das Feld an der angegebenen Position
-    def changeField(x: Int, y: Int, inhalt: Int): Unit = {
+    def changeField(x: Int, y: Int, inhalt: Int): Field = {
         assert(x >= 0 && x < width && y >= 0 && y < height)
-        fieldVector = fieldVector.updated(x, fieldVector(x).updated(y, inhalt))
+        val newRow = fieldVector(x).updated(y, inhalt)
+        val newFieldVector = fieldVector.updated(x, newRow)
+        new Field(newFieldVector)
+    }
+}
+
+object Field {
+    def apply(width: Int, height: Int): Field = {
+        val initialFieldVector = Vector.fill(height, width)(1)
+        new Field(initialFieldVector)
     }
 }
