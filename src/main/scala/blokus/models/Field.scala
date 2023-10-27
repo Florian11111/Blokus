@@ -1,12 +1,12 @@
 package blokus.models
 
 class Field(val width: Int, val height: Int) {
-    private var fieldArray: Array[Array[Int]] = Array.ofDim[Int](height, width).map(_ => Array.fill(width)(1))
+    private var fieldVector: Vector[Vector[Int]] = Vector.fill(height, width)(1)
 
-    def getFieldArray: Array[Array[Int]] = fieldArray
+    def getFieldVector: Vector[Vector[Int]] = fieldVector
 
-  // Konvertiert eine Zeile von Ganzzahlen in Zeichen
-    def rowToString(row: Array[Int]): String = {
+    // Konvertiert eine Zeile von Ganzzahlen in Zeichen
+    def rowToString(row: Vector[Int]): String = {
         row.map {
             case 0 => "# "
             case 1 => "+ "
@@ -14,14 +14,14 @@ class Field(val width: Int, val height: Int) {
         }.mkString
     }
 
-    // Konvertiert das Array in einen String
+    // Konvertiert das Vector in einen String
     def createFieldString: String = {
-        getFieldArray.map(rowToString).mkString("\n")
+        getFieldVector.map(rowToString).mkString("\n")
     }
 
     // Ändert das Feld an der angegebenen Position
     def changeField(x: Int, y: Int, inhalt: Int): Unit = {
         assert(x >= 0 && x < width && y >= 0 && y < height)
-        fieldArray = fieldArray.updated(x, fieldArray(x).updated(y, inhalt))
+        fieldVector = fieldVector.updated(x, fieldVector(x).updated(y, inhalt))
     }
 }
