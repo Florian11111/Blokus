@@ -15,9 +15,10 @@ class FieldSpec extends AnyWordSpec with Matchers {
     }
 
     "convert the array to a string correctly" in {
-      val initialString = "+ + + + + \n" * 5
-      testField.createFieldString shouldBe initialString.trim
+    val initialString = ("+ + + + + " + "\n") * (testField.height - 1) + "+ + + + + "
+    testField.createFieldString shouldBe initialString
     }
+
 
     "change the field correctly" in {
       testField.changeField(2, 2, 0)
