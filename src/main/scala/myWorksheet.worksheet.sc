@@ -24,5 +24,6 @@ def changeField(field: Array[Array[Int]], x: Int, y: Int, inhalt: Int): Array[Ar
 
 val field = Array.ofDim[Int](height, width).map(_ => Array.fill(width)(1))
 val field2 = changeField(field, 5, 4, 0)
-var row1 = rowToString(field2(5))
 val fieldString = createFieldString(field2)
+
+println(fieldString) // Print the resulting fieldString
