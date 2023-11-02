@@ -1,8 +1,5 @@
-## sbt project compiled with Scala 3
-
-### Usage
-
-This is a normal sbt project. You can compile code with `sbt compile`, run it with `sbt run`, and `sbt console` will start a Scala 3 REPL.
-
-For more information on the sbt-dotty plugin, see the
-[scala3-example-project](https://github.com/scala/scala3-example-project/blob/main/README.md).
+<img src="https://static.wikia.nocookie.net/logopedia/images/a/a7/Blokus.png" align="center">
+[![Scala CI](https://github.com/Florian11111/blokus/actions/workflows/scala.yml/badge.svg)](https://github.com/Florian11111/blokus/actions/workflows/scala.yml)
+<img src="https://github.com/Florian11111/blokus/blob/main/image.png?raw=true" align="center">
+Blooookus
+Bitte spielen. danke
