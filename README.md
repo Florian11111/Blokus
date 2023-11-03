@@ -14,11 +14,11 @@ Blokus. Ein Zeitloser Klassiker
 
 ## Spielprinzip
 
-Hier kommt der Inhalt des zweiten Abschnitts.
+Blöcke und Rotieren.
 
 ## Installation
 
-Hier kommt der Inhalt des dritten Abschnitts.
+sbt und so
 
 ## Testing
 
