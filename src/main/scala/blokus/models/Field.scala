@@ -28,6 +28,14 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
         new Field(newFieldVector)
     }
 
+    def isValidPosition(block: List[(Int, Int)], x: Int, y: Int): Boolean = {
+    block.forall { case (dx, dy) =>
+        val newX = x + dx
+        val newY = y + dy
+        newX >= 0 && newX < width && newY >= 0 && newY < height
+        }
+    }
+
     def placeBlock(block: List[(Int, Int)], x: Int, y: Int, newValue: Int): Field = {
         var newField = this
         for ((dx, dy) <- block) {

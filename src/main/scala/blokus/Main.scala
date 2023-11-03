@@ -16,8 +16,8 @@ object Main {
   }
 
   def clearTerminal(): Unit = {
-     print("\u001b[H\u001b[2J")
-      System.out.flush()
+    print("\u001b[H\u001b[2J")
+    System.out.flush()
   }
 
   def captureKeyPress(): Char = {
@@ -26,7 +26,7 @@ object Main {
 
   def resetTerminalToNormal(): Unit = {
     val cmd = "stty echo icanon"
-    val pb = new ProcessBuilder("sh", "-c", cmd)
+    val pb = ProcessBuilder("sh", "-c", cmd)
     pb.inheritIO().start().waitFor()
   }
 
@@ -43,8 +43,8 @@ object Main {
     val height = 20 // Hier die Höhe deines Felds eingeben
 
     var blockField = Field(width, height)
-    var currentX = 0
-    var currentY = 0
+    var currentX = 2
+    var currentY = 2
     var currentBlockType = Block.block7
     var rotation = 0
     var mirrored = false
@@ -85,7 +85,7 @@ object Main {
     }
   }
 
-    def renderBlock(block: List[(Int, Int)], fieldOld: Field, x: Int, y: Int, width: Int, height: Int): Field = {
+  def renderBlock(block: List[(Int, Int)], fieldOld: Field, x: Int, y: Int, width: Int, height: Int): Field = {
     var newField = fieldOld
     for ((dx, dy) <- block) {
       val newX = x + dx
@@ -96,5 +96,4 @@ object Main {
     }
     newField
   }
-
 }
