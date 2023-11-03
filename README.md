@@ -1,6 +1,6 @@
-<p align="center">
-  <h1 align="center"><img src="https://static.wikia.nocookie.net/logopedia/images/a/a7/Blokus.png" align="center" width="250px"></img></h1>
-  <h2 align="center> [![Scala CI](https://github.com/Florian11111/blokus/actions/workflows/scala.yml/badge.svg?branch=main)](https://github.com/Florian11111/blokus/actions/workflows/scala.yml) </h2>
+<p align="center" style="margin:0; padding:0;">
+  <h1 align="center" style="margin:0; padding:0;"><img src="https://static.wikia.nocookie.net/logopedia/images/a/a7/Blokus.png" align="center" width="250px"></img></h1>
+[![Scala CI](https://github.com/Florian11111/blokus/actions/workflows/scala.yml/badge.svg?branch=main)](https://github.com/Florian11111/blokus/actions/workflows/scala.yml)
 </p>
 
 ## Inhaltsverzeichnis
