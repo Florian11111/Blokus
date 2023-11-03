@@ -25,6 +25,6 @@ sbt und so
 
 [![Scala CI](https://github.com/Florian11111/blokus/actions/workflows/scala.yml/badge.svg)](https://github.com/Florian11111/blokus/actions/workflows/scala.yml)
 
-Manuell:<br<
+Manuell:<br>
 sbt clean coverage test<br>
 sbt cleanCoverage
