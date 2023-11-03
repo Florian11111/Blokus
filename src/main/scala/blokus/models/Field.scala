@@ -11,6 +11,7 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
         row.map {
             case 0 => "# "
             case 1 => "+ "
+            case 2 => "|"
             case _ => "? "
         }.mkString
     }
@@ -25,6 +26,18 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
         val newRow = fieldVector(x).updated(y, inhalt)
         val newFieldVector = fieldVector.updated(x, newRow)
         new Field(newFieldVector)
+    }
+
+    def placeBlock(block: List[(Int, Int)], x: Int, y: Int, newValue: Int): Field = {
+        var newField = this
+        for ((dx, dy) <- block) {
+            val newX = x + dx
+            val newY = y + dy
+            if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                newField = newField.changeField(newX, newY, 0)
+            }
+        }
+        newField
     }
 }
 
