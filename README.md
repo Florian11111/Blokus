@@ -23,6 +23,11 @@ Die Spielsteine werden abwechselnd reihum gelegt, wobei in den Ecken begonnen wi
 Es wird so lange gezogen, bis keine Steine mehr gesetzt werden können.<br>
 
 Ziel ist es, möglichst viele Spielsteine auf dem Brett abzulegen. Da das Spielfeld gerade mal ausreichend Platz für alle Steine bietet, werden die Räume schnell eng. Wer am Schluss die wenigsten Punkte übrig hat, hat gewonnen. Dabei zählt jedes kleine Quadrat eines eigenen Spielsteins einen Punkt.
+<div align="center">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/1/16/BlockusFinalBoardCloseUp.jpg" width=300px>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Blokus_starting_in_Tampere.jpg/2560px-Blokus_starting_in_Tampere.jpg" width=300px>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Blokus_with_two_players.jpg/2560px-Blokus_with_two_players.jpg" width=300px>
+</div>
 
 ## Installation
 
