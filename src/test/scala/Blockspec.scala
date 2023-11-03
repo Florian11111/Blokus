@@ -17,7 +17,7 @@ class BlockTypeTest extends AnyFlatSpec with Matchers {
 
   it should "rotate the block 90 degrees correctly" in {
     val rotatedBlock = BlockType.createBlock(BlockType.block4, 1, false)
-    rotatedBlock should contain theSameElementsAs List((0, 0), (0, -1), (1, 0))
+    rotatedBlock should contain theSameElementsAs List((0, 0), (-1, 0), (0, 1))
   }
 
   it should "rotate the block 180 degrees correctly" in {
@@ -27,7 +27,7 @@ class BlockTypeTest extends AnyFlatSpec with Matchers {
 
   it should "rotate the block 270 degrees correctly" in {
     val rotatedBlock = BlockType.createBlock(BlockType.block4, 3, false)
-    rotatedBlock should contain theSameElementsAs List((0, 0), (0, 1), (-1, 0))
+    rotatedBlock should contain theSameElementsAs List((0, 0), (1, 0), (0, -1))
   }
 
   it should "rotate 90 degrees and mirror the block correctly" in {
