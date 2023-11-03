@@ -70,8 +70,8 @@ object Main {
             blockField = blockField.placeBlock(currentBlock, currentX, currentY, 2)
             println(blockField.createFieldString)
             currentBlockType = Block.block15
-            currentX = 0
-            currentY = 0
+            currentX = 2
+            currentY = 2
           }
           case 'w' if isValidPosition(currentBlock, currentX - 1, currentY, width, height) => currentX -= 1
           case 's' if isValidPosition(currentBlock, currentX + 1, currentY, width, height) => currentX += 1
