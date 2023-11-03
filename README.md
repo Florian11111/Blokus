@@ -7,6 +7,7 @@
 1. [Intro](#intro)
 2. [Spielprinzip](#spielprinzip)
 3. [Installation](#installation)
+4. [Testing](#testing)
 
 ## Intro
 
@@ -24,6 +25,6 @@ sbt und so
 
 [![Scala CI](https://github.com/Florian11111/blokus/actions/workflows/scala.yml/badge.svg)](https://github.com/Florian11111/blokus/actions/workflows/scala.yml)
 
-Manuell:
-sbt clean coverage test
+Manuell:<br<
+sbt clean coverage test<br>
 sbt cleanCoverage
