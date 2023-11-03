@@ -16,7 +16,7 @@ object Main {
   }
 
   def clearTerminal(): Unit = {
-    print("\u001b[H\u001b[2J")
+     print("\u001b[H\u001b[2J")
       System.out.flush()
   }
 
@@ -78,7 +78,7 @@ object Main {
   }
 
     def renderBlock(block: List[(Int, Int)], fieldOld: Field, x: Int, y: Int, width: Int, height: Int): Field = {
-    var newField = Field(width, height)
+    var newField = fieldOld
     for ((dx, dy) <- block) {
       val newX = x + dx
       val newY = y + dy
