@@ -6,21 +6,19 @@ import models.Block
 object Main {
 
   def configureTerminalForImmediateInput(): Unit = {
-    val cmd = "stty -icanon min 1 -echo"
-    val pb = new ProcessBuilder("sh", "-c", cmd)
-    pb.inheritIO().start().waitFor()
-  }
-
-  def clearScreen(): Unit = {
-    val os = System.getProperty("os.name").toLowerCase
-    os match {
-      case name if name.contains("win") =>
-        Runtime.getRuntime.exec("cls")
-      case _ =>
-        Runtime.getRuntime.exec("clear")
+    if (System.getProperty("os.name").toLowerCase.contains("win")) {
+      new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor()
+    } else {
+      val cmd = "stty -icanon min 1 -echo"
+      val pb = new ProcessBuilder("sh", "-c", cmd)
+      pb.inheritIO().start().waitFor()
     }
   }
 
+  def clearTerminal(): Unit = {
+    print("\u001b[H\u001b[2J")
+      System.out.flush()
+  }
 
   def captureKeyPress(): Char = {
     System.in.read().toChar
@@ -47,9 +45,9 @@ object Main {
 
     try {
       while (true) {
-        clearScreen() // Terminal löschen
+        clearTerminal() // Terminal löschen
         val currentBlock = Block.createBlock(currentBlockType, rotation, mirrored)
-        println(renderBlock(currentBlock, blockField, currentX, currentY, width, height).createFieldString)
+        println(renderBlock(currentBlock, blockField, currentX, currentY, width, height).createFieldString.trim)
 
         println("Steuerung:")
         println("Pfeiltasten: Block bewegen")
