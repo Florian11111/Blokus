@@ -4,8 +4,8 @@ class Controller {
     val width = 20 // Hier die Breite deines Felds eingeben
     val height = 20 // Hier die Höhe deines Felds eingeben
     var blockField = Field(width, height)
-    var currentX = 0
-    var currentY = 0
+    var currentX = 2
+    var currentY = 2
     var currentBlockType = Block.block7
     var rotation = 0
     var mirrored = false
@@ -15,15 +15,27 @@ class Controller {
     def move(richtung: Int): Unit = {
         if (canMove(richtung)) {
             richtung match {
-                case 0 => currentX += 1
-                case 1 => currentY += 1
-                case 2 => currentX -= 1
-                case 3 => currentY -= 1
+                case 0 => currentY += 1
+                case 1 => currentX += 1
+                case 2 => currentY -= 1
+                case 3 => currentX -= 1
                 case _ => // Ungültige Richtung, keine Aktion erforderlich
             }
         }
     }
 
+    // Überprüft, ob der Block in die angegebene Richtung bewegt werden kann
+    def canMove(richtung: Int): Boolean = {
+        val newPosition = richtung match {
+            case 0 => (currentY + 1, currentX) // rechts
+            case 1 => (currentY, currentX + 1) // runter
+            case 2 => (currentY - 1, currentX) // links
+            case 3 => (currentY, currentX - 1) // oben
+            case _ => (currentY, currentX) // Ungültige Richtung
+        }
+        blockField.isValidPosition(Block.createBlock(currentBlockType, rotation, mirrored), newPosition._1, newPosition._2)
+    }
+    
     // Dreht den aktuellen Block um 90 Grad im Uhrzeigersinn
     def rotate(): Unit = {
         rotation = (rotation + 1) % 4
@@ -34,42 +46,13 @@ class Controller {
         mirrored = !mirrored
     }
 
-    // Überprüft, ob der Block in die angegebene Richtung bewegt werden kann
-    def canMove(richtung: Int): Boolean = {
-        val newPosition = richtung match {
-            case 0 => (currentX + 1, currentY) // rechts
-            case 1 => (currentX, currentY + 1) // runter
-            case 2 => (currentX - 1, currentY) // links
-            case 3 => (currentX, currentY - 1) // oben
-            case _ => (currentX, currentY) // Ungültige Richtung
-        }
-
-        blockField.isValidPosition(Block.createBlock(currentBlockType, rotation, mirrored), newPosition._1, newPosition._2)
-    }
-
-    // Überprüft, ob der Block gesetzt werden kann
-    def kannSetzen(): Boolean = {
-        val position = (currentX, currentY)
-        val rotatedBlock = Block.createBlock(currentBlockType, rotation, mirrored)
-        val playerBlock = rotatedBlock.map { case (dx, dy) => (dx + position._1, dy + position._2) }
-        playerBlock.forall { case (x, y) =>
-            x >= 0 && x < width && y >= 0 && y < height && blockField.getFieldVector(x)(y) == 0
-        }
-    }
-
     // Setzt den Block an der aktuellen Position
     def setzen(): Unit = {
-        if (kannSetzen()) {
-            val position = (currentX, currentY)
-            val rotatedBlock = Block.createBlock(currentBlockType, rotation, mirrored)
-            val playerBlock = rotatedBlock.map { case (dx, dy) => (dx + position._1, dy + position._2) }
-            playerBlock.foreach { case (x, y) =>
-                blockField = blockField.changeField(x, y, currentPlayer)
-            }
-            // Hier kannst du Logik hinzufügen, um zum nächsten Spieler zu wechseln
-            currentPlayer = if (currentPlayer == 1) 2 else 1
-        }
+        blockField = blockField.placeBlock(Block.createBlock(currentBlockType, rotation, mirrored), currentX, currentY, 0)
+        currentX = 2
+        currentY = 2
     }
+
 
     // Andere Methoden, um den aktuellen Spieler, das Spielfeld, Konflikte, usw. abzurufen
 

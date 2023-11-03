@@ -38,14 +38,3 @@ object Block {
         block
     }
 }
-
-
-def main(args: Array[String]): Unit = {
-    val blockType = Block.block6 // Wähle den gewünschten Blocktyp
-    val rotation = 1
-    val mirrored = true
-
-    val rotatedBlock = Block.createBlock(blockType, rotation, mirrored)
-
-    println(rotatedBlock)
-}

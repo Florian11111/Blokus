@@ -29,10 +29,10 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
     }
 
     def isValidPosition(block: List[(Int, Int)], x: Int, y: Int): Boolean = {
-    block.forall { case (dx, dy) =>
-        val newX = x + dx
-        val newY = y + dy
-        newX >= 0 && newX < width && newY >= 0 && newY < height
+        block.forall { case (dx, dy) =>
+            val newX = x + dx
+            val newY = y + dy
+            newX >= -1 && newX < width && newY > 0 && newY < height
         }
     }
 
