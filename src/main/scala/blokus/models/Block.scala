@@ -26,18 +26,17 @@ object BlockType {
     val block21 = BlockType(List((-1, -1), (0, -1), (1, -1), (1, 0), (1, 1)))
 
 
-  // Weitere Blocktypen ...
-
     def createBlock(blockType: BlockType, rotation: Int, mirrored: Boolean): List[(Int, Int)] = {
-    var block = blockType.baseForm
-    if (mirrored) {
-        block = block.map { case (x, y) => (x, -y) }
-    }
-    for (_ <- 0 until rotation) {
-        block = block.map { case (x, y) => (y, -x) }
-    }
-    block
-    }
+        var block = blockType.baseForm
+
+        if (mirrored) {
+            block = block.map { case (x, y) => (x, -y) }
+        }
+        for (_ <- 0 until rotation) {
+            block = block.map { case (x, y) => (-y, x) }
+        }
+        block
+    } 
 }
 
 

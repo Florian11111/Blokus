@@ -1,35 +1,46 @@
-class Field(val width: Int, val height: Int) {
-  private var fieldArray: Array[Array[Int]] = Array.ofDim[Int](height, width).map(_ => Array.fill(width)(1))
+case class BlockType(baseForm: List[(Int, Int)])
 
-  def getFieldArray: Array[Array[Int]] = fieldArray
+object BlockType {
+  val block1 = BlockType(List((0, 0)))
+  val block2 = BlockType(List((0, 0), (1, 0)))
+  val block3 = BlockType(List((-1, 0), (0, 0), (1, 0)))
+  val block4 = BlockType(List((0, 0), (1, 0), (0, 1)))
+  val block5 = BlockType(List((-1, 0), (0, 0), (1, 0), (2, 0)))
+  val block6 = BlockType(List((-1, 0), (-1, 1), (0, 0), (1, 0)))
+  val block7 = BlockType(List((-1, 0), (0, 0), (1, 0), (0, 1)))
+  val block8 = BlockType(List((0, 0), (1, 0), (0, 1), (1, 1)))
+  val block9 = BlockType(List((0, 0), (-1, 0), (0, 1), (1, 1)))
+  val block10 = BlockType(List((-2, 0), (-1, 0), (0, 0), (1, 0), (2, 0)))
+  val block11 = BlockType(List((-1, 1), (-1, 0), (0, 0), (1, 0), (1, 1)))
+  val block12 = BlockType(List((-1, 0), (0, 0), (1, 0), (0, 1), (1, 1)))
+  val block13 = BlockType(List((-1, 0), (0, 0), (1, 0), (2, 0), (0, 1)))
+  val block14 = BlockType(List((-2, 0), (-1, 0), (0, 0), (0, 1), (1, 1)))
+  val block15 = BlockType(List((-2, 0), (-1, 0), (0, 0), (1, 0), (1, 1)))
+  val block16 = BlockType(List((0, 0), (0, -1), (1, 0), (0, 1), (-1, 0)))
+  val block17 = BlockType(List((-1, -1), (0, -1), (0, 0), (0, 1), (1, 1)))
+  val block18 = BlockType(List((-1, -1), (0, -1), (0, 0), (1, 0), (1, 1)))
+  val block19 = BlockType(List((-1, -1), (0, -1), (1, -1), (0, 0), (0, 1)))
+  val block20 = BlockType(List((-1, -1), (0, -1), (0, 0), (1, 0), (0, 1)))
+  val block21 = BlockType(List((-1, -1), (0, -1), (1, -1), (1, 0), (1, 1)))
 
-  // Konvertiert eine Zeile von Ganzzahlen in Zeichen
-  def rowToString(row: Array[Int]): String = {
-    row.map {
-      case 0 => "# "
-      case 1 => "+ "
-      case _ => "? "
-    }.mkString
-  }
+  def createBlock(blockType: BlockType, rotation: Int, mirrored: Boolean): List[(Int, Int)] = {
+    var block = blockType.baseForm
 
-  // Konvertiert das Array in einen String
-  def createFieldString: String = {
-    getFieldArray.map(rowToString).mkString("\n")
-  }
-
-  // Ändert das Feld an der angegebenen Position
-  def changeField(x: Int, y: Int, inhalt: Int): Unit = {
-    assert(x >= 0 && x < width && y >= 0 && y < height)
-    fieldArray = fieldArray.updated(x, fieldArray(x).updated(y, inhalt))
+    if (mirrored) {
+        block = block.map { case (x, y) => (x, -y) }
+    }
+    for (_ <- 0 until rotation) {
+        block = block.map { case (x, y) => (-y, x) }
+    }
+    block
   }
 }
 
-object FieldMain {
-  val field = new Field(20, 20)
-  field.changeField(5, 4, 0)
-  val reihe = field.rowToString(field.getFieldArray(0))
-  val fieldString = field.createFieldString
 
-  println(fieldString) // Drucke den resultierenden fieldString
-  
-}
+val blockType = BlockType.block4
+val rotation = 1
+val mirrored = true
+
+val rotatedBlock = BlockType.createBlock(blockType, rotation, mirrored)
+
+println(rotatedBlock)
