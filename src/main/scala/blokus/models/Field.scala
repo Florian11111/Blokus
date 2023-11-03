@@ -11,7 +11,7 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
         row.map {
             case 0 => "# "
             case 1 => "+ "
-            case 2 => "|"
+            case 2 => "| "
             case _ => "? "
         }.mkString
     }

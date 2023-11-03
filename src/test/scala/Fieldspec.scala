@@ -23,7 +23,7 @@ class FieldSpec extends AnyWordSpec with Matchers {
 
     "convert a row of integers to characters correctly" in {
       val testField = Field(5, 5)
-      testField.rowToString(Vector(1, 0, 1, 2, 1)) shouldBe "+ # + ? + "
+      testField.rowToString(Vector(1, 0, 1, 2, 1)) shouldBe "+ # + | + "
     }
 
     "convert the field vector to a string correctly" in {
