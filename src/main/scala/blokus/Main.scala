@@ -30,6 +30,14 @@ object Main {
     pb.inheritIO().start().waitFor()
   }
 
+  def isValidPosition(block: List[(Int, Int)], x: Int, y: Int, width: Int, height: Int): Boolean = {
+    block.forall { case (dx, dy) =>
+      val newX = x + dx
+      val newY = y + dy
+      newX >= 0 && newX < width && newY >= 0 && newY < height
+    }
+  }
+
   def main(args: Array[String]): Unit = {
     val width = 20 // Hier die Breite deines Felds eingeben
     val height = 20 // Hier die Höhe deines Felds eingeben
@@ -65,10 +73,10 @@ object Main {
             currentX = 0
             currentY = 0
           }
-          case 'w' => currentX -= 1
-          case 's' => currentX += 1
-          case 'a' => currentY -= 1
-          case 'd' => currentY += 1
+          case 'w' if isValidPosition(currentBlock, currentX - 1, currentY, width, height) => currentX -= 1
+          case 's' if isValidPosition(currentBlock, currentX + 1, currentY, width, height) => currentX += 1
+          case 'a' if isValidPosition(currentBlock, currentX, currentY - 1, width, height) => currentY -= 1
+          case 'd' if isValidPosition(currentBlock, currentX, currentY + 1, width, height) => currentY += 1
           case _ => // ignoriere andere Tastendrücke
         }
       }
@@ -88,6 +96,5 @@ object Main {
     }
     newField
   }
-
 
 }
