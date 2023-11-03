@@ -3,8 +3,9 @@
 case class BlockType(baseForm: List[(Int, Int)])
 
 object BlockType {
-    val blockA = BlockType(List((0, 0), (0, -1), (0, 1), (1, 1)))
-    val blockB = BlockType(List((0, 0), (0, -1), (1, 0), (1, -1), (1, -1)))
+    val block1 = BlockType(List((0, 0)))
+    val block2 = BlockType(List((0, 0), (1, 0)))
+    val block3 = BlockType(List((-1, 0), (0, 0), (1, 0)))
   // Weitere Blocktypen ...
 
     def createBlock(blockType: BlockType, rotation: Int, mirrored: Boolean): List[(Int, Int)] = {
@@ -20,11 +21,10 @@ object BlockType {
 }
 
 
-val blockType = BlockType.blockA // Wähle den gewünschten Blocktyp
+val blockType = BlockType.block1 // Wähle den gewünschten Blocktyp
 val rotation = 1
 val mirrored = false
 
 val rotatedBlock = BlockType.createBlock(blockType, rotation, mirrored)
 
 println(rotatedBlock)
-
