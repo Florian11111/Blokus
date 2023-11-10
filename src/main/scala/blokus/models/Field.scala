@@ -18,19 +18,20 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
     def placeBlock(block: List[(Int, Int)], x: Int, y: Int, newValue: Int): Field = {
     if (isValidPosition(block, x, y)) {
         val updatedField = fieldVector.zipWithIndex.map { case (row, rowIndex) =>
-        row.zipWithIndex.map { 
+        row.zipWithIndex.map {
             case (_, colIndex) =>
-            if (block.contains((rowIndex - y, colIndex - x))) 
-                newValue 
-            else 
+            if (block.contains((colIndex - x, rowIndex - y))) // Vertauschte X- und Y-Koordinaten
+                newValue
+            else
                 fieldVector(rowIndex)(colIndex)
-            }
+        }
         }
         new Field(updatedField)
-        } else {
-            throw new IllegalArgumentException("Ungültige Position für Platzierung des Blocks.")
-        }
+    } else {
+        throw new IllegalArgumentException("Ungültige Position für Platzierung des Blocks.")
     }
+    }
+
 
 }
 

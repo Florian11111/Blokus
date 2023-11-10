@@ -14,9 +14,7 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) {
     def move(richtung:Int) = hoverBlock.move(field, richtung)
     def rotate():Boolean = hoverBlock.rotate(field)
     def mirror():Boolean = hoverBlock.mirror(field)
-    def setzen(neuerTyp: Int) = { 
-        field = hoverBlock.setzen(field, neuerTyp)
-    }
+    def setzen(neuerTyp: Int) = field = hoverBlock.setzen(field, neuerTyp)
     def getRotation() = hoverBlock.getRotation()
     def changePlayer = hoverBlock.changePlayer()
     def getCurrentPlayer = hoverBlock.getCurrentPlayer

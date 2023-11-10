@@ -1,6 +1,5 @@
 package blokus.view
 
-import blokus.models.Field
 import blokus.controller.Controller
 import scala.io.StdIn
 import scala.annotation.switch
