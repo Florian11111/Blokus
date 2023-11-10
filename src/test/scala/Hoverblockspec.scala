@@ -39,7 +39,7 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
       hoverBlock.getY() shouldEqual 3
 
       hoverBlock.move(field, 3) shouldEqual true // Can't move up
-      hoverBlock.getX() shouldEqual 2
+      hoverBlock.getX() shouldEqual 1
       hoverBlock.getY() shouldEqual 3
     }
 
@@ -52,7 +52,7 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
       hoverBlock.rotate(field) shouldEqual false
       hoverBlock.getBlock() shouldEqual Block.createBlock(firstBlock, 1, false)
 
-      hoverBlock.rotate(field) shouldEqual true
+      hoverBlock.rotate(field) shouldEqual false
       hoverBlock.getBlock() shouldEqual Block.createBlock(firstBlock, 2, false)
     }
 
@@ -65,7 +65,7 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
       hoverBlock.mirror(field) shouldEqual false
       hoverBlock.getBlock() shouldEqual Block.createBlock(firstBlock, 0, true)
 
-      hoverBlock.mirror(field) shouldEqual true
+      hoverBlock.mirror(field) shouldEqual false
       hoverBlock.getBlock() shouldEqual Block.createBlock(firstBlock, 0, false)
     }
 

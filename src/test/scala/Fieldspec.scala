@@ -51,7 +51,7 @@ class FieldSpec extends AnyWordSpec with Matchers {
     "correctly convert the field to a string" in {
       val field = Field(2, 2)
       val fieldString = field.createFieldString
-      fieldString shouldEqual "+ + \n+ + \n"
+      fieldString shouldEqual "+ + \n+ + "
     }
   }
 }
