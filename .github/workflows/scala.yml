@@ -12,7 +12,7 @@ on:
     branches: [ "main", "coveralls" ]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
