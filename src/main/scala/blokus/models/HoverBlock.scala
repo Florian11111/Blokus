@@ -1,21 +1,24 @@
 package blokus.models
 import blokus.models.Block
 
-class HoverBlock {
+class HoverBlock(playerAmount: Int) {
     var currentX = 2
     var currentY = 2
-    var currentBlockType = 0
+    var currentBlockTyp = 0
     var rotation = 0
     var mirrored = false
+    var currentPlayer = 0
 
     def getX(): Int = currentX
     def getY(): Int = currentY
-    //def getBlockType(): Int = currentBlockType
-    //def getRotation(): Int = rotation
-    //def getMirrod(): Boolean = mirrored
-    def getBlock(): List[(Int, Int)] = Block.createBlock(currentBlockType, rotation, mirrored)
+    def getBlock(): List[(Int, Int)] = Block.createBlock(currentBlockTyp, rotation, mirrored)
 
-    def move(feld: Field, richtung: Int): Unit = {
+    def changePlayer(): Int = {
+        currentPlayer = (currentPlayer + 1) % playerAmount
+        currentPlayer
+    }
+
+    def move(feld: Field, richtung: Int): Boolean = {
         if (canMove(feld, richtung)) {
             richtung match {
                 case 0 => currentY += 1
@@ -24,6 +27,9 @@ class HoverBlock {
                 case 3 => currentX -= 1
                 case _ => // Ungültige Richtung, keine Aktion erforderlich
             }
+            true
+        } else {
+            false
         }
     }
     
@@ -35,29 +41,45 @@ class HoverBlock {
             case 3 => (currentY, currentX - 1) // oben
             case _ => (currentY, currentX) // Ungültige Richtung
         }
-        feld.isValidPosition(Block.createBlock(currentBlockType, rotation, mirrored), newPosition._1, newPosition._2)
+        feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), newPosition._1, newPosition._2)
+    }
+
+    def canRotate(feld: Field): Boolean = {
+        feld.isValidPosition(Block.createBlock(currentBlockTyp, (rotation + 1) % 4, mirrored), feld.width, feld.height)
     }
 
     // Dreht den aktuellen Block um 90 Grad im Uhrzeigersinn
-    def rotate(): Unit = {
-        rotation = (rotation + 1) % 4
+    def rotate(feld: Field): Boolean = {
+        if (canRotate(feld)) {
+            rotation = (rotation + 1) % 4
+            true
+        } else {
+            false
+        }
+    }
+
+    def canMirror(feld: Field): Boolean = {
+        feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, !mirrored), feld.width, feld.height)
     }
 
     // Spiegelt den aktuellen Block horizontal
-    def mirror(): Unit = {
-        mirrored = !mirrored
+    def mirror(feld: Field): Boolean = {
+        if (canMirror(feld)) {
+            mirrored = !mirrored
+            true
+        } else {
+            false
+        }
     }
 
     // Setzt den Block an der aktuellen Position
     def setzen(feld: Field, newBlockTyp: Int): Field = {
-        val temp = feld.placeBlock(Block.createBlock(currentBlockType, rotation, mirrored), currentX, currentY, 0)
+        val temp = feld.placeBlock(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX, currentY, currentPlayer)
         currentX = 2
         currentY = 2
         rotation = 0
         mirrored = false
-        currentBlockType = newBlockTyp
+        currentBlockTyp = newBlockTyp
         temp
     }
-
-    
 }
