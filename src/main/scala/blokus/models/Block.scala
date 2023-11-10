@@ -3,31 +3,38 @@ package blokus.models
 case class Block(baseForm: List[(Int, Int)])
 
 object Block {
-    val block1 = Block(List((0, 0)))
-    val block2 = Block(List((0, 0), (1, 0)))
-    val block3 = Block(List((-1, 0), (0, 0), (1, 0)))
-    val block4 = Block(List((0, 0), (1, 0), (0, 1)))
-    val block5 = Block(List((-1, 0), (0, 0), (1, 0), (2, 0)))
-    val block6 = Block(List((-1, 0), (-1, 1), (0, 0), (1, 0)))
-    val block7 = Block(List((-1, 0), (0, 0), (1, 0), (0, 1)))
-    val block8 = Block(List((0, 0), (1, 0), (0, 1), (1, 1)))
-    val block9 = Block(List((0, 0), (-1, 0), (0, 1), (1, 1)))
-    val block10 = Block(List((-2, 0), (-1, 0), (0, 0), (1, 0), (2, 0)))
-    val block11 = Block(List((-1, 1), (-1, 0), (0, 0), (1, 0), (1, 1)))
-    val block12 = Block(List((-1, 0), (0, 0), (1, 0), (0, 1), (1, 1)))
-    val block13 = Block(List((-1, 0), (0, 0), (1, 0), (2, 0), (0, 1)))
-    val block14 = Block(List((-2, 0), (-1, 0), (0, 0), (0, 1), (1, 1)))
-    val block15 = Block(List((-2, 0), (-1, 0), (0, 0), (1, 0), (1, 1)))
-    val block16 = Block(List((0, 0), (0, -1), (1, 0), (0, 1), (-1, 0)))
-    val block17 = Block(List((-1, -1), (0, -1), (0, 0), (0, 1), (1, 1)))
-    val block18 = Block(List((-1, -1), (0, -1), (0, 0), (1, 0), (1, 1)))
-    val block21 = Block(List((-1, -1), (0, -1), (1, -1), (1, 0), (1, 1)))
-    val block19 = Block(List((-1, -1), (0, -1), (1, -1), (0, 0), (0, 1)))
-    val block20 = Block(List((-1, -1), (0, -1), (0, 0), (1, 0), (0, 1)))
+    val baseForm0 = List((0, 0))
+    val baseForm1 = List((0, 0), (1, 0))
+    val baseForm2 = List((-1, 0), (0, 0), (1, 0))
+    val baseForm3 = List((0, 0), (1, 0), (0, 1))
+    val baseForm4 = List((-1, 0), (0, 0), (1, 0), (2, 0))
+    val baseForm5 = List((-1, 0), (-1, 1), (0, 0), (1, 0))
+    val baseForm6 = List((-1, 0), (0, 0), (1, 0), (0, 1))
+    val baseForm7 = List((0, 0), (1, 0), (0, 1), (1, 1))
+    val baseForm8 = List((0, 0), (-1, 0), (0, 1), (1, 1))
+    val baseForm9 = List((-2, 0), (-1, 0), (0, 0), (1, 0), (2, 0))
+    val baseForm10 = List((-1, 1), (-1, 0), (0, 0), (1, 0), (1, 1))
+    val baseForm11 = List((-1, 0), (0, 0), (1, 0), (0, 1), (1, 1))
+    val baseForm12 = List((-1, 0), (0, 0), (1, 0), (2, 0), (0, 1))
+    val baseForm13 = List((-2, 0), (-1, 0), (0, 0), (0, 1), (1, 1))
+    val baseForm14 = List((-2, 0), (-1, 0), (0, 0), (1, 0), (1, 1))
+    val baseForm15 = List((0, 0), (0, -1), (1, 0), (0, 1), (-1, 0))
+    val baseForm16 = List((-1, -1), (0, -1), (0, 0), (0, 1), (1, 1))
+    val baseForm17 = List((-1, -1), (0, -1), (0, 0), (1, 0), (1, 1))
+    val baseForm18 = List((-1, -1), (0, -1), (1, -1), (1, 0), (1, 1))
+    val baseForm19 = List((-1, -1), (0, -1), (1, -1), (0, 0), (0, 1))
 
+    val blockBaseForms: Array[List[(Int, Int)]] = Array(
+        baseForm0, baseForm1, baseForm2, baseForm3, baseForm4,
+        baseForm5, baseForm6, baseForm7, baseForm8, baseForm9,
+        baseForm10, baseForm11, baseForm12, baseForm13, baseForm14,
+        baseForm15, baseForm16, baseForm17, baseForm18, baseForm19
+    )
 
-    def createBlock(blockType: Block, rotation: Int, mirrored: Boolean): List[(Int, Int)] = {
-        var block = blockType.baseForm
+    def createBlock(blockType: Int, rotation: Int, mirrored: Boolean): List[(Int, Int)] = {
+        val baseForm = blockBaseForms(blockType)
+
+        var block = baseForm
 
         if (mirrored) {
             block = block.map { case (x, y) => (x, -y) }
