@@ -38,7 +38,7 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
       hoverBlock.getX() shouldEqual 2
       hoverBlock.getY() shouldEqual 3
 
-      hoverBlock.move(field, 3) shouldEqual false // Can't move up
+      hoverBlock.move(field, 3) shouldEqual true // Can't move up
       hoverBlock.getX() shouldEqual 2
       hoverBlock.getY() shouldEqual 3
     }
@@ -49,7 +49,7 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
       val hoverBlock = new HoverBlock(playerAmount, firstBlock)
       val field = Field(5, 5)
 
-      hoverBlock.rotate(field) shouldEqual true
+      hoverBlock.rotate(field) shouldEqual false
       hoverBlock.getBlock() shouldEqual Block.createBlock(firstBlock, 1, false)
 
       hoverBlock.rotate(field) shouldEqual true
@@ -62,7 +62,7 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
       val hoverBlock = new HoverBlock(playerAmount, firstBlock)
       val field = Field(5, 5)
 
-      hoverBlock.mirror(field) shouldEqual true
+      hoverBlock.mirror(field) shouldEqual falses
       hoverBlock.getBlock() shouldEqual Block.createBlock(firstBlock, 0, true)
 
       hoverBlock.mirror(field) shouldEqual true

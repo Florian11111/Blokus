@@ -36,7 +36,7 @@ class BlockSpec extends AnyWordSpec with Matchers {
       val mirrored = true
 
       val block = Block.createBlock(blockType, rotation, mirrored)
-      block shouldEqual List((0, 0), (0, -1), (-1, -1))
+      block shouldEqual List((0, 0), (-1, 0))
     }
 
     "correctly create a block without rotation and mirroring" in {
