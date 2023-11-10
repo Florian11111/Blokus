@@ -62,7 +62,7 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
       val hoverBlock = new HoverBlock(playerAmount, firstBlock)
       val field = Field(5, 5)
 
-      hoverBlock.mirror(field) shouldEqual falses
+      hoverBlock.mirror(field) shouldEqual false
       hoverBlock.getBlock() shouldEqual Block.createBlock(firstBlock, 0, true)
 
       hoverBlock.mirror(field) shouldEqual true
