@@ -11,6 +11,7 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
 
     def getX(): Int = currentX
     def getY(): Int = currentY
+    def getCurrentPlayer: Int = currentPlayer
     def getBlock(): List[(Int, Int)] = Block.createBlock(currentBlockTyp, rotation, mirrored)
 
     def changePlayer(): Int = {
