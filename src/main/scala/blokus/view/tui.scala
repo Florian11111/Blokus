@@ -36,7 +36,6 @@ class Tui(controller: Controller) {
       var continue = true
       while (continue) {
         clearTerminal()
-        controller.display() // bullshit
 
         println("Steuerung:")
         println("w/a/s/d: Block bewegen")
@@ -50,7 +49,6 @@ class Tui(controller: Controller) {
           case 'x' =>
             continue = false
           case _ =>
-            controller.handleInput(input) //bullshit, muss hier sein.
         }
       }
     } finally {
