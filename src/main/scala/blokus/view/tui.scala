@@ -6,7 +6,13 @@ import scala.io.StdIn
 
 class Tui(controller: Controller) {
   def configureTerminalForImmediateInput(): Unit = {
-    // Implementation remains the same
+    if (System.getProperty("os.name").toLowerCase.contains("win")) {
+      new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor()
+    } else {
+      val cmd = "stty -icanon min 1 -echo"
+      val pb = new ProcessBuilder("sh", "-c", cmd)
+      pb.inheritIO().start().waitFor()
+    }
   }
 
   def clearTerminal(): Unit = {
@@ -19,7 +25,9 @@ class Tui(controller: Controller) {
   }
 
   def resetTerminalToNormal(): Unit = {
-    // Implementation remains the same
+    val cmd = "stty echo icanon"
+    val pb = new ProcessBuilder("sh", "-c", cmd)
+    pb.inheritIO().start().waitFor()
   }
 
   def inputLoop(): Unit = {
