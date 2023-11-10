@@ -7,7 +7,7 @@ import blokus.util.Observer
 class Tui(controller: Controller) extends Observer[ControllerEvent] {
 
     controller.addObserver(this)
-
+    display()
     def clearTerminal(): Unit = {
         print("\u001b[H\u001b[2J")
         System.out.flush()
@@ -52,16 +52,8 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
         println("x: Beenden")
 
         event match {
-        case ControllerEvent.Move =>
-            // Handle the move event if needed
-        case ControllerEvent.Rotate =>
-            // Handle the rotate event if needed
-        case ControllerEvent.Mirror =>
-            // Handle the mirror event if needed
-        case ControllerEvent.Setzen =>
-            // Handle the setzen event if needed
+        case ControllerEvent.Update =>
         case ControllerEvent.PlayerChange(player) =>
-            // Handle the player change event if needed
         }
     }
 

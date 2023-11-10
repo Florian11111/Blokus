@@ -15,7 +15,7 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
     def move(richtung: Int): Boolean = {
         val moved = hoverBlock.move(field, richtung)
         if (moved) {
-            notifyObservers(ControllerEvent.Move)
+            notifyObservers(ControllerEvent.Update)
         }
         moved
     }
@@ -23,7 +23,7 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
     def rotate(): Boolean = {
         val rotated = hoverBlock.rotate(field)
         if (rotated) {
-            notifyObservers(ControllerEvent.Rotate)
+            notifyObservers(ControllerEvent.Update)
         }
         rotated
     }
@@ -31,14 +31,14 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
     def mirror(): Boolean = {
         val mirrored = hoverBlock.mirror(field)
         if (mirrored) {
-            notifyObservers(ControllerEvent.Mirror)
+            notifyObservers(ControllerEvent.Update)
         }
         mirrored
     }
 
     def setzen(neuerTyp: Int): Unit = {
         field = hoverBlock.setzen(field, neuerTyp)
-        notifyObservers(ControllerEvent.Setzen)
+        notifyObservers(ControllerEvent.Update)
     }
 
     def getRotation(): Int = hoverBlock.getRotation()
@@ -53,9 +53,6 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
 
 sealed trait ControllerEvent
 object ControllerEvent {
-    case object Move extends ControllerEvent
-    case object Rotate extends ControllerEvent
-    case object Mirror extends ControllerEvent
-    case object Setzen extends ControllerEvent
+    case object Update extends ControllerEvent
     case class PlayerChange(player: Int) extends ControllerEvent
 }
