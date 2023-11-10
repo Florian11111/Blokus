@@ -1,10 +1,10 @@
 package blokus.models
 import blokus.models.Block
 
-class HoverBlock(playerAmount: Int) {
+class HoverBlock(playerAmount: Int, firstBlock: Int) {
     var currentX = 2
     var currentY = 2
-    var currentBlockTyp = 0
+    var currentBlockTyp = firstBlock
     var rotation = 0
     var mirrored = false
     var currentPlayer = 0

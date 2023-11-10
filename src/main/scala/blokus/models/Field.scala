@@ -22,30 +22,34 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
     }
 
     def changeField(x: Int, y: Int, inhalt: Int): Field = {
-        assert(x >= 0 && x < width && y >= 0 && y < height)
-        val newRow = fieldVector(x).updated(y, inhalt)
-        val newFieldVector = fieldVector.updated(x, newRow)
-        new Field(newFieldVector)
+        if (x >= 0 && x < width && y >= 0 && y < height) {
+            val newRow = fieldVector(x).updated(y, inhalt)
+            val newFieldVector = fieldVector.updated(x, newRow)
+            new Field(newFieldVector)
+        } else {
+            throw new IllegalArgumentException("Ungültige Position für Änderung des Felds.")
+        }
     }
 
     def isValidPosition(block: List[(Int, Int)], x: Int, y: Int): Boolean = {
         block.forall { case (dx, dy) =>
             val newX = x + dx
             val newY = y + dy
-            newX >= -1 && newX < width && newY > 0 && newY < height
+            newX >= 0 && newX < width && newY >= 0 && newY < height
         }
     }
 
     def placeBlock(block: List[(Int, Int)], x: Int, y: Int, newValue: Int): Field = {
-        var newField = this
-        for ((dx, dy) <- block) {
-            val newX = x + dx
-            val newY = y + dy
-            if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
-                newField = newField.changeField(newX, newY, 0)
+        if (isValidPosition(block, x, y)) {
+            val updatedField = fieldVector.zipWithIndex.map { case (row, rowIndex) =>
+                row.zipWithIndex.map { case (_, colIndex) =>
+                    if (block.contains((rowIndex - x, colIndex - y))) newValue else fieldVector(rowIndex)(colIndex)
+                }
             }
+            new Field(updatedField)
+        } else {
+            throw new IllegalArgumentException("Ungültige Position für Platzierung des Blocks.")
         }
-        newField
     }
 }
 
