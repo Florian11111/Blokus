@@ -30,6 +30,7 @@ object Block {
         baseForm10, baseForm11, baseForm12, baseForm13, baseForm14,
         baseForm15, baseForm16, baseForm17, baseForm18, baseForm19
     )
+    
 
     def createBlock(blockType: Int, rotation: Int, mirrored: Boolean): List[(Int, Int)] = {
         val baseForm = blockBaseForms(blockType)

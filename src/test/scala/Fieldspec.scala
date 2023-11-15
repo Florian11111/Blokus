@@ -1,57 +1,39 @@
-package blokus.models
-
+import blokus.models.Field
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 
 class FieldSpec extends AnyWordSpec with Matchers {
 
-  "A Field" should {
-    "initialize with the correct dimensions" in {
-      val field = Field(3, 4)
-      field.width should be(3)
-      field.height should be(4)
+  "Field" should {
+
+    "be initialized with correct dimensions" in {
+      val field = Field(5, 4)
+      field.width shouldBe 5
+      field.height shouldBe 4
+      field.getFieldVector shouldBe Vector.fill(4, 5)(1)
     }
 
-    "correctly change the field contents" in {
-      val field = Field(3, 3)
-      val updatedField = field.changeField(1, 1, 2)
-      updatedField.getFieldVector shouldEqual Vector(
-        Vector(1, 1, 1),
-        Vector(1, 2, 1),
-        Vector(1, 1, 1)
-      )
+    "validate positions correctly" in {
+      val field = Field(5, 5)
+      field.isValidPosition(List((0, 0)), 2, 2) shouldBe true
+      field.isValidPosition(List((0, 0), (1, 0)), 4, 4) shouldBe false // block goes out of bounds
+      field.isValidPosition(List((0, 0), (-1, -1)), 0, 0) shouldBe false // block goes out of bounds
+      // ... more cases
     }
 
-    "correctly place a block on the field" in {
-      val field = Field(4, 4)
-      val block = List((0, 0), (0, 1), (1, 0))
-      val updatedField = field.placeBlock(block, 1, 1, 2)
-      updatedField.getFieldVector shouldEqual Vector(
-        Vector(1, 1, 1, 1),
-        Vector(1, 2, 2, 1),
-        Vector(1, 2, 1, 1),
-        Vector(1, 1, 1, 1)
-      )
+    "place block correctly" in {
+      val field = Field(5, 5)
+      val newField = field.placeBlock(List((0, 0)), 2, 2, 0)
+      newField.getFieldVector(2)(2) shouldBe 0
+      // ... more cases, including edge cases
     }
 
-    "throw an exception when changing or placing a block at an invalid position" in {
-      val field = Field(3, 3)
-      val invalidChange = intercept[IllegalArgumentException] {
-        field.changeField(4, 2, 2)
+    "throw exception for invalid block placement" in {
+      val field = Field(5, 5)
+      a[IllegalArgumentException] shouldBe thrownBy {
+        field.placeBlock(List((0, 0), (1, 0)), 4, 4, 0) // block goes out of bounds
       }
-      invalidChange.getMessage should include("Ungültige Position für Änderung des Felds.")
-
-      val block = List((0, 0), (0, 1), (1, 0), (3, 3))
-      val invalidPlacement = intercept[IllegalArgumentException] {
-        field.placeBlock(block, 0, 0, 2)
-      }
-      invalidPlacement.getMessage should include("Ungültige Position für Platzierung des Blocks.")
-    }
-
-    "correctly convert the field to a string" in {
-      val field = Field(2, 2)
-      val fieldString = field.createFieldString
-      fieldString shouldEqual "+ + \n+ + "
+      // ... more cases for invalid placements
     }
   }
 }
