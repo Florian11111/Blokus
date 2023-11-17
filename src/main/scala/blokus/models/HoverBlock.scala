@@ -81,7 +81,7 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
     }
 
     def canSetzen(feld: Field): Boolean = {
-        feld.isValidPlace(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX, currentY)
+        feld.isValidPlace(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX, currentY, currentPlayer)
     }
 
     // Setzt den Block an der aktuellen Position

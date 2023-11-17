@@ -14,13 +14,12 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
     }
     }
 
-    def isValidPlace(block: List[(Int, Int)], x: Int, y: Int): Boolean = {
+    def isValidPlace(block: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int): Boolean = {
         if (isValidPosition(block, x, y)) {
             block.forall { case (dx, dy) =>
             val newY = y + dy
             val newX = x + dx
-            var test = fieldVector(newY)(newX) == -1
-            test
+            fieldVector(newY)(newX) == -1
         }
         } else {
             false
@@ -29,12 +28,12 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
     
 
 
-    def placeBlock(block: List[(Int, Int)], x: Int, y: Int, newValue: Int): Field = {
-        if (isValidPosition(block, x, y)) {
+    def placeBlock(block: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int): Field = {
+        if (isValidPlace(block, x, y, currentPlayer)) {
         val updatedField = fieldVector.zipWithIndex.map { case (row, rowIndex) =>
             row.zipWithIndex.map { case (_, colIndex) =>
             if (block.contains((colIndex - x, rowIndex - y)))
-                newValue
+                currentPlayer
             else
                 fieldVector(rowIndex)(colIndex)
             }
