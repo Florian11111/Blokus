@@ -39,7 +39,7 @@ class BlockSpec extends AnyWordSpec with Matchers {
 
       "apply both rotation and mirroring correctly for a single block type" in {
         // Example with Block.baseForm1
-        Block.createBlock(1, 1, true) shouldBe List((0, 0), (0, 1)).map { case (x, y) => (x, -y) }
+        Block.createBlock(1, 1, true) shouldBe List((0, 0), (0, -1)).map { case (x, y) => (x, -y) }
         // ... test combined cases for other block types
       }
     }

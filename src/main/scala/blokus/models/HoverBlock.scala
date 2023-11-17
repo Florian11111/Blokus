@@ -36,16 +36,20 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
             false
         }
     }
-    
+
     def canMove(feld: Field, richtung: Int): Boolean = {
-        val newPosition = richtung match {
-            case 0 => (currentX, currentY + 1) // rechts
-            case 1 => (currentX + 1, currentY) // runter
-            case 2 => (currentX, currentY - 1) // links
-            case 3 => (currentX - 1, currentY) // oben
-            case _ => (currentX, currentY) // Ungültige Richtung
+    richtung match {
+        case 0 => // rechts
+            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentY + 1, currentX)
+        case 1 => // runter
+            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentY, currentX + 1)
+        case 2 => // links
+            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentY - 1, currentX)
+        case 3 => // oben
+            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentY, currentX - 1)
+        case _ => // Ungültige Richtung
+            false
         }
-        feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), newPosition._1, newPosition._2)
     }
 
     def canRotate(feld: Field): Boolean = {
