@@ -43,12 +43,14 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
     }
 
     "rotate correctly" in {
-      hoverBlock.rotate(testField) shouldBe true
-      hoverBlock.getRotation() shouldBe 1
+      val initialRotation = hoverBlock.getRotation()
 
-      // Test rotations for all 4 directions
-      // Ensure rotation is not possible when it would place block out of bounds
-    }
+      // Rotate through all four directions
+      for (i <- 1 to 4) {
+        hoverBlock.rotate(testField) shouldBe true
+        hoverBlock.getRotation() shouldBe (initialRotation + i) % 4
+      }
+     }
 
     "mirror correctly" in {
       hoverBlock.mirror(testField) shouldBe true
@@ -61,6 +63,10 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
       val newField = hoverBlock.setzen(testField, newBlockType)
       // Assert the block is set correctly on the field
       // Assert hoverBlock's state is reset to initial values
+    }
+
+    "determine if a block can be placed correctly" in {
+      hoverBlock.canSetzen(testField) shouldBe true
     }
   }
 }
