@@ -7,32 +7,30 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
     def getFieldVector: Vector[Vector[Int]] = fieldVector
 
     def isValidPosition(block: List[(Int, Int)], x: Int, y: Int): Boolean = {
-        block.forall { case (dx, dy) =>
-            val newX = x + dx
-            val newY = y + dy
-            newX >= 0 && newX < width && newY >= 0 && newY < height
+        block.forall { case (dy, dx) =>
+        val newY = y + dy
+        val newX = x + dx
+        println("    newX: " + newX + " newY: " + newY +  " => " + (newY >= 0 && newY < height && newX >= 0 && newX < width && fieldVector(newY)(newX) == 1))
+        //newY >= 0 && newY < height && newX >= 0 && newX < width && fieldVector(newY)(newX) == 1
+        newY >= 0 && newY < height && newX >= 0 && newX < width
         }
     }
 
-
     def placeBlock(block: List[(Int, Int)], x: Int, y: Int, newValue: Int): Field = {
-    if (isValidPosition(block, x, y)) {
+        if (isValidPosition(block, x, y)) {
         val updatedField = fieldVector.zipWithIndex.map { case (row, rowIndex) =>
-        row.zipWithIndex.map {
-            case (_, colIndex) =>
-            if (block.contains((colIndex - x, rowIndex - y))) // Vertauschte X- und Y-Koordinaten
+            row.zipWithIndex.map { case (_, colIndex) =>
+            if (block.contains((colIndex - x, rowIndex - y)))
                 newValue
             else
                 fieldVector(rowIndex)(colIndex)
-        }
+            }
         }
         new Field(updatedField)
-    } else {
-        throw new IllegalArgumentException("Ungültige Position für Platzierung des Blocks.")
+        } else {
+        throw new IllegalArgumentException("Invalid position for block placement.")
+        }
     }
-    }
-
-
 }
 
 object Field {

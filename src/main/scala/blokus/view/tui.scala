@@ -5,24 +5,29 @@ import blokus.controller.ControllerEvent
 import blokus.util.Observer
 
 class Tui(controller: Controller) extends Observer[ControllerEvent] {
-
     controller.addObserver(this)
-    display()
+
     def clearTerminal(): Unit = {
-        print("\u001b[H\u001b[2J")
-        System.out.flush()
+        val os = System.getProperty("os.name").toLowerCase()
+        if (os.contains("win")) {
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor()
+        } else {
+            print("\u001b[H\u001b[2J")
+            System.out.flush()
+        }
     }
+
 
     def mergeFieldAndBlock(playerNumber: Int): Vector[Vector[Int]] = {
         val field = controller.getField()
         val block = controller.getBlock()
         val merged = field.zipWithIndex.map { case (row, rowIndex) =>
-        row.zipWithIndex.map { case (cell, columnIndex) =>
-            val blockCell = block.find { case (x, y) =>
-            x == columnIndex && y == rowIndex
+            row.zipWithIndex.map { case (cell, columnIndex) =>
+                val blockCell = block.find { case (x, y) =>
+                    x == columnIndex && y == rowIndex
+                }
+                blockCell.map(_ => playerNumber).getOrElse(cell)
             }
-            blockCell.map(_ => playerNumber).getOrElse(cell)
-        }
         }
         merged
     }
@@ -33,17 +38,18 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
 
     def rowToString(row: Vector[Int]): String = {
         row.map {
-        case 0 => "# "
-        case 1 => "+ "
-        case 2 => "| "
-        case 6 => "X "
-        case _ => "? "
+            case 0 => "# "
+            case 1 => "+ "
+            case 2 => "| "
+            case 6 => "X "
+            case _ => "? "
         }.mkString
     }
 
     override def update(event: ControllerEvent): Unit = {
         clearTerminal()
         display()
+        print(controller.getBlock())
         println("\nSteuerung:")
         println("w/a/s/d: Block bewegen")
         println("r: Block rotieren")
@@ -52,30 +58,30 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
         println("x: Beenden")
 
         event match {
-        case ControllerEvent.Update =>
-        case ControllerEvent.PlayerChange(player) =>
+            case ControllerEvent.Update =>
+            case ControllerEvent.PlayerChange(player) =>
         }
     }
 
     def inputLoop(): Unit = {
         try {
-        var continue = true
-        while (continue) {
-            val input = scala.io.StdIn.readLine()
-            input match {
-            case "x" => continue = false
-            case "w" => controller.move(2)
-            case "d" => controller.move(1)
-            case "s" => controller.move(0)
-            case "a" => controller.move(3)
-            case "r" => controller.rotate()
-            case "m" => controller.mirror()
-            case "e" => controller.setzen(2)
-            case _ =>
+            var continue = true
+            while (continue) {
+                val input = scala.io.StdIn.readLine()
+                input match {
+                    case "x" => continue = false
+                    case "w" => controller.move(0)
+                    case "d" => controller.move(3)
+                    case "s" => controller.move(2)
+                    case "a" => controller.move(1)
+                    case "r" => controller.rotate()
+                    case "m" => controller.mirror()
+                    case "e" => controller.setzen(2)
+                    case _ =>
+                }
             }
-        }
         } finally {
-        // Reset any terminal configurations if needed
+            // Reset any terminal configurations if needed
         }
     }
 }

@@ -14,8 +14,7 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
     def getRotation(): Int = rotation
     def getCurrentPlayer: Int = currentPlayer
     def getBlock(): List[(Int, Int)] = {
-        val baseForm = Block.createBlock(currentBlockTyp, rotation, mirrored)
-        baseForm.map { case (x, y) => (x + currentX, y + currentY) }
+        Block.createBlock(currentBlockTyp, rotation, mirrored).map { case (x, y) => (x + currentX, y + currentY) }
     }
 
     def changePlayer(): Int = {
@@ -40,11 +39,11 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
     
     def canMove(feld: Field, richtung: Int): Boolean = {
         val newPosition = richtung match {
-            case 0 => (currentY + 1, currentX) // rechts
-            case 1 => (currentY, currentX + 1) // runter
-            case 2 => (currentY - 1, currentX) // links
-            case 3 => (currentY, currentX - 1) // oben
-            case _ => (currentY, currentX) // Ungültige Richtung
+            case 0 => (currentX, currentY + 1) // rechts
+            case 1 => (currentX + 1, currentY) // runter
+            case 2 => (currentX, currentY - 1) // links
+            case 3 => (currentX - 1, currentY) // oben
+            case _ => (currentX, currentY) // Ungültige Richtung
         }
         feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), newPosition._1, newPosition._2)
     }
