@@ -10,7 +10,7 @@ class FieldSpec extends AnyWordSpec with Matchers {
       val field = Field(5, 4)
       field.width shouldBe 5
       field.height shouldBe 4
-      field.getFieldVector shouldBe Vector.fill(4, 5)(1)
+      field.getFieldVector shouldBe Vector.fill(4, 5)(-1)
     }
 
     "validate positions correctly" in {
@@ -34,6 +34,14 @@ class FieldSpec extends AnyWordSpec with Matchers {
         field.placeBlock(List((0, 0), (1, 0)), 4, 4, 0) // block goes out of bounds
       }
       // ... more cases for invalid placements
+    }
+  }
+  "Field object" should {
+    "create a new Field instance with the given dimensions using apply method" in {
+      val field = Field.apply(5, 5)
+      field.width shouldBe 5
+      field.height shouldBe 5
+      // Additional assertions as needed
     }
   }
 }
