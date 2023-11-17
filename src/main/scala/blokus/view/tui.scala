@@ -17,7 +17,6 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
         }
     }
 
-
     def mergeFieldAndBlock(): Vector[Vector[Int]] = {
         val field = controller.getField()
         val block = controller.getBlock()
@@ -29,10 +28,8 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
             }.map(_ => if (fieldValue != -1) 11 else 10).getOrElse(fieldValue)
             }
         }
-
         merged
     }
-
 
     def display(): Unit = {
         println(mergeFieldAndBlock().map(rowToString).mkString("\n"))
@@ -85,6 +82,8 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
                         if (controller.canSetzten()) {
                             controller.setzen(1)
                             controller.changePlayer()
+                        } else {
+                            println("Kann nicht an dieser Stelle Platziert werden!")
                         }
                     }
                     case _ =>

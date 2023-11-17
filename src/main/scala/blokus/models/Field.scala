@@ -15,17 +15,31 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
     }
 
     def isValidPlace(block: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int): Boolean = {
-        if (isValidPosition(block, x, y)) {
-            block.forall { case (dx, dy) =>
-            val newY = y + dy
-            val newX = x + dx
-            fieldVector(newY)(newX) == -1
-        }
-        } else {
+        if (!isValidPosition(block, x, y) || !block.forall { case (dx, dy) => fieldVector(y + dy)(x + dx) == -1 }) {
             false
+        } else {
+            // isLogicPlace
+            true
         }
     }
     
+    // geht durch den block und speichert alle ecken in einer liste. dann wird der block nochmal durchgegannen
+    // und alle direkten nachbarn gecheckt. => muss fals sein wenn es einen nachbarn vom selben block gibt der nicht
+    // teil des blocks ist und löscht alle direkten nachbarn aus der liste. Dann wird die ecken liste überprüft ob es 
+    // mindestens einen match gibt
+    /*
+    def getAllCorners(blocks: List[List[(Int, Int)]]): List[(Int, Int)] = {
+        blocks.flatMap { block =>
+        block.flatMap { case (x, y) =>
+            List(
+            (x + 1, y + 1),
+            (x + 1, y - 1),
+            (x - 1, y + 1),
+            (x - 1, y - 1)
+            )
+        }
+        }.distinct
+    }*/
 
 
     def placeBlock(block: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int): Field = {

@@ -11,7 +11,9 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
     var hoverBlock = HoverBlock(playerAmount, firstBlock)
 
     def getField(): Vector[Vector[Int]] = field.getFieldVector
+
     def getBlock(): List[(Int, Int)] = hoverBlock.getBlock()
+
     def move(richtung: Int): Boolean = {
         val moved = hoverBlock.move(field, richtung)
         if (moved) {
