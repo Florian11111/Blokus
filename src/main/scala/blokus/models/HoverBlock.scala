@@ -39,15 +39,15 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
 
     def canMove(feld: Field, richtung: Int): Boolean = {
     richtung match {
-        case 0 => // rechts
-            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentY + 1, currentX)
-        case 1 => // runter
-            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentY, currentX + 1)
-        case 2 => // links
-            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentY - 1, currentX)
-        case 3 => // oben
-            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentY, currentX - 1)
-        case _ => // Ungültige Richtung
+        case 0 => 
+            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX, currentY + 1)
+        case 1 => 
+            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX + 1, currentY)
+        case 2 => 
+            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX, currentY - 1)
+        case 3 => 
+            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX - 1, currentY)
+        case _ => 
             false
         }
     }
@@ -80,8 +80,13 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
         }
     }
 
+    def canSetzen(feld: Field): Boolean = {
+        feld.isValidPlace(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX, currentY)
+    }
+
     // Setzt den Block an der aktuellen Position
     def setzen(feld: Field, newBlockTyp: Int): Field = {
+
         val temp = feld.placeBlock(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX, currentY, currentPlayer)
         currentX = 2
         currentY = 2

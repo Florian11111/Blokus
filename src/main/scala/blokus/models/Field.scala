@@ -7,14 +7,27 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
     def getFieldVector: Vector[Vector[Int]] = fieldVector
 
     def isValidPosition(block: List[(Int, Int)], x: Int, y: Int): Boolean = {
-        block.forall { case (dy, dx) =>
+    block.forall { case (dx, dy) =>
         val newY = y + dy
         val newX = x + dx
-        println("    newX: " + newX + " newY: " + newY +  " => " + (newY >= 0 && newY < height && newX >= 0 && newX < width && fieldVector(newY)(newX) == 1))
-        //newY >= 0 && newY < height && newX >= 0 && newX < width && fieldVector(newY)(newX) == 1
         newY >= 0 && newY < height && newX >= 0 && newX < width
+    }
+    }
+
+    def isValidPlace(block: List[(Int, Int)], x: Int, y: Int): Boolean = {
+        if (isValidPosition(block, x, y)) {
+            block.forall { case (dx, dy) =>
+            val newY = y + dy
+            val newX = x + dx
+            var test = fieldVector(newY)(newX) == -1
+            test
+        }
+        } else {
+            false
         }
     }
+    
+
 
     def placeBlock(block: List[(Int, Int)], x: Int, y: Int, newValue: Int): Field = {
         if (isValidPosition(block, x, y)) {
@@ -35,7 +48,7 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
 
 object Field {
     def apply(width: Int, height: Int): Field = {
-        val initialFieldVector = Vector.fill(height, width)(1)
+        val initialFieldVector = Vector.fill(height, width)(-1)
         new Field(initialFieldVector)
     }
 }

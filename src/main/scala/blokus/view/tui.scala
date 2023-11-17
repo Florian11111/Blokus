@@ -6,7 +6,7 @@ import blokus.util.Observer
 
 class Tui(controller: Controller) extends Observer[ControllerEvent] {
     controller.addObserver(this)
-
+    display()
     def clearTerminal(): Unit = {
         val os = System.getProperty("os.name").toLowerCase()
         if (os.contains("win")) {
@@ -18,30 +18,35 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
     }
 
 
-    def mergeFieldAndBlock(playerNumber: Int): Vector[Vector[Int]] = {
+    def mergeFieldAndBlock(): Vector[Vector[Int]] = {
         val field = controller.getField()
         val block = controller.getBlock()
+
         val merged = field.zipWithIndex.map { case (row, rowIndex) =>
-            row.zipWithIndex.map { case (cell, columnIndex) =>
-                val blockCell = block.find { case (x, y) =>
-                    x == columnIndex && y == rowIndex
-                }
-                blockCell.map(_ => playerNumber).getOrElse(cell)
+            row.zipWithIndex.map { case (fieldValue, columnIndex) =>
+            block.find { case (x, y) =>
+                x == columnIndex && y == rowIndex
+            }.map(_ => if (fieldValue != -1) 11 else 10).getOrElse(fieldValue)
             }
         }
+
         merged
     }
 
+
     def display(): Unit = {
-        println(mergeFieldAndBlock(6).map(rowToString).mkString("\n"))
+        println(mergeFieldAndBlock().map(rowToString).mkString("\n"))
     }
 
     def rowToString(row: Vector[Int]): String = {
         row.map {
-            case 0 => "# "
-            case 1 => "+ "
-            case 2 => "| "
-            case 6 => "X "
+            case -1 => "+ "
+            case 0 => "1 "
+            case 1 => "2 "
+            case 2 => "3 "
+            case 3 => "4 "
+            case 10 => "# "
+            case 11 => "? "
             case _ => "? "
         }.mkString
     }
@@ -70,13 +75,18 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
                 val input = scala.io.StdIn.readLine()
                 input match {
                     case "x" => continue = false
-                    case "w" => controller.move(0)
-                    case "d" => controller.move(3)
-                    case "s" => controller.move(2)
-                    case "a" => controller.move(1)
+                    case "w" => controller.move(2)
+                    case "d" => controller.move(1)
+                    case "s" => controller.move(0)
+                    case "a" => controller.move(3)
                     case "r" => controller.rotate()
                     case "m" => controller.mirror()
-                    case "e" => controller.setzen(2)
+                    case "e" => {
+                        if (controller.canSetzten()) {
+                            controller.setzen(1)
+                            controller.changePlayer()
+                        }
+                    }
                     case _ =>
                 }
             }

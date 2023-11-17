@@ -6,7 +6,7 @@ import blokus.models.HoverBlock
 import blokus.util.{Observable, Observer}
 
 class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) extends Observable[ControllerEvent] {
-
+    assert(playerAmount >= 1 && playerAmount < 5)
     var field = Field(width, height)
     var hoverBlock = HoverBlock(playerAmount, firstBlock)
 
@@ -41,7 +41,12 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
         notifyObservers(ControllerEvent.Update)
     }
 
+    def canSetzten(): Boolean = {
+        hoverBlock.canSetzen(field)
+    }
+
     def getRotation(): Int = hoverBlock.getRotation()
+
     def changePlayer(): Int = {
         val currentPlayer = hoverBlock.changePlayer()
         notifyObservers(ControllerEvent.PlayerChange(currentPlayer))
