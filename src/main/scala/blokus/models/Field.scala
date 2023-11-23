@@ -57,11 +57,23 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
         throw new IllegalArgumentException("Invalid position for block placement.")
         }
     }
+    def copy(): Field = {
+        val copiedVector = fieldVector.map(_.toVector).toVector
+        new Field(copiedVector)
+    }
 }
 
 object Field {
-    def apply(width: Int, height: Int): Field = {
+    private var instance: Option[Field] = None
+
+    def getInstance(width: Int, height: Int): Field = {
+        instance.getOrElse {
         val initialFieldVector = Vector.fill(height, width)(-1)
-        new Field(initialFieldVector)
+        val fieldInstance = new Field(initialFieldVector)
+        instance = Some(fieldInstance)
+        fieldInstance
+        }
     }
+
+    def apply(width: Int, height: Int): Field = new Field(Vector.fill(height, width)(-1))
 }

@@ -57,6 +57,7 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
         println("r: Block rotieren")
         println("m: Block spiegeln")
         println("s: Block platzieren")
+        println("u: Undo")
         println("x: Beenden")
 
         event match {
@@ -78,10 +79,11 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
                     case "a" => controller.move(3)
                     case "r" => controller.rotate()
                     case "m" => controller.mirror()
+                    case "u" => controller.undo()
                     case "e" => {
                         if (controller.canSetzten()) {
                             controller.setzen(1)
-                            controller.changePlayer()
+                            controller.nextPlayer()
                         } else {
                             println("Kann nicht an dieser Stelle Platziert werden!")
                         }

@@ -22,6 +22,12 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
         currentPlayer
     }
 
+    def setPlayer(newPlayer: Int): Int = {
+        val prevPlayer = currentPlayer
+        currentPlayer = newPlayer
+        prevPlayer
+    }
+
     def move(feld: Field, richtung: Int): Boolean = {
         if (canMove(feld, richtung)) {
             richtung match {
@@ -94,5 +100,16 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
         mirrored = false
         currentBlockTyp = newBlockTyp
         temp
+    }
+}
+
+object HoverBlock {
+    private var instance: HoverBlock = _
+
+    def getInstance(playerAmount: Int, firstBlock: Int): HoverBlock = {
+        if (instance == null) {
+        instance = new HoverBlock(playerAmount, firstBlock)
+        }
+        instance
     }
 }
