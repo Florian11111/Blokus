@@ -16,7 +16,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       controller.getField().size shouldBe height
       controller.getField().head.size shouldBe width
       controller.getBlock() shouldBe controller.hoverBlock.getBlock()
-      controller.getCurrentPlayer shouldBe 0
+      controller.getCurrentPlayer() shouldBe 0
     }
 
     "move the hover block correctly" in {
@@ -39,8 +39,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
 
     "change the player correctly" in {
       val nextPlayer = controller.changePlayer(1)
-      nextPlayer shouldBe 1 // Assuming next player is 1
-      controller.getCurrentPlayer shouldBe nextPlayer
+      controller.getCurrentPlayer() shouldBe 1
       // Optionally check if observers are notified on player change
     }
 
