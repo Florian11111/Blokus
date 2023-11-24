@@ -13,7 +13,7 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
     var hoverBlock = HoverBlock(playerAmount, firstBlock)
 
 
-    def setzen(newBlock: Int): Try[Unit] = execute(SetBlockCommand(this, field, getcurrendPlayer(), newBlock: Int))
+    def setzen(newBlock: Int): Try[Unit] = execute(SetBlockCommand(this, field, getcurrentPlayer(), newBlock: Int))
 
     def setzen_2(neuerTyp: Int): Unit = {
         field = hoverBlock.setzen(field, neuerTyp)
