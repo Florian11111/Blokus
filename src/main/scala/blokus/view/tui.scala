@@ -86,8 +86,8 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
         }
     }
 
+    // State Pattern
     private class DefaultState extends TuiState {
-
         override def printInfo(controller: Controller): Unit = {
             printf("Spieler %d\n", controller.getcurrentPlayer() + 1)
             println("\nSteuerung: ")

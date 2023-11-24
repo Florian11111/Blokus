@@ -30,7 +30,7 @@ object Block {
         baseForm10, baseForm11, baseForm12, baseForm13, baseForm14,
         baseForm15, baseForm16, baseForm17, baseForm18, baseForm19
     )
-    
+    // Strategy Pattern
     trait Strategy {
         def createBlock(baseForm: List[(Int, Int)], rotation: Int, mirrored: Boolean): List[(Int, Int)]
     }

@@ -103,6 +103,8 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
     }
 }
 
+
+// Singelton
 object HoverBlock {
     private var instance: HoverBlock = _
 
