@@ -31,18 +31,36 @@ object Block {
         baseForm15, baseForm16, baseForm17, baseForm18, baseForm19
     )
     
+    trait Strategy {
+        def createBlock(baseForm: List[(Int, Int)], rotation: Int, mirrored: Boolean): List[(Int, Int)]
+    }
 
-    def createBlock(blockType: Int, rotation: Int, mirrored: Boolean): List[(Int, Int)] = {
-        val baseForm = blockBaseForms(blockType)
+    object MirroredStrategy extends Strategy {
+        override def createBlock(baseForm: List[(Int, Int)], rotation: Int, mirrored: Boolean): List[(Int, Int)] = {
+        var block = baseForm.map { case (x, y) => (x, -y) }
 
-        var block = baseForm
-
-        if (mirrored) {
-            block = block.map { case (x, y) => (x, -y) }
-        }
         for (_ <- 0 until rotation) {
             block = block.map { case (x, y) => (-y, x) }
         }
         block
+        }
+    }
+
+    object NotMirroredStrategy extends Strategy {
+        override def createBlock(baseForm: List[(Int, Int)], rotation: Int, mirrored: Boolean): List[(Int, Int)] = {
+        var block = baseForm
+
+        for (_ <- 0 until rotation) {
+            block = block.map { case (x, y) => (-y, x) }
+        }
+        block
+        } 
+    }
+
+    def createBlock(blockType: Int, rotation: Int, mirrored: Boolean): List[(Int, Int)] = {
+        val baseForm = blockBaseForms(blockType)
+        val strategy: Strategy = if (mirrored) MirroredStrategy else NotMirroredStrategy
+
+        strategy.createBlock(baseForm, rotation, mirrored)
     }
 }

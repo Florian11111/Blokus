@@ -108,7 +108,7 @@ object HoverBlock {
 
     def getInstance(playerAmount: Int, firstBlock: Int): HoverBlock = {
         if (instance == null) {
-        instance = new HoverBlock(playerAmount, firstBlock)
+            instance = new HoverBlock(playerAmount, firstBlock)
         }
         instance
     }

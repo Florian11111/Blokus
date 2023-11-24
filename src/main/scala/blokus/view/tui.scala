@@ -3,6 +3,7 @@ package blokus.view
 import blokus.controller.Controller
 import blokus.controller.ControllerEvent
 import blokus.util.Observer
+import scala.util.Random
 
 trait TuiState {
     def handleInput(input: String, controller: Controller): Unit
@@ -110,7 +111,7 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
             case "u" => controller.undo()
             case "e" => {
             if (controller.canSetzten()) {
-                controller.setzen(1)
+                controller.setzen(8)
                 controller.nextPlayer()
             } else {
                 println("Kann nicht an dieser Stelle Platziert werden!")
