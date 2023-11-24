@@ -13,13 +13,14 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
     var hoverBlock = HoverBlock(playerAmount, firstBlock)
 
 
-    def setzen(newBlock: Int): Try[Unit] = execute(SetBlockCommand(this, field, hoverBlock.getCurrentPlayer, newBlock: Int))
+    def setzen(newBlock: Int): Try[Unit] = execute(SetBlockCommand(this, field, getcurrendPlayer(), newBlock: Int))
 
     def setzen_2(neuerTyp: Int): Unit = {
         field = hoverBlock.setzen(field, neuerTyp)
         notifyObservers(ControllerEvent.Update)
     }
 
+    def getcurrendPlayer(): Int = hoverBlock.getCurrentPlayer
     def getField(): Vector[Vector[Int]] = field.getFieldVector
 
     def getBlock(): List[(Int, Int)] = hoverBlock.getBlock()
