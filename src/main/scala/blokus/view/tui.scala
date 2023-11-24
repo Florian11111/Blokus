@@ -79,10 +79,9 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
                     case "a" => controller.move(3)
                     case "r" => controller.rotate()
                     case "m" => controller.mirror()
-                    case "u" => controller.undo()
                     case "e" => {
                         if (controller.canSetzten()) {
-                            controller.setzen(1)
+                            controller.setzen(5)
                             controller.nextPlayer()
                         } else {
                             println("Kann nicht an dieser Stelle Platziert werden!")
