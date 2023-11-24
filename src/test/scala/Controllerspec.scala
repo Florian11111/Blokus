@@ -64,11 +64,14 @@ class ControllerSpec extends AnyWordSpec with Matchers {
 
       // Check if undo and redo work correctly
       controllertest.undo() shouldBe a[scala.util.Success[_]]
+      controllertest.undo() shouldBe a[scala.util.Failure[_]]
       controllertest.getField() shouldBe initialField
 
       controllertest.redo() shouldBe a[scala.util.Success[_]]
       // Validate if the action has been redone correctly
       // Optionally check if observers are notified after undo and redo
+
+      controllertest.redo() shouldBe a[scala.util.Failure[_]]
     }
 
     "check if canSetzen() returns correct result" in {
