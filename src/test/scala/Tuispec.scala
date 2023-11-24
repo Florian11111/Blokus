@@ -56,7 +56,7 @@ class TuiSpec extends AnyWordSpec {
       }
 
       "correctly merge field and block with the player number" in {
-        controller.changePlayer()
+        controller.changePlayer(1)
         controller.move(2)
         controller.move(2)
         controller.setzen(5)
