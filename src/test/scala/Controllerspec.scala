@@ -38,7 +38,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
     }
 
     "change the player correctly" in {
-      val nextPlayer = controller.changePlayer()
+      val nextPlayer = controller.changePlayer(1)
       nextPlayer shouldBe 1 // Assuming next player is 1
       controller.getCurrentPlayer shouldBe nextPlayer
       // Optionally check if observers are notified on player change
