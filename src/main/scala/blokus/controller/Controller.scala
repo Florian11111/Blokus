@@ -20,7 +20,7 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
         notifyObservers(ControllerEvent.Update)
     }
 
-    def getcurrendPlayer(): Int = hoverBlock.getCurrentPlayer
+    def getcurrentPlayer(): Int = hoverBlock.getCurrentPlayer
     def getField(): Vector[Vector[Int]] = field.getFieldVector
 
     def getBlock(): List[(Int, Int)] = hoverBlock.getBlock()
@@ -53,7 +53,7 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
         hoverBlock.canSetzen(field)
     }
     def changeBlock(neuerBlock: Int): Int = {
-        val currentBlock = hoverBlock.currentBlockTyp 
+        val currentBlock = hoverBlock.currentBlockTyp
         hoverBlock.currentBlockTyp = neuerBlock
         currentBlock
     }
@@ -63,7 +63,7 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
         val currentPlayer = hoverBlock.changePlayer()
         notifyObservers(ControllerEvent.PlayerChange(currentPlayer))
         currentPlayer
-    } 
+    }
 
     def changePlayer(newPlayer: Int): Try[Unit] = {
         Try {
@@ -87,7 +87,7 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
                 Failure(new NoSuchElementException("Nothing to undo!"))
             }
             case head :: tail => {
-                head.undo() 
+                head.undo()
                 undoStack = tail
                 redoStack = head :: redoStack
                 Success(())
