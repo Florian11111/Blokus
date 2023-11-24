@@ -62,8 +62,8 @@ class TuiSpec extends AnyWordSpec {
         controller.setzen(5)
 
         val expectedMergedField = Vector(
-            Vector(-1, -1, 0, 0, 0),
-            Vector(-1, -1, 0, -1, -1),
+            Vector(-1, -1, 1, 1, 1),
+            Vector(-1, -1, 1, -1, -1),
             Vector(-1, 10, 10, 10, -1),
             Vector(-1, 10, -1, -1, -1),
             Vector(-1, -1, -1, -1, -1)
