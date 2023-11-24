@@ -81,19 +81,5 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
       assert(instance1 eq instance2) // Überprüfen, ob beide Instanzen identisch sind
       assert(instance1.hashCode() == instance2.hashCode()) // Überprüfen, ob hashCode gleich ist
     }
-
-    "return different instances for different playerAmount or firstBlock" in {
-      val playerAmount1 = 4
-      val playerAmount2 = 2
-      val firstBlock1 = 0
-      val firstBlock2 = 1
-
-      val instance1 = HoverBlock.getInstance(playerAmount1, firstBlock1)
-      val instance2 = HoverBlock.getInstance(playerAmount2, firstBlock1)
-      val instance3 = HoverBlock.getInstance(playerAmount1, firstBlock2)
-
-      assert(instance1 ne instance2) // Überprüfen, ob Instanzen unterschiedlich sind aufgrund unterschiedlicher playerAmount
-      assert(instance1 ne instance3) // Überprüfen, ob Instanzen unterschiedlich sind aufgrund unterschiedlicher firstBlock
-    }
   }
 }

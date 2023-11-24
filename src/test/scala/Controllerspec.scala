@@ -60,7 +60,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       val initialField = controllertest.getField()
 
       // Perform a move or action to create a command
-      controllertest.move(1) shouldBe true // Assuming this is a valid move
+      controllertest.setzen(1) shouldBe a[scala.util.Success[_]] // Assuming this is a valid move
 
       // Check if undo and redo work correctly
       controllertest.undo() shouldBe a[scala.util.Success[_]]
