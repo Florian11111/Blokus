@@ -12,15 +12,15 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
     var field = Field(width, height)
     var hoverBlock = HoverBlock(playerAmount, firstBlock)
 
-
-    def setzen(newBlock: Int): Try[Unit] = execute(SetBlockCommand(this, field, getcurrendPlayer(), newBlock: Int))
+    def setzen(newBlock: Int): Try[Unit] = execute(SetBlockCommand(this, field, getcurrentPlayer(), newBlock: Int))
 
     def setzen_2(neuerTyp: Int): Unit = {
         field = hoverBlock.setzen(field, neuerTyp)
         notifyObservers(ControllerEvent.Update)
     }
 
-    def getcurrendPlayer(): Int = hoverBlock.getCurrentPlayer
+    def getcurrentPlayer(): Int = hoverBlock.getCurrentPlayer
+
     def getField(): Vector[Vector[Int]] = field.getFieldVector
 
     def getBlock(): List[(Int, Int)] = hoverBlock.getBlock()
@@ -52,11 +52,13 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
     def canSetzten(): Boolean = {
         hoverBlock.canSetzen(field)
     }
+
     def changeBlock(neuerBlock: Int): Int = {
         val currentBlock = hoverBlock.currentBlockTyp 
         hoverBlock.currentBlockTyp = neuerBlock
         currentBlock
     }
+
     def getRotation(): Int = hoverBlock.getRotation()
 
     def nextPlayer(): Int = {
@@ -71,6 +73,9 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
             notifyObservers(ControllerEvent.PlayerChange(currentPlayer))
         }
     }
+
+    // TODO:
+    def isOver(): Boolean = false
 
     private var undoStack: List[Command] = List()
     private var redoStack: List[Command] = List()
