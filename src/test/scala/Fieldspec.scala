@@ -44,4 +44,15 @@ class FieldSpec extends AnyWordSpec with Matchers {
       // Additional assertions as needed
     }
   }
+
+  "creating a copy" should {
+    "produce an identical copy of the field" in {
+      val field = Field.getInstance(4, 5)
+      val copiedField = field.copy()
+
+      assert(field.width == copiedField.width)
+      assert(field.height == copiedField.height)
+      assert(field.getFieldVector == copiedField.getFieldVector)
+    }
+  }
 }
