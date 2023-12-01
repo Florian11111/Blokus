@@ -51,7 +51,7 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
     override def update(event: ControllerEvent): Unit = {
         clearTerminal()
         display()
-        print(controller.getBlock())
+        printf("Spieler: \n", controller.getCurrentPlayer() + 1)
         println("\nSteuerung:")
         println("w/a/s/d: Block bewegen")
         println("r: Block rotieren")
@@ -90,6 +90,7 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
                     }
                     case _ =>
                 }
+
             }
         } finally {
             // Reset any terminal configurations if needed
