@@ -51,7 +51,11 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
     override def update(event: ControllerEvent): Unit = {
         clearTerminal()
         display()
-        printf("Spieler: \n", controller.getCurrentPlayer() + 1)
+        //printf("bloecke: ", controller.getBlocks())
+        println("\nBloecke:")
+        print(controller.getBlocks())
+        println("\nPlayer:")
+        print(controller.getCurrentPlayer() + 1)
         println("\nSteuerung:")
         println("w/a/s/d: Block bewegen")
         println("r: Block rotieren")
@@ -80,8 +84,8 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
                     case "r" => controller.rotate()
                     case "m" => controller.mirror()
                     case "e" => {
-                        if (controller.canSetzten()) {
-                            controller.setzen(5)
+                        if (controller.canPlace()) {
+                            controller.place(5)
                             controller.nextPlayer()
                         } else {
                             println("Kann nicht an dieser Stelle Platziert werden!")

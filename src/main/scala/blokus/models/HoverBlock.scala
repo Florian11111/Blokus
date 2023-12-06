@@ -86,12 +86,12 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
         }
     }
 
-    def canSetzen(feld: Field): Boolean = {
+    def canPlace(feld: Field): Boolean = {
         feld.isValidPlace(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX, currentY, currentPlayer)
     }
 
     // Setzt den Block an der aktuellen Position
-    def setzen(feld: Field, newBlockTyp: Int): Field = {
+    def place(feld: Field, newBlockTyp: Int): Field = {
 
         val temp = feld.placeBlock(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX, currentY, currentPlayer)
         currentX = 2
@@ -105,7 +105,6 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
 
 object HoverBlock {
     private var instance: HoverBlock = _
-
     def getInstance(playerAmount: Int, firstBlock: Int): HoverBlock = {
         if (instance == null) {
         instance = new HoverBlock(playerAmount, firstBlock)

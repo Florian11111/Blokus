@@ -14,6 +14,18 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
     }
     }
 
+    def countPlayerNumbers(): Int = {
+        3
+    }
+
+    def isGameOver(block: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int): Boolean = {
+        if (!isValidPosition(block, x, y) || !block.forall { case (dx, dy) => fieldVector(y + dy)(x + dx) == -1 }) {
+            false
+        } else {
+            true
+        }
+    }
+    
     def isValidPlace(block: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int): Boolean = {
         if (!isValidPosition(block, x, y) || !block.forall { case (dx, dy) => fieldVector(y + dy)(x + dx) == -1 }) {
             false
@@ -22,7 +34,7 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
             true
         }
     }
-    
+
     // geht durch den block und speichert alle ecken in einer liste. dann wird der block nochmal durchgegannen
     // und alle direkten nachbarn gecheckt. => muss fals sein wenn es einen nachbarn vom selben block gibt der nicht
     // teil des blocks ist und löscht alle direkten nachbarn aus der liste. Dann wird die ecken liste überprüft ob es 
