@@ -14,9 +14,15 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
     var hoverBlock = HoverBlock(playerAmount, firstBlock)
     var blockInventory = new BlockInventory(playerAmount)
 
-    def place(newBlock: Int): Try[Unit] = execute(SetBlockCommand(this, field, getCurrentPlayer(), newBlock))
+    def getWidth(): Int = width
+    def getHeight(): Int = height
+
+    def place(newBlock: Int): Try[Unit] = {
+        execute(SetBlockCommand(this, blockInventory, field, getCurrentPlayer(), newBlock, hoverBlock.getCurrentBlock))
+    }
 
     def place_2(neuerTyp: Int): Unit = {
+        blockInventory.useBlock(getCurrentPlayer(), hoverBlock.getCurrentBlock)
         val randomBlock = blockInventory.getRandomBlock(getCurrentPlayer())
         randomBlock.foreach(block => {
         field = hoverBlock.place(field, block)
@@ -28,6 +34,7 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
 
     def changeCurrentBlock(newBlock: Int): Try[Unit] = Try {
         hoverBlock.currentBlockTyp = newBlock
+        hoverBlock.getOutOfCorner(height, width)
         notifyObservers(ControllerEvent.Update)
     }
 
@@ -36,6 +43,12 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
     def getField(): Vector[Vector[Int]] = field.getFieldVector
 
     def getBlock(): List[(Int, Int)] = hoverBlock.getBlock()
+
+    def setCurrentBlock(newBlock: Int): Int = {
+        val temp = hoverBlock.setCurrentBlock(newBlock)
+        notifyObservers(ControllerEvent.Update)
+        temp
+    } 
 
     def move(richtung: Int): Boolean = {
         val moved = hoverBlock.move(field, richtung)
@@ -126,9 +139,10 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
 		def redo(): Try[Unit]
 	}
 
-    private class SetBlockCommand(controller: Controller, newField: Field, player: Int, blockTyp: Int) extends Command {
+    private class SetBlockCommand(controller: Controller, blockInventory: BlockInventory, newField: Field, player: Int, blockTyp: Int, currentBlock: Int) extends Command {
         private val originalField = controller.field
-        private val originalBlocks = controller.blockInventory.getBlocks(player)
+        private val originalBlocksBefore = blockInventory.deepCopy
+        private val originalCurrentBlock = controller.hoverBlock.getCurrentBlock
 
         override def execute(): Try[Unit] = Try {
             controller.place_2(blockTyp)
@@ -137,14 +151,16 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
         override def undo(): Unit = {
             controller.field = originalField
             controller.changePlayer(player)
-            controller.blockInventory = new BlockInventory(player, initialCount = 0) // Setze die Blocks zurück auf 0
-            originalBlocks.foreach(block => controller.blockInventory.useBlock(player, block))
-            controller.changeBlock(blockTyp)
+            controller.blockInventory = originalBlocksBefore
+            controller.changeBlock(currentBlock)
+            controller.hoverBlock.setCurrentBlock(originalCurrentBlock)
             notifyObservers(ControllerEvent.Update)
         }
 
         override def redo(): Try[Unit] = execute()
     }
+
+
 }
 
 

@@ -81,6 +81,7 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
                     case "d" => controller.move(1)
                     case "s" => controller.move(0)
                     case "a" => controller.move(3)
+                    case "u" => controller.undo()
                     case "r" => controller.rotate()
                     case "m" => controller.mirror()
                     case "e" => {
@@ -100,3 +101,4 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
         }
     }
 }
+
