@@ -13,7 +13,6 @@ import scalafx.scene.shape.Rectangle
 import scalafx.application.Platform
 
 
-
 class Gui(controller: Controller, windowsWidth: Int, windowsHeight: Int) extends JFXApp3 with Observer[ControllerEvent] {
     controller.addObserver(this)
 
@@ -69,18 +68,22 @@ class Gui(controller: Controller, windowsWidth: Int, windowsHeight: Int) extends
                 buttonBox1.children.add(button2)
 
                 val button3 = new Button(s"Links")
+                styleButton(button3)
                 button3.onAction = _ => handleButtonAction(2)
                 buttonBox1.children.add(button3)
 
                 val button4 = new Button(s"Rechts")
+                styleButton(button4)
                 button4.onAction = _ => handleButtonAction(3)
                 buttonBox1.children.add(button4)
 
                 val button5 = new Button(s"Spiegeln")
+                styleButton(button5)
                 button5.onAction = _ => handleButtonAction(4)
                 buttonBox1.children.add(button5)
 
                 val button6 = new Button(s"Drehen")
+                styleButton(button6)
                 button6.onAction = _ => handleButtonAction(5)
                 buttonBox1.children.add(button6)
 
@@ -93,14 +96,17 @@ class Gui(controller: Controller, windowsWidth: Int, windowsHeight: Int) extends
                 }
 
                 val button7 = new Button(s"Setzten")
+                styleButton(button7)
                 button7.onAction = _ => handleButtonAction(6)
                 buttonBox2.children.add(button7)
 
                 val button8 = new Button(s"Undo")
+                styleButton(button8)
                 button8.onAction = _ => handleButtonAction(7)
                 buttonBox2.children.add(button8)
 
                 val button9 = new Button(s"BlockWechseln")
+                styleButton(button9)
                 button9.onAction = _ => handleButtonAction(8)
                 buttonBox2.children.add(button9)
 
