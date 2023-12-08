@@ -3,7 +3,7 @@ package blokus.models
 import scala.util.Random
 
 class BlockInventory(playerAmount: Int, initialCount: Int = 1) {
-    private var inventories: Array[Array[Int]] = Array.fill(playerAmount, 20)(initialCount)
+    private var inventories: Array[Array[Int]] = Array.fill(playerAmount, 21)(initialCount)
 
     def getBlocks(spielerNumber: Int): List[Int] = inventories(spielerNumber).toList
 

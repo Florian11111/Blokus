@@ -1,15 +1,55 @@
 import numpy as np
+'''
+(0, 0)
+(0, 0), (1, 0)
+(-1, 0), (0, 0), (1, 0)
+(0, 0), (1, 0), (0, 1)
+(-1, 0), (0, 0), (1, 0) (2, 0)
+(-1, 0), (-1, 1), (0, 0), (1, 0)
+(-1, 0), (0, 0), (1, 0), (0, 1)
+(0, 0), (1, 0), (0, 1), (1, 1)
+(0, 0), (-1, 0), (0, 1), (1, 1)
+(-2, 0), (-1, 0), (0, 0), (1, 0), (2, 0)
+(-1, 1), (-1, 0), (0, 0), (1, 0), (1, 1)
+(-1, 0), (0, 0), (1, 0), (0, 1), (1, 1)
+(-1, 0), (0, 0), (1, 0), (2, 0), (0, 1)
+(-2, 0), (-1, 0), (0, 0), (0, 1), (1, 1)
+(-2, 0), (-1, 0), (0, 0), (1, 0), (1, 1)
+(0, 0), (0, -1), (1, 0), (0, 1), (-1, 0)
+(-1, -1), (0, -1), (0, 0), (0, 1), (1, 1)
+(-1, -1), (0, -1), (0, 0), (1, 0), (1, 1)
+(-1, -1), (0, -1), (1, -1), (0, 0), (0, 1)
+(-1, -1), (0, -1), (0, 0), (1, 0), (0, 1)
+(-1, -1), (0, -1), (1, -1), (1, 0), (1, 1)
 
-x = np.zeros((10, 10), dtype=int)
-block_coordinates = [[5, 3], [5, 4], [6, 4]]
-ecken = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
+'''
 
-corners = []
-for block in block_coordinates:
-    for ecke in ecken:
-        corners.append()
+liste = [(-1, -1), (0, -1), (1, -1), (0, 0), (0, 1)]
+ecken = []
 
-for coord in block_coordinates:
-    x[coord[0]][coord[1]] = 1
+# Erstelle die Eckenliste
+for x, y in liste:
+    for xCord in [-1, 1]:
+        for yCord in [-1, 1]:
+            ecken.append((x + xCord, y + yCord))
 
-print(x)
+print(ecken, "\n")
+
+# Entferne die Koordinaten der Ecken aus der Liste
+ecken = list(set(ecken))  # Um Duplikate zu entfernen
+for coord in ecken:
+    if coord in liste:
+        ecken.remove(coord)
+
+print(ecken, "\n")
+
+# Entferne die Ecken, die direkt an einen Block angrenzen
+benachbarte_ecken = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+for x, y in liste:
+    for coord in benachbarte_ecken:
+        nachbar = x + coord[0], y + coord[1] 
+        if (nachbar) in ecken:
+            ecken.remove(nachbar)
+
+print(ecken)
+

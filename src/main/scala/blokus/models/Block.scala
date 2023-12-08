@@ -21,14 +21,23 @@ object Block {
     val baseForm15 = List((0, 0), (0, -1), (1, 0), (0, 1), (-1, 0))
     val baseForm16 = List((-1, -1), (0, -1), (0, 0), (0, 1), (1, 1))
     val baseForm17 = List((-1, -1), (0, -1), (0, 0), (1, 0), (1, 1))
-    val baseForm18 = List((-1, -1), (0, -1), (1, -1), (1, 0), (1, 1))
-    val baseForm19 = List((-1, -1), (0, -1), (1, -1), (0, 0), (0, 1))
+    val baseForm18 = List((-1, -1), (0, -1), (1, -1), (0, 0), (0, 1))
+    val baseForm19 = List((-1, -1), (0, -1), (0, 0), (1, 0), (0, 1))
+    val baseForm20 = List((-1, -1), (0, -1), (1, -1), (1, 0), (1, 1))
+
+    // alle ecken an die man platzieren darf
+    val cornersForm0 = List((-1, 1), (-1, -1), (1, 1), (1, -1))
+
+
+    //alle blöcke wo nichts sein darf
+    val edgesForm0 =  List((0, -1), (1, 0), (0, 1), (-1, 0))
 
     val blockBaseForms: Array[List[(Int, Int)]] = Array(
         baseForm0, baseForm1, baseForm2, baseForm3, baseForm4,
         baseForm5, baseForm6, baseForm7, baseForm8, baseForm9,
         baseForm10, baseForm11, baseForm12, baseForm13, baseForm14,
-        baseForm15, baseForm16, baseForm17, baseForm18, baseForm19
+        baseForm15, baseForm16, baseForm17, baseForm18, baseForm19, 
+        baseForm20
     )
     
 

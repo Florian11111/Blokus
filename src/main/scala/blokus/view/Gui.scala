@@ -167,7 +167,7 @@ class Gui(controller: Controller, windowsWidth: Int, windowsHeight: Int) extends
                 val inputText = numberTextField.text.value
                 if (inputText.matches("""\d+""")) {
                     val blockIndex = inputText.toInt
-                    if (blockIndex >= 0 && blockIndex <= 19) {
+                    if (blockIndex >= 0 && blockIndex <= 20) {
                         val blocks = controller.getBlocks()
                         if (blocks(blockIndex) > 0) {
                             controller.changeCurrentBlock(blockIndex)
@@ -175,7 +175,7 @@ class Gui(controller: Controller, windowsWidth: Int, windowsHeight: Int) extends
                             print("Block nicht mehr verfuegbar!")
                         }
                     } else {
-                        print("Wahle Block Zwischen 0 und 19!")
+                        print("Wahle Block Zwischen 0 und 20!")
                     }
                 } else {
                     print("Bitte gebe eine Zahl an!")
