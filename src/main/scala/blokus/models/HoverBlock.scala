@@ -15,7 +15,7 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
     def getCurrentPlayer: Int = currentPlayer
     def getCurrentBlock: Int = currentBlockTyp
     def getBlock(): List[(Int, Int)] = {
-        Block.createBlock(currentBlockTyp, rotation, mirrored).map { case (x, y) => (x + currentX, y + currentY) }
+        Block.createBlock(currentBlockTyp, rotation, mirrored).baseForm.map { case (x, y) => (x + currentX, y + currentY) }
     }
 
     def setCurrentBlock(newBlock: Int): Int = {
@@ -69,20 +69,24 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
     def canMove(feld: Field, richtung: Int): Boolean = {
     richtung match {
         case 0 => 
-            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX, currentY + 1)
+            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored).baseForm, currentX, currentY + 1)
         case 1 => 
-            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX + 1, currentY)
+            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored).baseForm, currentX + 1, currentY)
         case 2 => 
-            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX, currentY - 1)
+            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored).baseForm, currentX, currentY - 1)
         case 3 => 
-            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX - 1, currentY)
+            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored).baseForm, currentX - 1, currentY)
         case _ => 
             false
         }
     }
 
     def canRotate(feld: Field): Boolean = {
-        feld.isValidPosition(Block.createBlock(currentBlockTyp, (rotation + 1) % 4, mirrored), currentX, currentY)
+        feld.isValidPosition(
+            Block.createBlock(currentBlockTyp, (rotation + 1) % 4, mirrored).baseForm,
+            currentX,
+            currentY
+        )
     }
 
     // Dreht den aktuellen Block um 90 Grad im Uhrzeigersinn
@@ -96,7 +100,7 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
     }
 
     def canMirror(feld: Field): Boolean = {
-        feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, !mirrored), currentX, currentY)
+        feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, !mirrored).baseForm, currentX, currentY)
     }
 
     // Spiegelt den aktuellen Block horizontal
@@ -110,12 +114,14 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
     }
 
     def canPlace(feld: Field): Boolean = {
-        feld.isValidPlace(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX, currentY, currentPlayer)
+        val block = Block.createBlock(currentBlockTyp, rotation, mirrored)
+        feld.isLogicPlace(block.baseForm, block.edges, block.corners, currentX, currentY, currentPlayer)
     }
 
     // Setzt den Block an der aktuellen Position
     def place(feld: Field, newBlockTyp: Int): Field = {
-        val temp = feld.placeBlock(Block.createBlock(currentBlockTyp, rotation, mirrored), currentX, currentY, currentPlayer)
+        val block = Block.createBlock(currentBlockTyp, rotation, mirrored)
+        val temp = feld.placeBlock(block.baseForm, block.edges, block.corners, currentX, currentY, currentPlayer)
         currentX = 2
         currentY = 2
         rotation = 0

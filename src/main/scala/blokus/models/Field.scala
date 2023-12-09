@@ -22,13 +22,18 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
         }
     }
     
-    def isValidPlace(block: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int): Boolean = {
-        if (!isValidPosition(block, x, y) || !block.forall { case (dx, dy) => fieldVector(y + dy)(x + dx) == -1 }) {
-            false
+
+    def isLogicPlace(block: List[(Int, Int)], ecken: List[(Int, Int)], kanten: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int): Boolean = {
+        if (isValidPosition(block, x, y)) {
+            if (kanten.forall { case (dx, dy) => fieldVector(y + dy)(x + dx) != currentPlayer }) {
+                true
+            } else {
+                false
+            } 
         } else {
-            // isLogicPlace
-            true
+            false
         }
+        
     }
 
     // geht durch den block und speichert alle ecken in einer liste. dann wird der block nochmal durchgegannen
@@ -50,8 +55,8 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
     }*/
 
 
-    def placeBlock(block: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int): Field = {
-        if (isValidPlace(block, x, y, currentPlayer)) {
+    def placeBlock(block: List[(Int, Int)], ecken: List[(Int, Int)], kanten: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int): Field = {
+        if (isLogicPlace(block, ecken, kanten, x, y, currentPlayer)) {
         val updatedField = fieldVector.zipWithIndex.map { case (row, rowIndex) =>
             row.zipWithIndex.map { case (_, colIndex) =>
             if (block.contains((colIndex - x, rowIndex - y)))
