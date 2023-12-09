@@ -27,6 +27,7 @@ class BlockSpec extends AnyWordSpec with Matchers {
       Block.baseForm17 shouldBe List((-1, -1), (0, -1), (0, 0), (1, 0), (1, 1))
       Block.baseForm18 shouldBe List((-1, -1), (0, -1), (1, -1), (1, 0), (1, 1))
       Block.baseForm19 shouldBe List((-1, -1), (0, -1), (1, -1), (0, 0), (0, 1))
+      Block.baseForm20 shouldBe List((-1, -1), (0, -1), (1, -1), (1, 0), (1, 1))
     }
 
     "createBlock" should {
@@ -52,6 +53,7 @@ class BlockSpec extends AnyWordSpec with Matchers {
         Block.createBlock(17, 0, false) shouldEqual Block.baseForm17
         Block.createBlock(18, 0, false) shouldEqual Block.baseForm18
         Block.createBlock(19, 0, false) shouldEqual Block.baseForm19
+        Block.createBlock(20, 0, false) shouldEqual Block.baseForm20
       }
 
       "correctly apply rotation for a single block type" in {
@@ -75,6 +77,7 @@ class BlockSpec extends AnyWordSpec with Matchers {
         Block.createBlock(17, 0, false) shouldEqual Block.baseForm17
         Block.createBlock(18, 0, false) shouldEqual Block.baseForm18
         Block.createBlock(19, 0, false) shouldEqual Block.baseForm19
+        Block.createBlock(20, 0, false) shouldEqual Block.baseForm20
       }
 
       "correctly apply mirroring for a single block type" in {
@@ -98,6 +101,7 @@ class BlockSpec extends AnyWordSpec with Matchers {
         Block.createBlock(17, 0, true) shouldEqual Block.baseForm17.map { case (x, y) => (x, -y) }
         Block.createBlock(18, 0, true) shouldEqual Block.baseForm18.map { case (x, y) => (x, -y) }
         Block.createBlock(19, 0, true) shouldEqual Block.baseForm19.map { case (x, y) => (x, -y) }
+        Block.createBlock(20, 0, true) shouldEqual Block.baseForm20.map { case (x, y) => (x, -y) }
       }
 
       "apply both rotation and mirroring correctly for a single block type" in {
@@ -121,6 +125,7 @@ class BlockSpec extends AnyWordSpec with Matchers {
         Block.createBlock(17, 1, true) shouldEqual Block.baseForm17.map { case (x, y) => (y, x) }
         Block.createBlock(18, 1, true) shouldEqual Block.baseForm18.map { case (x, y) => (y, x) }
         Block.createBlock(19, 1, true) shouldEqual Block.baseForm19.map { case (x, y) => (y, x) }
+        Block.createBlock(20, 1, true) shouldEqual Block.baseForm20.map { case (x, y) => (y, x) }
       }
     }
   }
