@@ -51,7 +51,6 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
     override def update(event: ControllerEvent): Unit = {
         clearTerminal()
         display()
-        //printf("bloecke: ", controller.getBlocks())
         println("\nBloecke:")
         print(controller.getBlocks())
         println("\nPlayer:")
@@ -63,11 +62,11 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
         println("s: Block platzieren")
         println("u: Undo")
         println("x: Beenden")
-
         event match {
             case ControllerEvent.Update =>
             case ControllerEvent.PlayerChange(player) =>
         }
+        
     }
 
     def inputLoop(): Unit = {
@@ -86,7 +85,7 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
                     case "m" => controller.mirror()
                     case "e" => {
                         if (controller.canPlace()) {
-                            controller.place(5)
+                            controller.placeBlock(5)
                             controller.nextPlayer()
                         } else {
                             println("Kann nicht an dieser Stelle Platziert werden!")

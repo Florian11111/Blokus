@@ -113,17 +113,23 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
         }
     }
 
-    def canPlace(feld: Field): Boolean = {
+    def canPlace(feld: Field, firstPlace: Boolean): Boolean = {
         val block = Block.createBlock(currentBlockTyp, rotation, mirrored)
-        feld.isLogicPlace(block.baseForm, block.edges, block.corners, currentX, currentY, currentPlayer)
+        if (firstPlace) {
+            feld.isLogicFirstPlace(block.baseForm, currentX, currentY)
+        } else {
+            feld.isLogicPlace(block.baseForm, block.corners, block.edges, currentX, currentY, currentPlayer)
+        }
     }
 
     // Setzt den Block an der aktuellen Position
-    def place(feld: Field, newBlockTyp: Int): Field = {
+    def place(field: Field, newBlockTyp: Int, firstPlace: Boolean): Field = {
+        
         val block = Block.createBlock(currentBlockTyp, rotation, mirrored)
-        val temp = feld.placeBlock(block.baseForm, block.edges, block.corners, currentX, currentY, currentPlayer)
-        currentX = 2
-        currentY = 2
+        val temp = field.placeBlock(block.baseForm, block.corners, block.edges, currentX, currentY, currentPlayer, firstPlace)
+        
+        currentX = (field.width / 2) - 1
+        currentY = (field.height / 2) - 1
         rotation = 0
         mirrored = false
         currentBlockTyp = newBlockTyp

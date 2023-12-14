@@ -7,7 +7,7 @@ import blokus.util.{Observable, Observer}
 
 import scala.util.{Try, Success, Failure}
 
-class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) extends Observable[ControllerEvent] {
+class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) extends Observable[ControllerEvent] with GameController {
     assert(playerAmount >= 1 && playerAmount < 5)
 
     var field = Field(width, height)
@@ -17,16 +17,17 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
     def getWidth(): Int = width
     def getHeight(): Int = height
 
-    def place(newBlock: Int): Try[Unit] = {
+    def placeBlock(newBlock: Int): Try[Unit] = {
         execute(SetBlockCommand(this, blockInventory, field, getCurrentPlayer(), newBlock, hoverBlock.getCurrentBlock))
     }
 
     def place_2(neuerTyp: Int): Unit = {
+        val firstPlace = blockInventory.firstBlock(getCurrentPlayer())
         blockInventory.useBlock(getCurrentPlayer(), hoverBlock.getCurrentBlock)
         val randomBlock = blockInventory.getRandomBlock(getCurrentPlayer())
         randomBlock.foreach(block => {
-        field = hoverBlock.place(field, block)
-        notifyObservers(ControllerEvent.Update)
+            field = hoverBlock.place(field, block, firstPlace)
+            notifyObservers(ControllerEvent.Update)
         })
     }
 
@@ -38,8 +39,8 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
         notifyObservers(ControllerEvent.Update)
     }
 
-
     def getCurrentPlayer(): Int = hoverBlock.getCurrentPlayer
+
     def getField(): Vector[Vector[Int]] = field.getFieldVector
 
     def getBlock(): List[(Int, Int)] = hoverBlock.getBlock()
@@ -75,7 +76,7 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
     }
 
     def canPlace(): Boolean = {
-        hoverBlock.canPlace(field)
+        hoverBlock.canPlace(field, blockInventory.firstBlock(getCurrentPlayer()))
     }
 
     def changeBlock(neuerBlock: Int): Int = {
@@ -159,10 +160,7 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
 
         override def redo(): Try[Unit] = execute()
     }
-
-
 }
-
 
 sealed trait ControllerEvent
 object ControllerEvent {

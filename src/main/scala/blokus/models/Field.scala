@@ -14,26 +14,43 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
     }
     }
 
+    private def isInBounds(x: Int, y: Int): Boolean = x >= 0 && x < width && y >= 0 && y < height
+
     def isGameOver(block: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int): Boolean = {
-        if (!isValidPosition(block, x, y) || !block.forall { case (dx, dy) => fieldVector(y + dy)(x + dx) == -1 }) {
-            false
-        } else {
-            true
-        }
+        false
     }
     
+    def isCorner(x: Int, y: Int): Boolean = {
+        (x == 0 && y == 0) || (x == width - 1 && y == 0) || (x == 0 && y == height - 1) || (x == width - 1 && y == height - 1)
+    }
 
-    def isLogicPlace(block: List[(Int, Int)], ecken: List[(Int, Int)], kanten: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int): Boolean = {
+    def isLogicFirstPlace(block: List[(Int, Int)], x: Int, y: Int): Boolean = {
+        isValidPosition(block, x, y) && 
+        block.forall {case (dx, dy) => isInBounds(x + dx, y + dy) && fieldVector(y + dy)(x + dx) == -1} &&
+        block.exists {case (dx, dy) => isInBounds(x + dx, y + dy) && isCorner(x + dx, y + dy)
+    }
+
+    }
+
+    def isLogicPlace(
+        block: List[(Int, Int)],
+        ecken: List[(Int, Int)],
+        kanten: List[(Int, Int)],
+        x: Int,
+        y: Int,
+        currentPlayer: Int
+    ): Boolean = {
         if (isValidPosition(block, x, y)) {
-            if (kanten.forall { case (dx, dy) => fieldVector(y + dy)(x + dx) != currentPlayer }) {
-                true
+            // Überprüfe, ob keine Kante vom Gegner benachbart ist
+            if (kanten.forall { case (dx, dy) => isInBounds(x + dx, y + dy) && fieldVector(y + dy)(x + dx) != currentPlayer }) {
+                // Überprüfe, ob an mindestens einer Ecke ein Block vom eigenen Spieler ist
+                ecken.exists { case (dx, dy) => isInBounds(x + dx, y + dy) && fieldVector(y + dy)(x + dx) == currentPlayer }
             } else {
                 false
-            } 
-        } else {
+            }
+            } else {
             false
         }
-        
     }
 
     // geht durch den block und speichert alle ecken in einer liste. dann wird der block nochmal durchgegannen
@@ -55,19 +72,19 @@ class Field(private val fieldVector: Vector[Vector[Int]]) {
     }*/
 
 
-    def placeBlock(block: List[(Int, Int)], ecken: List[(Int, Int)], kanten: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int): Field = {
-        if (isLogicPlace(block, ecken, kanten, x, y, currentPlayer)) {
-        val updatedField = fieldVector.zipWithIndex.map { case (row, rowIndex) =>
-            row.zipWithIndex.map { case (_, colIndex) =>
-            if (block.contains((colIndex - x, rowIndex - y)))
-                currentPlayer
-            else
-                fieldVector(rowIndex)(colIndex)
+    def placeBlock(block: List[(Int, Int)], ecken: List[(Int, Int)], kanten: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int, firstPlace: Boolean): Field = {
+        if (isLogicPlace(block, ecken, kanten, x, y, currentPlayer) || (firstPlace && isLogicFirstPlace(block, x, y))) {
+            val updatedField = fieldVector.zipWithIndex.map { case (row, rowIndex) =>
+                row.zipWithIndex.map { case (_, colIndex) =>
+                if (block.contains((colIndex - x, rowIndex - y)))
+                    currentPlayer
+                else
+                    fieldVector(rowIndex)(colIndex)
+                }
             }
-        }
-        new Field(updatedField)
+            new Field(updatedField)
         } else {
-        throw new IllegalArgumentException("Invalid position for block placement.")
+            throw new IllegalArgumentException("Invalid position for block placement.")
         }
     }
     def copy(): Field = {
