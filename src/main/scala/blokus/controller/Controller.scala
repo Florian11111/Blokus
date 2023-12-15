@@ -45,12 +45,6 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
 
     def getBlock(): List[(Int, Int)] = hoverBlock.getBlock()
 
-    def setCurrentBlock(newBlock: Int): Int = {
-        val temp = hoverBlock.setCurrentBlock(newBlock)
-        notifyObservers(ControllerEvent.Update)
-        temp
-    } 
-
     def move(richtung: Int): Boolean = {
         val moved = hoverBlock.move(field, richtung)
         if (moved) {
@@ -84,6 +78,7 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
         hoverBlock.currentBlockTyp = neuerBlock
         currentBlock
     }
+
     def getRotation(): Int = hoverBlock.getRotation()
 
     def nextPlayer(): Int = {

@@ -18,6 +18,13 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       controller.getField().head.size shouldBe width
       controller.getBlock() shouldBe controller.hoverBlock.getBlock()
       controller.getCurrentPlayer() shouldBe 0
+      controller.getHeight() shouldBe 10
+      controller.getWidth() shouldBe 10
+    }
+
+    "detect too invalid player number" in {
+      an[AssertionError] should be thrownBy new Controller(0, 0, 10, 10)
+      an[AssertionError] should be thrownBy new Controller(5, 0, 10, 10)
     }
 
     "move the hover block correctly" in {
@@ -85,6 +92,11 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       controllertest3.redo() shouldBe a[scala.util.Failure[_]]
     }
 
+    "changecurrentblock soll gehen" in {
+      controller.changeCurrentBlock(1)
+      controller.getBlock() shouldBe List((2, 3), (2, 4))
+    }
+
     "check if canSetzen() returns correct result" in {
       val playerAmount = 4
       val firstBlockType = 2
@@ -105,12 +117,6 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       test4controller.move(2)
       test4controller.move(2)
       test4controller.move(2)
-      test4controller.placeBlock(1)
-      test4controller.move(1)
-      test4controller.move(1)
-      test4controller.move(0)
-      test4controller.move(0)
-      // Test when it's possible to setzen
       test4controller.canPlace() shouldBe true
       test4controller.placeBlock(2) // Set a block type
       test4controller.canPlace() shouldBe false

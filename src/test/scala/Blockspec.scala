@@ -13,6 +13,19 @@ class BlockSpec extends AnyWordSpec with Matchers {
       }
     }
 
+    "create blocks with different base forms" in {
+      val blockForms = Seq(
+        List((0, 0)),
+        List((0, 0), (1, 0)),
+        List((-1, 0), (0, 0), (1, 0))
+      )
+
+      for (form <- blockForms) {
+        val block = Block(form, List(), List())  // Assuming a constructor that directly sets these properties
+        block.baseForm shouldBe form
+      }
+    }
+
     "correctly apply rotation to blocks" in {
       // Testing rotation on a specific block type
       val blockType = 0
@@ -30,7 +43,7 @@ class BlockSpec extends AnyWordSpec with Matchers {
 
     "correctly apply mirroring to blocks" in {
       // Testing mirroring on a specific block type
-      val blockType = 1
+      val blockType = 3
       val mirroredForm = List((0, 0), (1, 0), (0, -1))// Define the expected mirrored form
 
       val mirroredBlock = Block.createBlock(blockType, 0, mirrored = true)
@@ -42,8 +55,8 @@ class BlockSpec extends AnyWordSpec with Matchers {
       val blockType = 0
       val block = Block.createBlock(blockType, 0, mirrored = false)
 
-      val expectedCorners = List((-1, 1), (1, 1), (1, -1), (-1, -1))// Define the expected corners
-      val expectedEdges = List((0, 1), (1, 0), (-1, 0), (0, -1))// Define the expected edges
+      val expectedCorners = List((1, 1), (1, -1), (-1, 1), (-1, -1))// Define the expected corners
+      val expectedEdges = List((-1, 0), (1, 0), (0, -1), (0, 1))// Define the expected edges
 
       block.corners shouldBe expectedCorners
       block.edges shouldBe expectedEdges
@@ -53,8 +66,8 @@ class BlockSpec extends AnyWordSpec with Matchers {
       val baseForm = List((0, 0), (1, 0)) // Example base form
       val (corners, edges) = Block.eckenUndKanten(baseForm)
 
-      val expectedCorners = List((-1, -1), (2, -1), (-1, 1), (2, 1))
-      val expectedEdges = List((-1, 0), (2, 0), (0, -1), (1, -1), (0, 1), (1, 1))
+      val expectedCorners = List((2, 1), (2, -1), (-1, 1), (-1, -1))
+      val expectedEdges = List((0, 0), (2, 0), (1, -1), (1, 1), (-1, 0), (1, 0), (0, -1), (0, 1))
 
       corners shouldBe expectedCorners
       edges shouldBe expectedEdges

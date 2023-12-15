@@ -54,28 +54,46 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
 
     "not rotate the block when not possible" in {
       // Set up a scenario where rotation is not possible
-      hoverBlock.currentX = testField.width - 1
-      hoverBlock.currentY = testField.height - 1
-      hoverBlock.rotate(testField) shouldBe false
+      hoverBlock.setCurrentBlock(3)
+      hoverBlock.currentX = 0
+      hoverBlock.currentY = testField.height
+      hoverBlock.canRotate(testField) shouldBe false
     }
 
     "mirror the block when possible" in {
+      hoverBlock.setCurrentBlock(1)
+      hoverBlock.currentX = 4
+      hoverBlock.currentY = 4
       val initialMirroredState = hoverBlock.mirrored
       hoverBlock.mirror(testField) shouldBe true
       hoverBlock.mirrored should not be initialMirroredState
     }
 
     "not mirror the block when not possible" in {
-      hoverBlock.currentX = 7
-      hoverBlock.currentY = 8
+      hoverBlock.setCurrentBlock(3)
+      hoverBlock.currentX = 0
+      hoverBlock.currentY = testField.height
       hoverBlock.mirror(testField) shouldBe false
     }
 
     "place the block correctly on the first place" in {
-      val newField = hoverBlock.place(testField, 2, firstPlace = true)
-      newField shouldBe a[Field]
-      // Assert the state of the field after placement
-      // This requires specific knowledge of the field's state and block positioning
+      hoverBlock.setCurrentBlock(0)
+      hoverBlock.currentX = 0
+      hoverBlock.currentY = 0
+      val newField = hoverBlock.place(testField, 0, firstPlace = true)
+      val expectedfield = Vector(
+          Vector(0, -1, -1, -1, -1, -1, -1, -1, -1, -1),
+          Vector(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1),
+          Vector(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1),
+          Vector(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1),
+          Vector(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1),
+          Vector(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1),
+          Vector(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1),
+          Vector(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1),
+          Vector(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1),
+          Vector(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
+        )
+      newField.getFieldVector shouldBe expectedfield
     }
 
     "not place the block when it's not a valid placement" in {
@@ -87,13 +105,26 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
       // an[Exception] should be thrownBy hoverBlock.place(testField, 2, firstPlace = false)
     }
 
+    "move the block inside the field from the left edge" in {
+      hoverBlock.currentX = 0
+      hoverBlock.currentY = 10
+
+      hoverBlock.getOutOfCorner(testField.height, testField.width) shouldBe true
+      hoverBlock.currentX shouldBe 2
+      hoverBlock.currentY shouldBe 10
+    }
+
     "reset its position after placing a block" in {
-      hoverBlock.place(testField, 2, firstPlace = true)
+      hoverBlock.setPlayer(1)
+      hoverBlock.setCurrentBlock(0)
+      hoverBlock.currentX = 0
+      hoverBlock.currentY = 0
+      hoverBlock.place(testField, 1, firstPlace = true)
       hoverBlock.getX() shouldBe (testField.width / 2) - 1
       hoverBlock.getY() shouldBe (testField.height / 2) - 1
       hoverBlock.getRotation() shouldBe 0
       hoverBlock.mirrored shouldBe false
-      hoverBlock.getCurrentBlock shouldBe 2
+      hoverBlock.getCurrentBlock shouldBe 1
     }
 
     "handle singleton pattern correctly" in {

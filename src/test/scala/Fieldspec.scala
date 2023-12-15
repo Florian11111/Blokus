@@ -40,9 +40,9 @@ class FieldSpec extends AnyWordSpec with Matchers {
     }
 
     "handle regular placement logic" in {
-      val field = Field(5, 5).placeBlock(List((0, 0)), List((1, 1)), List(), 0, 0, 1, firstPlace = true)
-      field.isLogicPlace(List((1, 1)), List((1, 1)), List(), 1, 1, 1) shouldBe true
-      field.isLogicPlace(List((1, 1)), List((1, 1)), List(), 2, 2, 1) shouldBe false
+      val field = Field(5, 5).placeBlock(List((0, 0)), List((1, 1)), List((1,0), (0,1)), 0, 0, 1, firstPlace = true)
+      field.isLogicPlace(List((0, 0)), List((1, 1), (-1, -1)), List((1,0), (0,1), (-1, 0), (0, -1)), 1, 1, 1) shouldBe true
+      field.isLogicPlace(List((0, 0)), List((1, 1)), List((1,0), (0,1)), 2, 2, 1) shouldBe false
     }
 
     "place a block correctly" in {

@@ -60,5 +60,10 @@ class BlockInventorySpec extends AnyWordSpec with Matchers with BeforeAndAfter {
       an[IllegalArgumentException] should be thrownBy blockInventory.getRandomBlock(-1)
       an[IllegalArgumentException] should be thrownBy blockInventory.getBlocks(-1)
     }
+
+    "handle empty inventory" in {
+      blockInventory.inventories = Array.fill(2 + 1, 0)(0)
+      an[RuntimeException] should be thrownBy blockInventory.getRandomBlock(0)
+    }
   }
 }
