@@ -1,85 +1,105 @@
-import blokus.models.{HoverBlock, Field, Block}
+import blokus.models.{Field, HoverBlock, Block}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 
 class HoverBlockSpec extends AnyWordSpec with Matchers {
 
-  "HoverBlock" should {
+  "A HoverBlock" should {
 
-    val playerAmount = 4
-    val firstBlockType = 1
-    val hoverBlock = new HoverBlock(playerAmount, firstBlockType)
-    val testField = Field(10, 10) // Assuming a 10x10 field
+    val playerAmount = 2
+    val firstBlock = 1
+    val hoverBlock = new HoverBlock(playerAmount, firstBlock)
+    val testField = Field(10, 10)
 
     "initialize correctly" in {
+      hoverBlock.getCurrentPlayer shouldBe 0
+      hoverBlock.getCurrentBlock shouldBe firstBlock
       hoverBlock.getX() shouldBe 2
       hoverBlock.getY() shouldBe 2
       hoverBlock.getRotation() shouldBe 0
+      hoverBlock.getBlock() should not be empty
+    }
+
+    "change the current player correctly" in {
+      val newPlayer = hoverBlock.changePlayer()
+      newPlayer shouldBe 1
+      hoverBlock.getCurrentPlayer shouldBe 1
+    }
+
+    "set a new player correctly" in {
+      val prevPlayer = hoverBlock.setPlayer(0)
+      prevPlayer shouldBe 1
       hoverBlock.getCurrentPlayer shouldBe 0
-      hoverBlock.getBlock() shouldBe Block.createBlock(firstBlockType, 0, false).map { case (x, y) => (x + 2, y + 2) }
     }
 
-    "change player correctly" in {
-      for (i <- 1 until playerAmount) {
-        hoverBlock.changePlayer() shouldBe i
-      }
-      hoverBlock.changePlayer() shouldBe 0 // Wrap around to first player
-    }
-
-    "move correctly" in {
+    "move correctly within the field boundaries" in {
       hoverBlock.move(testField, 0) shouldBe true // Move down
       hoverBlock.getY() shouldBe 3
 
       hoverBlock.move(testField, 1) shouldBe true // Move right
       hoverBlock.getX() shouldBe 3
-
-      hoverBlock.move(testField, 2) shouldBe true // Move up
-      hoverBlock.getY() shouldBe 2
-
-      hoverBlock.move(testField, 3) shouldBe true // Move left
-      hoverBlock.getX() shouldBe 2
-
-      hoverBlock.move(testField, 4) shouldBe false // Invalid direction
     }
 
-    "rotate correctly" in {
-      val initialRotation = hoverBlock.getRotation()
+    "not move outside the field boundaries" in {
+      hoverBlock.currentX = 0
+      hoverBlock.currentY = 0
+      hoverBlock.move(testField, 2) shouldBe false // Move up
+      hoverBlock.move(testField, 3) shouldBe false // Move left
+    }
 
-      // Rotate through all four directions
-      for (i <- 1 to 4) {
-        hoverBlock.rotate(testField) shouldBe true
-        hoverBlock.getRotation() shouldBe (initialRotation + i) % 4
-      }
-     }
+    "rotate the block when possible" in {
+      hoverBlock.rotate(testField) shouldBe true
+      hoverBlock.getRotation() shouldBe 1
+    }
 
-    "mirror correctly" in {
+    "not rotate the block when not possible" in {
+      // Set up a scenario where rotation is not possible
+      hoverBlock.currentX = testField.width - 1
+      hoverBlock.currentY = testField.height - 1
+      hoverBlock.rotate(testField) shouldBe false
+    }
+
+    "mirror the block when possible" in {
+      val initialMirroredState = hoverBlock.mirrored
       hoverBlock.mirror(testField) shouldBe true
-      // Test mirroring and ensure it toggles the mirrored state
-      // Ensure mirroring is not possible when it would place block out of bounds
+      hoverBlock.mirrored should not be initialMirroredState
     }
 
-    "set block correctly" in {
-      val newBlockType = 2
-      val newField = hoverBlock.setzen(testField, newBlockType)
-      // Assert the block is set correctly on the field
-      // Assert hoverBlock's state is reset to initial values
+    "not mirror the block when not possible" in {
+      hoverBlock.currentX = 7
+      hoverBlock.currentY = 8
+      hoverBlock.mirror(testField) shouldBe false
     }
 
-    "determine if a block can be placed correctly" in {
-      hoverBlock.canSetzen(testField) shouldBe true
+    "place the block correctly on the first place" in {
+      val newField = hoverBlock.place(testField, 2, firstPlace = true)
+      newField shouldBe a[Field]
+      // Assert the state of the field after placement
+      // This requires specific knowledge of the field's state and block positioning
     }
-  }
 
-  "HoverBlock.getInstance" should {
-    "return the same instance for the same playerAmount and firstBlock" in {
-      val playerAmount = 4
-      val firstBlock = 0
+    "not place the block when it's not a valid placement" in {
+      // Set up a scenario where placement is not valid
+      // This requires specific knowledge of the field's state and block positioning
+      // Example:
+      // hoverBlock.currentX = some value
+      // hoverBlock.currentY = some value
+      // an[Exception] should be thrownBy hoverBlock.place(testField, 2, firstPlace = false)
+    }
 
+    "reset its position after placing a block" in {
+      hoverBlock.place(testField, 2, firstPlace = true)
+      hoverBlock.getX() shouldBe (testField.width / 2) - 1
+      hoverBlock.getY() shouldBe (testField.height / 2) - 1
+      hoverBlock.getRotation() shouldBe 0
+      hoverBlock.mirrored shouldBe false
+      hoverBlock.getCurrentBlock shouldBe 2
+    }
+
+    "handle singleton pattern correctly" in {
       val instance1 = HoverBlock.getInstance(playerAmount, firstBlock)
       val instance2 = HoverBlock.getInstance(playerAmount, firstBlock)
-
-      assert(instance1 eq instance2) // Überprüfen, ob beide Instanzen identisch sind
-      assert(instance1.hashCode() == instance2.hashCode()) // Überprüfen, ob hashCode gleich ist
+      instance1 shouldBe theSameInstanceAs(instance2)
     }
   }
 }

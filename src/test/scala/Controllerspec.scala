@@ -46,7 +46,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
 
     "set a new block type correctly" in {
       val newBlockType = 2
-      controller.setzen(newBlockType)
+      controller.placeBlock(newBlockType)
       controller.getBlock() shouldBe controller.hoverBlock.getBlock()
       // Optionally check if observers are notified after setting a new block
     }
@@ -56,22 +56,33 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       val firstBlockType = 1
       val width = 10
       val height = 10
-      val controllertest = new Controller(playerAmount, firstBlockType, width, height)
-      val initialField = controllertest.getField()
+      val controllertest3 = new Controller(playerAmount, firstBlockType, width, height)
+      val initialField3 = controllertest3.getField()
 
       // Perform a move or action to create a command
-      controllertest.setzen(1) shouldBe a[scala.util.Success[_]] // Assuming this is a valid move
+      controllertest3.move(3)
+      controllertest3.move(3)
+      controllertest3.move(3)
+      controllertest3.move(3)
+      controllertest3.move(3)
+      controllertest3.move(2)
+      controllertest3.move(2)
+      controllertest3.move(2)
+      controllertest3.move(2)
+      controllertest3.move(2)
+      controllertest3.move(2)
+      controllertest3.placeBlock(1) shouldBe a[scala.util.Success[_]] // Assuming this is a valid move
 
       // Check if undo and redo work correctly
-      controllertest.undo() shouldBe a[scala.util.Success[_]]
-      controllertest.undo() shouldBe a[scala.util.Failure[_]]
-      controllertest.getField() shouldBe initialField
+      controllertest3.undo() shouldBe a[scala.util.Success[_]]
+      controllertest3.undo() shouldBe a[scala.util.Failure[_]]
+      controllertest3.getField() shouldBe initialField3
 
-      controllertest.redo() shouldBe a[scala.util.Success[_]]
+      controllertest3.redo() shouldBe a[scala.util.Success[_]]
       // Validate if the action has been redone correctly
       // Optionally check if observers are notified after undo and redo
 
-      controllertest.redo() shouldBe a[scala.util.Failure[_]]
+      controllertest3.redo() shouldBe a[scala.util.Failure[_]]
     }
 
     "check if canSetzen() returns correct result" in {
@@ -83,11 +94,26 @@ class ControllerSpec extends AnyWordSpec with Matchers {
 
       // Assuming your logic for "canSetzen" depends on the state of hoverBlock and field,
       // you should configure the state to test different cases
-
+      test4controller.move(3)
+      test4controller.move(3)
+      test4controller.move(3)
+      test4controller.move(3)
+      test4controller.move(3)
+      test4controller.move(2)
+      test4controller.move(2)
+      test4controller.move(2)
+      test4controller.move(2)
+      test4controller.move(2)
+      test4controller.move(2)
+      test4controller.placeBlock(1)
+      test4controller.move(1)
+      test4controller.move(1)
+      test4controller.move(0)
+      test4controller.move(0)
       // Test when it's possible to setzen
-      test4controller.canSetzten() shouldBe true
-      test4controller.setzen(2) // Set a block type
-      test4controller.canSetzten() shouldBe false
+      test4controller.canPlace() shouldBe true
+      test4controller.placeBlock(2) // Set a block type
+      test4controller.canPlace() shouldBe false
 
       // Test when it's not possible to setzen
       // For example, when the hoverBlock is in an invalid position

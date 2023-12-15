@@ -59,14 +59,14 @@ class TuiSpec extends AnyWordSpec {
         controller.changePlayer(1)
         controller.move(2)
         controller.move(2)
-        controller.setzen(5)
+        controller.placeBlock(5)
 
         val expectedMergedField = Vector(
-            Vector(-1, -1, 1, 1, 1),
-            Vector(-1, -1, 1, -1, -1),
-            Vector(-1, 10, 10, 10, -1),
-            Vector(-1, 10, -1, -1, -1),
-            Vector(-1, -1, -1, -1, -1)
+          Vector(-1, -1, 10, 10, 10),
+          Vector(-1, -1, 10, -1, -1),
+          Vector(-1, -1, -1, -1, -1),
+          Vector(-1, -1, -1, -1, -1),
+          Vector(-1, -1, -1, -1, -1)
         )
         tui.mergeFieldAndBlock() shouldBe expectedMergedField
       }

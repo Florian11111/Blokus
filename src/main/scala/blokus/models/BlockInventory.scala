@@ -3,19 +3,29 @@ package blokus.models
 import scala.util.Random
 
 class BlockInventory(playerAmount: Int, initialCount: Int = 1) {
-    private var inventories: Array[Array[Int]] = Array.fill(playerAmount, 21)(initialCount)
+    private var inventories: Array[Array[Int]] = Array.fill(playerAmount + 1, 21)(initialCount)
     private var isFirstBlock: Array[Boolean] = Array.fill(playerAmount)(true)
 
-    def getBlocks(spielerNumber: Int): List[Int] = inventories(spielerNumber).toList
+     def getBlocks(spielerNumber: Int): List[Int] = {
+        if (spielerNumber >= 0 && spielerNumber < inventories.length) {
+            inventories(spielerNumber).toList
+        } else {
+            throw new IllegalArgumentException(s"Invalid player number: $spielerNumber")
+        }
+    }
 
     def getRandomBlock(spielerNumber: Int): Option[Int] = {
+        if (spielerNumber >= 0 && spielerNumber < inventories.length) {
         val availableBlocks = getAvailableBlocks(spielerNumber)
         if (availableBlocks.nonEmpty) {
             val randomIndex = Random.nextInt(availableBlocks.length)
             val randomBlock = availableBlocks(randomIndex)
             Some(randomBlock)
         } else {
-            Some(-1)
+            throw new RuntimeException(s"No Block is available for Player $spielerNumber.")
+        }
+        } else {
+            throw new IllegalArgumentException(s"Invalid player number: $spielerNumber")
         }
     }
 
@@ -24,7 +34,11 @@ class BlockInventory(playerAmount: Int, initialCount: Int = 1) {
     }
 
     def isAvailable(spielerNumber: Int, blockNumber: Int): Boolean = {
-        inventories(spielerNumber)(blockNumber) > 0
+        if (spielerNumber >= 0 && spielerNumber < inventories.length) {
+            inventories(spielerNumber)(blockNumber) > 0
+        } else {
+            throw new IllegalArgumentException(s"Invalid player number: $spielerNumber")
+        }
     }
 
     def useBlock(spielerNumber: Int, blockNumber: Int): List[Int] = {
