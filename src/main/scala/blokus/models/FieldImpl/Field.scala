@@ -29,9 +29,7 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
     def isLogicFirstPlace(block: List[(Int, Int)], x: Int, y: Int): Boolean = {
         isValidPosition(block, x, y) && 
         block.forall {case (dx, dy) => isInBounds(x + dx, y + dy) && fieldVector(y + dy)(x + dx) == -1} &&
-        block.exists {case (dx, dy) => isInBounds(x + dx, y + dy) && isCorner(x + dx, y + dy)
-    }
-
+        block.exists {case (dx, dy) => isInBounds(x + dx, y + dy) && isCorner(x + dx, y + dy)}
     }
 
     def isLogicPlace(
