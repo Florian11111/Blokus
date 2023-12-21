@@ -9,9 +9,11 @@ import blokus.view.Gui
 
 object Main {
   def main(args: Array[String]): Unit = {
-    val controller = new Controller(4, 0, 20, 20)
+    val controller = new Controller(2, 0, 20, 20)
     val tui = new Tui(controller)
     val gui = new Gui(controller, 480, 650)
+    
+
 
     // Hier wird die GUI in einem separaten Thread gestartet
     implicit val context: ExecutionContext = scala.concurrent.ExecutionContext.global

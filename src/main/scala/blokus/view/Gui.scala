@@ -2,6 +2,8 @@ package blokus.view
 
 import blokus.controller.Controller
 import blokus.controller.ControllerEvent
+import blokus.controller.GameController
+
 import blokus.util.Observer
 import scalafx.Includes._
 import scalafx.application.JFXApp3
@@ -12,8 +14,7 @@ import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 import scalafx.application.Platform
 
-
-class Gui(controller: Controller, windowsWidth: Int, windowsHeight: Int) extends JFXApp3 with Observer[ControllerEvent] {
+class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) extends JFXApp3 with Observer[ControllerEvent] {
     controller.addObserver(this)
 
     private var boardPane: GridPane = _
@@ -232,10 +233,10 @@ class Gui(controller: Controller, windowsWidth: Int, windowsHeight: Int) extends
             case 3 => Color.Yellow
             case 10 => Color.Gray
             case 11 => Color.LightGray
-            case 20 => Color.web("#8b0000",1)
-            case 21 => Color.web("#006400",1)
-            case 22 => Color.web("#000088",1)
-            case 23 => Color.web("#9B870C",1)
+            case 20 => Color.web("#8b0000", 1)
+            case 21 => Color.web("#006400", 1)
+            case 22 => Color.web("#000088", 1)
+            case 23 => Color.web("#9B870C", 1)
             case _ => Color.Black
         }
     }

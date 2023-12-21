@@ -1,10 +1,11 @@
 package blokus.view
 
 import blokus.controller.Controller
+import blokus.controller.GameController
 import blokus.controller.ControllerEvent
 import blokus.util.Observer
 
-class Tui(controller: Controller) extends Observer[ControllerEvent] {
+class Tui(controller: GameController) extends Observer[ControllerEvent] {
     controller.addObserver(this)
     display()
     def clearTerminal(): Unit = {
@@ -14,6 +15,21 @@ class Tui(controller: Controller) extends Observer[ControllerEvent] {
         } else {
             print("\u001b[H\u001b[2J")
             System.out.flush()
+        }
+    }
+
+    def processInput(input: String): Unit = {
+        input match {
+        case "x" => System.exit(0)
+        case "s" => controller.move(0)
+        case "d" => controller.move(1)
+        case "w" => controller.move(2)
+        case "a" => controller.move(3)
+        case "r" => controller.rotate()
+        case "m" => controller.mirror()
+        case "e" => controller.placeBlock(5) 
+        case "u" => controller.undo()
+        case _   => println("Invalid command")
         }
     }
 

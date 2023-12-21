@@ -9,7 +9,7 @@ def print_offset_grid(center, *offset_lists):
     min_y = min([coord[1] for offset_list in offset_lists for coord in offset_list]) + center[1]
     max_y = max([coord[1] for offset_list in offset_lists for coord in offset_list]) + center[1]
 
-    # Erstelle eine leere 9x9 Matrix
+    # Erstelle eine leere 11x11 Matrix
     grid = [['.' for _ in range(11)] for _ in range(11)]
 
     # Setze das Zentrum und die Offset-Koordinaten in die Matrix

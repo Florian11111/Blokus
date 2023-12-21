@@ -1,12 +1,13 @@
-package blokus.models
+package blokus.models.blockInvImpl
 
+import blokus.models.BlockInventoryInterface
 import scala.util.Random
 
-class BlockInventory(playerAmount: Int, initialCount: Int = 1) {
-    var inventories: Array[Array[Int]] = Array.fill(playerAmount + 1, 21)(initialCount)
+class BlockInventory(playerAmount: Int, initialCount: Int = 1) extends BlockInventoryInterface {
+    private var inventories: Array[Array[Int]] = Array.fill(playerAmount, 21)(initialCount)
     private var isFirstBlock: Array[Boolean] = Array.fill(playerAmount)(true)
 
-     def getBlocks(spielerNumber: Int): List[Int] = {
+    def getBlocks(spielerNumber: Int): List[Int] = {
         if (spielerNumber >= 0 && spielerNumber < inventories.length) {
             inventories(spielerNumber).toList
         } else {

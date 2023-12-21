@@ -1,18 +1,23 @@
 package blokus.controller
 
-import blokus.models.Field
-import blokus.models.HoverBlock
-import blokus.models.BlockInventory
+import blokus.models.FieldInterface
+import blokus.models.hoverBlockImpl.HoverBlock
+import blokus.models.BlockInventoryInterface
+import blokus.models.blockInvImpl.*  
 import blokus.util.{Observable, Observer}
 
 import scala.util.{Try, Success, Failure}
 
-class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) extends Observable[ControllerEvent] with GameController {
+
+class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int)
+    extends GameController
+    with Observer[ControllerEvent] {
+
     assert(playerAmount >= 1 && playerAmount < 5)
 
-    var field = Field(width, height)
+    var field = FieldInterface.getInstance(width, height)
     var hoverBlock = HoverBlock(playerAmount, firstBlock)
-    var blockInventory = new BlockInventory(playerAmount)
+    var blockInventory = BlockInventoryInterface.getInstance(playerAmount)
 
     def getWidth(): Int = width
     def getHeight(): Int = height
@@ -24,8 +29,9 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
     def place_2(neuerTyp: Int): Unit = {
         val firstPlace = blockInventory.firstBlock(getCurrentPlayer())
         blockInventory.useBlock(getCurrentPlayer(), hoverBlock.getCurrentBlock)
-        val randomBlock = blockInventory.getRandomBlock(getCurrentPlayer())
-        randomBlock.foreach(block => {
+        val randomNextBlock = blockInventory.getRandomBlock(getCurrentPlayer())
+        print(randomNextBlock)
+        randomNextBlock.foreach(block => {
             field = hoverBlock.place(field, block, firstPlace)
             notifyObservers(ControllerEvent.Update)
         })
@@ -135,7 +141,8 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
 		def redo(): Try[Unit]
 	}
 
-    private class SetBlockCommand(controller: Controller, blockInventory: BlockInventory, newField: Field, player: Int, blockTyp: Int, currentBlock: Int) extends Command {
+
+    private class SetBlockCommand(controller: Controller, blockInventory: BlockInventoryInterface, newField: FieldInterface, player: Int, blockTyp: Int, currentBlock: Int) extends Command {
         private val originalField = controller.field
         private val originalBlocksBefore = blockInventory.deepCopy
         private val originalCurrentBlock = controller.hoverBlock.getCurrentBlock
@@ -152,13 +159,14 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int) ex
             controller.hoverBlock.setCurrentBlock(originalCurrentBlock)
             notifyObservers(ControllerEvent.Update)
         }
-
         override def redo(): Try[Unit] = execute()
     }
+    def update(event: ControllerEvent): Unit = {}
 }
 
 sealed trait ControllerEvent
 object ControllerEvent {
     case object Update extends ControllerEvent
     case class PlayerChange(player: Int) extends ControllerEvent
+    
 }

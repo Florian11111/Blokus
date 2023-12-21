@@ -1,12 +1,15 @@
 package blokus.util
 
-trait Observer[E] {
-    def update(e: E): Unit
+trait Observer[T] {
+    def update(event: T): Unit
 }
 
-class Observable[E] {
-    private var subscribers: Vector[Observer[E]] = Vector()
-    def addObserver(o: Observer[E]): Unit = subscribers = subscribers :+ o
-    def removeObserver(o: Observer[E]): Unit = subscribers = subscribers.filterNot(_ == o)
-    def notifyObservers(e: E): Unit = subscribers.foreach(_.update(e))
+trait Observable[T] {
+    private var observers: List[Observer[T]] = List()
+    def addObserver(observer: Observer[T]): Unit = {
+        observers = observer :: observers
+    }
+    def notifyObservers(event: T): Unit = {
+        observers.foreach(_.update(event))
+    }
 }

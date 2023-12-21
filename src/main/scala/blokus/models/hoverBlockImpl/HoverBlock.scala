@@ -1,7 +1,10 @@
-package blokus.models
+package blokus.models.hoverBlockImpl
+
+import blokus.models.HoverBlockInterface
+import blokus.models.FieldInterface
 import blokus.models.Block
 
-class HoverBlock(playerAmount: Int, firstBlock: Int) {
+class HoverBlock(playerAmount: Int, firstBlock: Int) extends HoverBlockInterface {
     var currentX = 2
     var currentY = 2
     var currentBlockTyp = firstBlock
@@ -33,6 +36,7 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
         prevPlayer
     }
 
+
     def getOutOfCorner(fieldHeight: Int, fieldWight: Int): Boolean = {
         if (currentX < 2) {
             currentX = 2
@@ -51,7 +55,7 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
         }
     }
 
-    def move(feld: Field, richtung: Int): Boolean = {
+    def move(feld: FieldInterface, richtung: Int): Boolean = {
         if (canMove(feld, richtung)) {
             richtung match {
                 case 0 => currentY += 1
@@ -66,7 +70,7 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
         }
     }
 
-    def canMove(feld: Field, richtung: Int): Boolean = {
+    def canMove(feld: FieldInterface, richtung: Int): Boolean = {
     richtung match {
         case 0 => 
             feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored).baseForm, currentX, currentY + 1)
@@ -81,7 +85,8 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
         }
     }
 
-    def canRotate(feld: Field): Boolean = {
+
+    def canRotate(feld: FieldInterface): Boolean = {
         feld.isValidPosition(
             Block.createBlock(currentBlockTyp, (rotation + 1) % 4, mirrored).baseForm,
             currentX,
@@ -90,7 +95,7 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
     }
 
     // Dreht den aktuellen Block um 90 Grad im Uhrzeigersinn
-    def rotate(feld: Field): Boolean = {
+    def rotate(feld: FieldInterface): Boolean = {
         if (canRotate(feld)) {
             rotation = (rotation + 1) % 4
             true
@@ -99,12 +104,13 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
         }
     }
 
-    def canMirror(feld: Field): Boolean = {
+
+    def canMirror(feld: FieldInterface): Boolean = {
         feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, !mirrored).baseForm, currentX, currentY)
     }
 
     // Spiegelt den aktuellen Block horizontal
-    def mirror(feld: Field): Boolean = {
+    def mirror(feld: FieldInterface): Boolean = {
         if (canMirror(feld)) {
             mirrored = !mirrored
             true
@@ -113,7 +119,8 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
         }
     }
 
-    def canPlace(feld: Field, firstPlace: Boolean): Boolean = {
+
+    def canPlace(feld: FieldInterface, firstPlace: Boolean): Boolean = {
         val block = Block.createBlock(currentBlockTyp, rotation, mirrored)
         if (firstPlace) {
             feld.isLogicFirstPlace(block.baseForm, currentX, currentY)
@@ -123,11 +130,10 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) {
     }
 
     // Setzt den Block an der aktuellen Position
-    def place(field: Field, newBlockTyp: Int, firstPlace: Boolean): Field = {
+    def place(field: FieldInterface, newBlockTyp: Int, firstPlace: Boolean): FieldInterface = {
         
         val block = Block.createBlock(currentBlockTyp, rotation, mirrored)
         val temp = field.placeBlock(block.baseForm, block.corners, block.edges, currentX, currentY, currentPlayer, firstPlace)
-        
         currentX = (field.width / 2) - 1
         currentY = (field.height / 2) - 1
         rotation = 0

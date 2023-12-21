@@ -1,6 +1,8 @@
-package blokus.models
+package blokus.models.FieldImpl
+import blokus.models.FieldInterface
 
-class Field(private val fieldVector: Vector[Vector[Int]]) {
+
+class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface {
     val width: Int = fieldVector.headOption.map(_.size).getOrElse(0)
     val height: Int = fieldVector.size
 
