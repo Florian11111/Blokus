@@ -3,25 +3,28 @@ package blokus.controller
 import blokus.models.FieldInterface
 import blokus.models.hoverBlockImpl.HoverBlock
 import blokus.models.BlockInventoryInterface
-import blokus.models.blockInvImpl.*  
 import blokus.util.{Observable, Observer}
-import blokus.BlokusModule
 
 import scala.util.{Try, Success, Failure}
-import blokus.controller.GameController
-import com.google.inject.Guice
+import com.google.inject.Inject
+import blokus.models.HoverBlockInterface
 
-class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int)
-    extends GameController
+class Controller @Inject()(
+    playerAmount: Int,
+    firstBlock: Int,
+    width: Int,
+    height: Int,
+    fieldInterface: FieldInterface,
+    blockInventoryInterface: BlockInventoryInterface,
+    hoverBlockInterface: HoverBlockInterface
+) extends GameController
     with Observer[ControllerEvent] {
-
 
     assert(playerAmount >= 1 && playerAmount < 5)
 
-    var field = FieldInterface.getInstance(width, height)
-    var hoverBlock = HoverBlock(playerAmount, firstBlock)
-    var blockInventory = BlockInventoryInterface.getInstance(playerAmount)
-
+    var field: FieldInterface = fieldInterface
+    var hoverBlock: HoverBlockInterface = hoverBlockInterface
+    var blockInventory: BlockInventoryInterface = blockInventoryInterface
     
     def getWidth(): Int = width
     def getHeight(): Int = height
@@ -44,7 +47,7 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int)
     def getBlocks(): List[Int] = blockInventory.getBlocks(getCurrentPlayer())
 
     def changeCurrentBlock(newBlock: Int): Try[Unit] = Try {
-        hoverBlock.currentBlockTyp = newBlock
+        hoverBlock.setCurrentBlock(newBlock) 
         hoverBlock.getOutOfCorner(height, width)
         notifyObservers(ControllerEvent.Update)
     }
@@ -84,8 +87,8 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int)
     }
 
     def changeBlock(neuerBlock: Int): Int = {
-        val currentBlock = hoverBlock.currentBlockTyp
-        hoverBlock.currentBlockTyp = neuerBlock
+        val currentBlock = hoverBlock.getCurrentBlock
+        hoverBlock.setCurrentBlock(neuerBlock)
         currentBlock
     }
 
