@@ -13,3 +13,6 @@
     Das spielfeld soll mit Knöpfen umgesetzt werden. Wenn man über einen hovert soll dieser als block ausgewählt werden.
     Mit den tasten R und M soll man Rotieren und Mirrown können. 
     Mit LinksClick soll man platziern können. 
+
+## Feature: Schöne auswahl für Blöcke
+    Mit Knöpfen und Bildern von Blöcken soll man Den Nächsten Block Auswählen Können

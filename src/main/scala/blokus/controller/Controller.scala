@@ -5,13 +5,16 @@ import blokus.models.hoverBlockImpl.HoverBlock
 import blokus.models.BlockInventoryInterface
 import blokus.models.blockInvImpl.*  
 import blokus.util.{Observable, Observer}
+import blokus.BlokusModule
 
 import scala.util.{Try, Success, Failure}
-
+import blokus.controller.GameController
+import com.google.inject.Guice
 
 class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int)
     extends GameController
     with Observer[ControllerEvent] {
+
 
     assert(playerAmount >= 1 && playerAmount < 5)
 
@@ -19,6 +22,7 @@ class Controller(playerAmount: Int, firstBlock: Int, width: Int, height: Int)
     var hoverBlock = HoverBlock(playerAmount, firstBlock)
     var blockInventory = BlockInventoryInterface.getInstance(playerAmount)
 
+    
     def getWidth(): Int = width
     def getHeight(): Int = height
 

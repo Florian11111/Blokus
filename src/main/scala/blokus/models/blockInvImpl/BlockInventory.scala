@@ -71,3 +71,9 @@ class BlockInventory(playerAmount: Int, initialCount: Int = 1) extends BlockInve
         }
     }
 }
+
+object BlockInventory {
+    def getInstance(playerAmount: Int, initialCount: Int = 1): BlockInventory = {
+        new BlockInventory(playerAmount, initialCount)
+    }
+}
