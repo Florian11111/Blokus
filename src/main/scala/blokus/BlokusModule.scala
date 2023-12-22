@@ -9,21 +9,19 @@ import blokus.models.FieldImpl.Field
 import blokus.models.hoverBlockImpl.HoverBlock
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.global
-import controller.GameController
+import blokus.controller.controllerInvImpl.Controller
 
 class BlokusModule extends AbstractModule {
     private val gameSize: (Int, Int) = (20, 20)
     private val playerAmount: Int = 2
+
     override def configure(): Unit = {
         bind(classOf[GameController]).toInstance(
             new Controller(
                 playerAmount, 
                 0, 
                 gameSize._1, 
-                gameSize._2, 
-                FieldInterface.getInstance(gameSize._1, gameSize._2), 
-                BlockInventoryInterface.getInstance(playerAmount, 1), 
-                HoverBlockInterface.getInstance(playerAmount, 2)
+                gameSize._2
             )
         )
     }

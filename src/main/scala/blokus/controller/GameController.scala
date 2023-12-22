@@ -4,6 +4,7 @@ import blokus.models.{FieldInterface, HoverBlockInterface}
 import blokus.util.{Observable, Observer}
 
 import scala.util.Try
+import controllerInvImpl.ControllerEvent
 
 trait GameController extends Observer[ControllerEvent] with Observable[ControllerEvent] {
     def getWidth(): Int 

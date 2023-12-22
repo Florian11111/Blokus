@@ -1,31 +1,37 @@
-package blokus.controller
+package blokus.controller.controllerInvImpl
 
 import blokus.models.FieldInterface
 import blokus.models.hoverBlockImpl.HoverBlock
 import blokus.models.BlockInventoryInterface
 import blokus.util.{Observable, Observer}
-
+import blokus.controller.GameController
 import scala.util.{Try, Success, Failure}
-import com.google.inject.Inject
 import blokus.models.HoverBlockInterface
+import blokus.BlokusModule
+import com.google.inject.Guice
+import com.google.inject.*
 
-class Controller @Inject()(
+
+class Controller (
     playerAmount: Int,
     firstBlock: Int,
     width: Int,
-    height: Int,
-    fieldInterface: FieldInterface,
-    blockInventoryInterface: BlockInventoryInterface,
-    hoverBlockInterface: HoverBlockInterface
+    height: Int
 ) extends GameController
     with Observer[ControllerEvent] {
-
     assert(playerAmount >= 1 && playerAmount < 5)
 
+    var blockInventory: BlockInventoryInterface = BlockInventoryInterface.getInstance(playerAmount, 1)
+    var hoverBlock: HoverBlockInterface = HoverBlockInterface.getInstance(playerAmount, 2)
+    var field: FieldInterface = FieldInterface.getInstance(width, height)
+        /*
+                bind(classOf[FieldInterface]).toInstance(FieldInterface.getInstance(gameSize._1, gameSize._2))
+        bind(classOf[BlockInventoryInterface]).toInstance(BlockInventoryInterface.getInstance(playerAmount, 1))
+        bind(classOf[HoverBlockInterface]).toInstance(HoverBlockInterface.getInstance(playerAmount, 2))
     var field: FieldInterface = fieldInterface
     var hoverBlock: HoverBlockInterface = hoverBlockInterface
     var blockInventory: BlockInventoryInterface = blockInventoryInterface
-    
+*/
     def getWidth(): Int = width
     def getHeight(): Int = height
 

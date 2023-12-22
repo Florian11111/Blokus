@@ -1,7 +1,7 @@
 package blokus.view
 
-import blokus.controller.Controller
-import blokus.controller.ControllerEvent
+import blokus.controller.controllerInvImpl.Controller
+import blokus.controller.controllerInvImpl.ControllerEvent
 import blokus.controller.GameController
 
 import blokus.util.Observer
