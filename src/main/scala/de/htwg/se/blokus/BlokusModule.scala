@@ -1,15 +1,16 @@
-package blokus
+package de.htwg.se.blokus
 
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
-import blokus.controller.*
-import blokus.models.{BlockInventoryInterface, FieldInterface, HoverBlockInterface}
-import blokus.models.blockInvImpl.BlockInventory
-import blokus.models.FieldImpl.Field
-import blokus.models.hoverBlockImpl.HoverBlock
+import de.htwg.se.blokus.controller.*
+import de.htwg.se.blokus.models.{BlockInventoryInterface, FieldInterface, HoverBlockInterface}
+import de.htwg.se.blokus.models.blockInvImpl.BlockInventory
+import de.htwg.se.blokus.models.FieldImpl.Field
+import de.htwg.se.blokus.models.hoverBlockImpl.HoverBlock
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.global
-import blokus.controller.controllerInvImpl.Controller
+import de.htwg.se.blokus.controller.GameController
+import de.htwg.se.blokus.controller.controllerInvImpl.Controller
 
 class BlokusModule extends AbstractModule {
     private val gameSize: (Int, Int) = (20, 20)

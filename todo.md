@@ -16,3 +16,7 @@
 
 ## Feature: Schöne auswahl für Blöcke
     Mit Knöpfen und Bildern von Blöcken soll man Den Nächsten Block Auswählen Können
+
+
+## Code: Methoden mit Klammer und ohne Klammer
+    Tauschen ob mit Klammern oder ohne 

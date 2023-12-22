@@ -1,7 +1,7 @@
-package blokus.models
+package de.htwg.se.blokus.models
 
-import blokus.models.FieldInterface
-import blokus.models.hoverBlockImpl.* 
+import de.htwg.se.blokus.models.FieldInterface
+import de.htwg.se.blokus.models.hoverBlockImpl.* 
 
 trait HoverBlockInterface {
     def getX(): Int

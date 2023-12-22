@@ -1,4 +1,4 @@
-package blokus.util
+package de.htwg.se.blokus.util
 
 trait Observer[T] {
     def update(event: T): Unit

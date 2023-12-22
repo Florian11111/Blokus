@@ -1,5 +1,5 @@
-package blokus.models.FieldImpl
-import blokus.models.FieldInterface
+package de.htwg.se.blokus.models.FieldImpl
+import de.htwg.se.blokus.models.FieldInterface
 
 
 class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface {

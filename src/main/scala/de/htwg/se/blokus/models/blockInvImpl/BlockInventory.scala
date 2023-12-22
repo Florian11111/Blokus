@@ -1,6 +1,6 @@
-package blokus.models.blockInvImpl
+package de.htwg.se.blokus.models.blockInvImpl
 
-import blokus.models.BlockInventoryInterface
+import de.htwg.se.blokus.models.BlockInventoryInterface
 import scala.util.Random
 
 class BlockInventory(playerAmount: Int, initialCount: Int = 1) extends BlockInventoryInterface {

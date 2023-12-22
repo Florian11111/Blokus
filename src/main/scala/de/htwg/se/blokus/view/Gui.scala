@@ -1,10 +1,10 @@
-package blokus.view
+package de.htwg.se.blokus.view
 
-import blokus.controller.controllerInvImpl.Controller
-import blokus.controller.controllerInvImpl.ControllerEvent
-import blokus.controller.GameController
+import de.htwg.se.blokus.controller.controllerInvImpl.Controller
+import de.htwg.se.blokus.controller.controllerInvImpl.ControllerEvent
+import de.htwg.se.blokus.controller.GameController
 
-import blokus.util.Observer
+import de.htwg.se.blokus.util.Observer
 import scalafx.Includes._
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene

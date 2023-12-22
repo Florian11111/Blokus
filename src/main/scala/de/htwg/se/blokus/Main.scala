@@ -1,11 +1,12 @@
-package blokus
+package de.htwg.se.blokus
 
-import blokus.controller.GameController
+import de.htwg.se.blokus.BlokusModule
+import de.htwg.se.blokus.controller.GameController
 import scala.concurrent.{Future, ExecutionContext, Await}
 import scala.concurrent.duration.Duration
 
-import blokus.view.Tui
-import blokus.view.Gui
+import de.htwg.se.blokus.view.Tui
+import de.htwg.se.blokus.view.Gui
 
 import com.google.inject.Guice
 

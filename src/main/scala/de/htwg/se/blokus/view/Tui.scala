@@ -1,9 +1,9 @@
-package blokus.view
+package de.htwg.se.blokus.view
 
-import blokus.controller.controllerInvImpl.Controller
-import blokus.controller.GameController
-import blokus.controller.controllerInvImpl.ControllerEvent
-import blokus.util.Observer
+import de.htwg.se.blokus.controller.controllerInvImpl.Controller
+import de.htwg.se.blokus.controller.GameController
+import de.htwg.se.blokus.controller.controllerInvImpl.ControllerEvent
+import de.htwg.se.blokus.util.Observer
 
 class Tui(controller: GameController) extends Observer[ControllerEvent] {
     controller.addObserver(this)

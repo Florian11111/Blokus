@@ -1,4 +1,4 @@
-package blokus.models
+package de.htwg.se.blokus.models
 
 case class Block(baseForm: List[(Int, Int)], corners: List[(Int, Int)], edges: List[(Int, Int)])
 

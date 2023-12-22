@@ -1,8 +1,8 @@
-package blokus.models.hoverBlockImpl
+package de.htwg.se.blokus.models.hoverBlockImpl
 
-import blokus.models.HoverBlockInterface
-import blokus.models.FieldInterface
-import blokus.models.Block
+import de.htwg.se.blokus.models.HoverBlockInterface
+import de.htwg.se.blokus.models.FieldInterface
+import de.htwg.se.blokus.models.Block
 
 class HoverBlock(playerAmount: Int, firstBlock: Int) extends HoverBlockInterface {
     var currentX = 2

@@ -1,13 +1,12 @@
-package blokus.controller.controllerInvImpl
+package de.htwg.se.blokus.controller.controllerInvImpl
 
-import blokus.models.FieldInterface
-import blokus.models.hoverBlockImpl.HoverBlock
-import blokus.models.BlockInventoryInterface
-import blokus.util.{Observable, Observer}
-import blokus.controller.GameController
+import de.htwg.se.blokus.models.FieldInterface
+import de.htwg.se.blokus.models.hoverBlockImpl.HoverBlock
+import de.htwg.se.blokus.models.BlockInventoryInterface
+import de.htwg.se.blokus.util.{Observable, Observer}
+import de.htwg.se.blokus.controller.GameController
 import scala.util.{Try, Success, Failure}
-import blokus.models.HoverBlockInterface
-import blokus.BlokusModule
+import de.htwg.se.blokus.models.HoverBlockInterface
 import com.google.inject.Guice
 import com.google.inject.*
 
@@ -79,7 +78,7 @@ class Controller (
             notifyObservers(ControllerEvent.Update)
         }
         mirrored
-    }
+    } 
 
     def canPlace(): Boolean = {
         hoverBlock.canPlace(field, blockInventory.firstBlock(getCurrentPlayer()))

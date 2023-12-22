@@ -1,6 +1,6 @@
-package blokus.models
+package de.htwg.se.blokus.models
 
-import blokus.models.FieldImpl.* 
+import de.htwg.se.blokus.models.FieldImpl.* 
 
 trait FieldInterface {
     val width: Int

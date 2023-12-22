@@ -1,8 +1,8 @@
-package blokus.models
+package de.htwg.se.blokus.models
 
-import blokus.controller
+import de.htwg.se.blokus.controller
 
-import blokus.models.blockInvImpl.*
+import de.htwg.se.blokus.models.blockInvImpl.*
 
 trait BlockInventoryInterface {
     def getBlocks(playerNumber: Int): List[Int]

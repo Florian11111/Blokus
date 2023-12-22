@@ -1,7 +1,7 @@
-package blokus.controller
+package de.htwg.se.blokus.controller
 
-import blokus.models.{FieldInterface, HoverBlockInterface}
-import blokus.util.{Observable, Observer}
+import de.htwg.se.blokus.models.{FieldInterface, HoverBlockInterface}
+import de.htwg.se.blokus.util.{Observable, Observer}
 
 import scala.util.Try
 import controllerInvImpl.ControllerEvent
