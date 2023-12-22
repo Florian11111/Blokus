@@ -1,4 +1,4 @@
-## Bug: Block Platziert nicht :
+## Bug: Block Platziert nicht:
     Wenn man einen Block Platziert und der nächste spieler den gleichen block als "vorschlag" bekommt wie den Block den man gerade platziert hat, wird ohne den block zu platziert zum nächsten spieler gewechselt. 
     
     Vermutung: Feherhafte reihnfolge mit spielerwechsel beim Blockinventory: (Controller:PlaceBlock)

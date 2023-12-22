@@ -24,14 +24,7 @@ class Controller (
     var blockInventory: BlockInventoryInterface = BlockInventoryInterface.getInstance(playerAmount, 1)
     var hoverBlock: HoverBlockInterface = HoverBlockInterface.getInstance(playerAmount, 2)
     var field: FieldInterface = FieldInterface.getInstance(width, height)
-        /*
-                bind(classOf[FieldInterface]).toInstance(FieldInterface.getInstance(gameSize._1, gameSize._2))
-        bind(classOf[BlockInventoryInterface]).toInstance(BlockInventoryInterface.getInstance(playerAmount, 1))
-        bind(classOf[HoverBlockInterface]).toInstance(HoverBlockInterface.getInstance(playerAmount, 2))
-    var field: FieldInterface = fieldInterface
-    var hoverBlock: HoverBlockInterface = hoverBlockInterface
-    var blockInventory: BlockInventoryInterface = blockInventoryInterface
-*/
+
     def getWidth(): Int = width
     def getHeight(): Int = height
 
