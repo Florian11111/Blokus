@@ -1,7 +1,7 @@
 package de.htwg.se.blokus.view
 
 import de.htwg.se.blokus.controller.controllerInvImpl.Controller
-import de.htwg.se.blokus.controller.controllerInvImpl.ControllerEvent
+import de.htwg.se.blokus.controller.*
 import de.htwg.se.blokus.controller.GameController
 
 import de.htwg.se.blokus.util.Observer
@@ -14,7 +14,7 @@ import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 import scalafx.application.Platform
 
-class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) extends JFXApp3 with Observer[ControllerEvent] {
+class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) extends JFXApp3 with Observer[Event] {
     controller.addObserver(this)
 
     private var boardPane: GridPane = _
@@ -187,7 +187,7 @@ class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) ext
     }
 
 
-    override def update(event: ControllerEvent): Unit = {
+    override def update(event: Event): Unit = {
         Platform.runLater(() => {
             updateBoard()
             updateLabels()

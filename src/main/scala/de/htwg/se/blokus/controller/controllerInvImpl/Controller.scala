@@ -2,27 +2,42 @@ package de.htwg.se.blokus.controller.controllerInvImpl
 
 import de.htwg.se.blokus.models.FieldInterface
 import de.htwg.se.blokus.models.hoverBlockImpl.HoverBlock
+import de.htwg.se.blokus.controller.*
 import de.htwg.se.blokus.models.BlockInventoryInterface
 import de.htwg.se.blokus.util.{Observable, Observer}
-import de.htwg.se.blokus.controller.GameController
 import scala.util.{Try, Success, Failure}
 import de.htwg.se.blokus.models.HoverBlockInterface
 import com.google.inject.Guice
 import com.google.inject.*
 
+class Controller extends GameController with Observable[Event] {
 
-class Controller (
-    playerAmount: Int,
-    firstBlock: Int,
-    width: Int,
-    height: Int
-) extends GameController
-    with Observer[ControllerEvent] {
-    assert(playerAmount >= 1 && playerAmount < 5)
+    private var playerAmount: Int = _
+    private var firstBlock: Int = _
+    private var width: Int = _
+    private var height: Int = _
 
-    var blockInventory: BlockInventoryInterface = BlockInventoryInterface.getInstance(playerAmount, 1)
-    var hoverBlock: HoverBlockInterface = HoverBlockInterface.getInstance(playerAmount, 2)
-    var field: FieldInterface = FieldInterface.getInstance(width, height)
+    var blockInventory: BlockInventoryInterface = _
+    var hoverBlock: HoverBlockInterface = _
+    var field: FieldInterface = _
+
+
+    def start(playerAmt: Int, firstBlk: Int, w: Int, h: Int): Unit = {
+        this.playerAmount = playerAmt
+        this.firstBlock = firstBlk
+        this.width = w
+        this.height = h
+
+        assert(playerAmount >= 1 && playerAmount < 5)
+
+        blockInventory = BlockInventoryInterface.getInstance(playerAmount, 1)
+        hoverBlock = HoverBlockInterface.getInstance(playerAmount, 2)
+        field = FieldInterface.getInstance(width, height)
+    }
+    def gameOver() = {
+
+
+    }
 
     def getWidth(): Int = width
     def getHeight(): Int = height
@@ -31,14 +46,14 @@ class Controller (
         execute(SetBlockCommand(this, blockInventory, field, getCurrentPlayer(), newBlock, hoverBlock.getCurrentBlock))
     }
 
-    def place_2(neuerTyp: Int): Unit = {
+    def place(neuerTyp: Int): Unit = {
         val firstPlace = blockInventory.firstBlock(getCurrentPlayer())
         blockInventory.useBlock(getCurrentPlayer(), hoverBlock.getCurrentBlock)
         val randomNextBlock = blockInventory.getRandomBlock(getCurrentPlayer())
         print(randomNextBlock)
         randomNextBlock.foreach(block => {
             field = hoverBlock.place(field, block, firstPlace)
-            notifyObservers(ControllerEvent.Update)
+            notifyObservers(UpdateEvent)
         })
     }
 
@@ -47,7 +62,7 @@ class Controller (
     def changeCurrentBlock(newBlock: Int): Try[Unit] = Try {
         hoverBlock.setCurrentBlock(newBlock) 
         hoverBlock.getOutOfCorner(height, width)
-        notifyObservers(ControllerEvent.Update)
+        notifyObservers(UpdateEvent)
     }
 
     def getCurrentPlayer(): Int = hoverBlock.getCurrentPlayer
@@ -59,7 +74,7 @@ class Controller (
     def move(richtung: Int): Boolean = {
         val moved = hoverBlock.move(field, richtung)
         if (moved) {
-            notifyObservers(ControllerEvent.Update)
+            notifyObservers(UpdateEvent)
         }
         moved
     }
@@ -67,7 +82,7 @@ class Controller (
     def rotate(): Boolean = {
         val rotated = hoverBlock.rotate(field)
         if (rotated) {
-            notifyObservers(ControllerEvent.Update)
+            notifyObservers(UpdateEvent)
         }
         rotated
     }
@@ -75,7 +90,7 @@ class Controller (
     def mirror(): Boolean = {
         val mirrored = hoverBlock.mirror(field)
         if (mirrored) {
-            notifyObservers(ControllerEvent.Update)
+            notifyObservers(UpdateEvent)
         }
         mirrored
     } 
@@ -94,14 +109,14 @@ class Controller (
 
     def nextPlayer(): Int = {
         val currentPlayer = hoverBlock.changePlayer()
-        notifyObservers(ControllerEvent.PlayerChange(currentPlayer))
+        notifyObservers(UpdateEvent)
         currentPlayer
     }
 
     def changePlayer(newPlayer: Int): Try[Unit] = {
         Try {
             val currentPlayer = hoverBlock.setPlayer(newPlayer)
-            notifyObservers(ControllerEvent.PlayerChange(currentPlayer))
+            notifyObservers(UpdateEvent)
         }
     }
 
@@ -153,7 +168,7 @@ class Controller (
         private val originalCurrentBlock = controller.hoverBlock.getCurrentBlock
 
         override def execute(): Try[Unit] = Try {
-            controller.place_2(blockTyp)
+            controller.place(blockTyp)
         }
 
         override def undo(): Unit = {
@@ -162,16 +177,9 @@ class Controller (
             controller.blockInventory = originalBlocksBefore
             controller.changeBlock(currentBlock)
             controller.hoverBlock.setCurrentBlock(originalCurrentBlock)
-            notifyObservers(ControllerEvent.Update)
+            notifyObservers(UpdateEvent)
         }
         override def redo(): Try[Unit] = execute()
     }
-    def update(event: ControllerEvent): Unit = {}
-}
-
-sealed trait ControllerEvent
-object ControllerEvent {
-    case object Update extends ControllerEvent
-    case class PlayerChange(player: Int) extends ControllerEvent
-    
+    def update(event: Event): Unit = {}
 }

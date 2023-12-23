@@ -18,12 +18,7 @@ class BlokusModule extends AbstractModule {
 
     override def configure(): Unit = {
         bind(classOf[GameController]).toInstance(
-            new Controller(
-                playerAmount, 
-                0, 
-                gameSize._1, 
-                gameSize._2
-            )
+            new Controller()
         )
     }
 }

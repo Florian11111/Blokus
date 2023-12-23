@@ -4,13 +4,13 @@ import de.htwg.se.blokus.models.{FieldInterface, HoverBlockInterface}
 import de.htwg.se.blokus.util.{Observable, Observer}
 
 import scala.util.Try
-import controllerInvImpl.ControllerEvent
 
-trait GameController extends Observer[ControllerEvent] with Observable[ControllerEvent] {
+trait GameController extends Observer[Event] with Observable[Event] {
+    def start(playerAmt: Int, firstBlk: Int, w: Int, h: Int): Unit
     def getWidth(): Int 
     def getHeight(): Int 
     def placeBlock(newBlock: Int): Try[Unit]
-    def place_2(neuerTyp: Int): Unit
+    def place(neuerTyp: Int): Unit
     def changeCurrentBlock(newBlock: Int): Try[Unit]
     def getCurrentPlayer(): Int
     def getField(): Vector[Vector[Int]]

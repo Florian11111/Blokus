@@ -2,10 +2,10 @@ package de.htwg.se.blokus.view
 
 import de.htwg.se.blokus.controller.controllerInvImpl.Controller
 import de.htwg.se.blokus.controller.GameController
-import de.htwg.se.blokus.controller.controllerInvImpl.ControllerEvent
+import de.htwg.se.blokus.controller.*
 import de.htwg.se.blokus.util.Observer
 
-class Tui(controller: GameController) extends Observer[ControllerEvent] {
+class Tui(controller: GameController) extends Observer[Event] {
     controller.addObserver(this)
     display()
     def clearTerminal(): Unit = {
@@ -64,7 +64,7 @@ class Tui(controller: GameController) extends Observer[ControllerEvent] {
         }.mkString
     }
 
-    override def update(event: ControllerEvent): Unit = {
+    override def update(event: Event): Unit = {
         clearTerminal()
         display()
         println("\nBloecke:")
@@ -77,12 +77,7 @@ class Tui(controller: GameController) extends Observer[ControllerEvent] {
         println("m: Block spiegeln")
         println("s: Block platzieren")
         println("u: Undo")
-        println("x: Beenden")
-        event match {
-            case ControllerEvent.Update =>
-            case ControllerEvent.PlayerChange(player) =>
-        }
-        
+        println("x: Beenden")        
     }
 
     def inputLoop(): Unit = {
@@ -109,7 +104,6 @@ class Tui(controller: GameController) extends Observer[ControllerEvent] {
                     }
                     case _ =>
                 }
-
             }
         } finally {
             // Reset any terminal configurations if needed
