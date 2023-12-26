@@ -18,8 +18,13 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
 
     private def isInBounds(x: Int, y: Int): Boolean = x >= 0 && x < width && y >= 0 && y < height
 
-    def isGameOver(block: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int): Boolean = {
-        false
+    // geht alle kompinatonen von ecken durch so das diese auf auf x und y possiton liegen und ruft dann isLogicPlace auf
+    def checkPos(x: Int, y: Int, block: List[(Int, Int)], ecken: List[(Int, Int)], kanten: List[(Int, Int)], currentPlayer: Int): Boolean = {
+        ecken.exists { ecke =>
+            val newX = x + ecke._1
+            val newY = y + ecke._2
+            isLogicPlace(block, ecken, kanten, newX, newY, currentPlayer)
+        }
     }
     
     def isCorner(x: Int, y: Int): Boolean = {
@@ -48,30 +53,12 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
             } else {
                 false
             }
-            } else {
+        } else {
             false
         }
     }
 
-    // geht durch den block und speichert alle ecken in einer liste. dann wird der block nochmal durchgegannen
-    // und alle direkten nachbarn gecheckt. => muss fals sein wenn es einen nachbarn vom selben block gibt der nicht
-    // teil des blocks ist und löscht alle direkten nachbarn aus der liste. Dann wird die ecken liste überprüft ob es 
-    // mindestens einen match gibt
-    /*
-    def getAllCorners(blocks: List[List[(Int, Int)]]): List[(Int, Int)] = {
-        blocks.flatMap { block =>
-        block.flatMap { case (x, y) =>
-            List(
-            (x + 1, y + 1),
-            (x + 1, y - 1),
-            (x - 1, y + 1),
-            (x - 1, y - 1)
-            )
-        }
-        }.distinct
-    }*/
-
-
+    
     def placeBlock(block: List[(Int, Int)], ecken: List[(Int, Int)], kanten: List[(Int, Int)], x: Int, y: Int, currentPlayer: Int, firstPlace: Boolean): Field = {
         if (isLogicPlace(block, ecken, kanten, x, y, currentPlayer) || (firstPlace && isLogicFirstPlace(block, x, y))) {
             val updatedField = fieldVector.zipWithIndex.map { case (row, rowIndex) =>

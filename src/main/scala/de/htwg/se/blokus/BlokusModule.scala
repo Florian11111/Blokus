@@ -3,7 +3,8 @@ package de.htwg.se.blokus
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import de.htwg.se.blokus.controller.*
-import de.htwg.se.blokus.models.{BlockInventoryInterface, FieldInterface, HoverBlockInterface}
+import de.htwg.se.blokus.models.{BlockInventoryInterface, HoverBlockInterface}
+import de.htwg.se.blokus.models.FieldInterface
 import de.htwg.se.blokus.models.blockInvImpl.BlockInventory
 import de.htwg.se.blokus.models.FieldImpl.Field
 import de.htwg.se.blokus.models.hoverBlockImpl.HoverBlock

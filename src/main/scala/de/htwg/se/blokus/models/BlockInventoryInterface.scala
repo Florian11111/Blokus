@@ -5,6 +5,8 @@ import de.htwg.se.blokus.controller
 import de.htwg.se.blokus.models.blockInvImpl.*
 
 trait BlockInventoryInterface {
+    def setEcken(playerNumber: Int, eckenList: List[(Int, Int)]): Unit
+    def getEcken(playerNumber: Int): List[(Int, Int)] 
     def getBlocks(playerNumber: Int): List[Int]
     def getRandomBlock(playerNumber: Int): Option[Int]
     def firstBlock(playerNumber: Int): Boolean

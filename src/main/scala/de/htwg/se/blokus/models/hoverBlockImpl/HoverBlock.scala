@@ -7,28 +7,18 @@ import de.htwg.se.blokus.models.Block
 class HoverBlock(playerAmount: Int, firstBlock: Int) extends HoverBlockInterface {
     var currentX = 2
     var currentY = 2
-    var currentBlockTyp = firstBlock
+    var BlockTyp = firstBlock
     var rotation = 0
     var mirrored = false
     var currentPlayer = 0
 
-    def getX(): Int = currentX
-    def getY(): Int = currentY
-    def getRotation(): Int = rotation
-    def getCurrentPlayer: Int = currentPlayer
-    def getCurrentBlock: Int = currentBlockTyp
-    def getBlock(): List[(Int, Int)] = {
-        Block.createBlock(currentBlockTyp, rotation, mirrored).baseForm.map { case (x, y) => (x + currentX, y + currentY) }
-    }
-
-    def setCurrentBlock(newBlock: Int): Int = {
-        currentBlockTyp = newBlock
-        currentBlockTyp
-    }
-    def changePlayer(): Int = {
-        currentPlayer = (currentPlayer + 1) % playerAmount
-        currentPlayer
-    }
+    def getX: Int = currentX
+    def getY: Int = currentY
+    
+    def getPlayer: Int = currentPlayer
+    def getBlockType: Int = BlockTyp
+    def getRotation: Int = rotation
+    def getMirrored: Boolean = mirrored
 
     def setPlayer(newPlayer: Int): Int = {
         val prevPlayer = currentPlayer
@@ -36,23 +26,52 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) extends HoverBlockInterface
         prevPlayer
     }
 
+    def setBlockType(newBlock: Int): Int = {
+        val prevBlock = BlockTyp
+        BlockTyp = newBlock
+        prevBlock
+    }
 
-    def getOutOfCorner(fieldHeight: Int, fieldWight: Int): Boolean = {
+    def setRotation(newRotation: Int): Int = {
+        val prevRotation = rotation
+        rotation = newRotation
+        prevRotation
+    }
+
+    def setMirrored(newMirrored: Boolean): Boolean = {
+        val prevMirrored = mirrored
+        mirrored = newMirrored
+        prevMirrored
+    }
+
+    def getOutOfCorner(height: Int, wight: Int): Boolean = {
         if (currentX < 2) {
             currentX = 2
             true
-        } else if ((currentX > fieldWight - 2)) {
-            currentX = fieldWight - 2
+        } else if ((currentX > wight - 2)) {
+            currentX = wight - 2
             true
         } else if (currentY < 2) {
             currentY = 2
             true
-        } else if ((currentY > fieldHeight - 2)) {
-            currentY = fieldHeight - 2
+        } else if ((currentY > height - 2)) {
+            currentY = height - 2
             true
         } else {
             false
         }
+    }
+    /*
+    def changePlayer(): Int = {
+        currentPlayer = (currentPlayer + 1) % playerAmount
+        currentPlayer
+    }
+
+    def getBlock(): List[(Int, Int)] = {
+        Block.createBlock(BlockTyp, rotation, mirrored).baseForm.map { case (x, y) => (x + currentX, y + currentY) }
+    }
+    def getRawBlock(blockTypeRaw: Int, rotationRaw: Int, mirroredRaw: Boolean): Block = {
+        Block.createBlock(blockTypeRaw, rotationRaw, mirroredRaw)
     }
 
     def move(feld: FieldInterface, richtung: Int): Boolean = {
@@ -73,13 +92,13 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) extends HoverBlockInterface
     def canMove(feld: FieldInterface, richtung: Int): Boolean = {
     richtung match {
         case 0 => 
-            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored).baseForm, currentX, currentY + 1)
+            feld.isValidPosition(Block.createBlock(BlockTyp, rotation, mirrored).baseForm, currentX, currentY + 1)
         case 1 => 
-            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored).baseForm, currentX + 1, currentY)
+            feld.isValidPosition(Block.createBlock(BlockTyp, rotation, mirrored).baseForm, currentX + 1, currentY)
         case 2 => 
-            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored).baseForm, currentX, currentY - 1)
+            feld.isValidPosition(Block.createBlock(BlockTyp, rotation, mirrored).baseForm, currentX, currentY - 1)
         case 3 => 
-            feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, mirrored).baseForm, currentX - 1, currentY)
+            feld.isValidPosition(Block.createBlock(BlockTyp, rotation, mirrored).baseForm, currentX - 1, currentY)
         case _ => 
             false
         }
@@ -88,7 +107,7 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) extends HoverBlockInterface
 
     def canRotate(feld: FieldInterface): Boolean = {
         feld.isValidPosition(
-            Block.createBlock(currentBlockTyp, (rotation + 1) % 4, mirrored).baseForm,
+            Block.createBlock(BlockTyp, (rotation + 1) % 4, mirrored).baseForm,
             currentX,
             currentY
         )
@@ -106,7 +125,7 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) extends HoverBlockInterface
 
 
     def canMirror(feld: FieldInterface): Boolean = {
-        feld.isValidPosition(Block.createBlock(currentBlockTyp, rotation, !mirrored).baseForm, currentX, currentY)
+        feld.isValidPosition(Block.createBlock(BlockTyp, rotation, !mirrored).baseForm, currentX, currentY)
     }
 
     // Spiegelt den aktuellen Block horizontal
@@ -121,7 +140,7 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) extends HoverBlockInterface
 
 
     def canPlace(feld: FieldInterface, firstPlace: Boolean): Boolean = {
-        val block = Block.createBlock(currentBlockTyp, rotation, mirrored)
+        val block = Block.createBlock(BlockTyp, rotation, mirrored)
         if (firstPlace) {
             feld.isLogicFirstPlace(block.baseForm, currentX, currentY)
         } else {
@@ -130,17 +149,17 @@ class HoverBlock(playerAmount: Int, firstBlock: Int) extends HoverBlockInterface
     }
 
     // Setzt den Block an der aktuellen Position
-    def place(field: FieldInterface, newBlockTyp: Int, firstPlace: Boolean): FieldInterface = {
-        
-        val block = Block.createBlock(currentBlockTyp, rotation, mirrored)
-        val temp = field.placeBlock(block.baseForm, block.corners, block.edges, currentX, currentY, currentPlayer, firstPlace)
+    def place(field: FieldInterface, firstPlace: Boolean): FieldInterface = {
+        val block = Block.createBlock(BlockTyp, rotation, mirrored)
+        val newField = field.placeBlock(block.baseForm, block.corners, block.edges, currentX, currentY, currentPlayer, firstPlace)
         currentX = (field.width / 2) - 1
         currentY = (field.height / 2) - 1
         rotation = 0
         mirrored = false
-        currentBlockTyp = newBlockTyp
-        temp
+        BlockTyp = -1
+        newField
     }
+    */
 }
 
 object HoverBlock {

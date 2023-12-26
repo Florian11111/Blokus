@@ -27,7 +27,7 @@ class Tui(controller: GameController) extends Observer[Event] {
         case "a" => controller.move(3)
         case "r" => controller.rotate()
         case "m" => controller.mirror()
-        case "e" => controller.placeBlock(5) 
+        case "e" => controller.placeBlock() 
         case "u" => controller.undo()
         case _   => println("Invalid command")
         }
@@ -96,8 +96,7 @@ class Tui(controller: GameController) extends Observer[Event] {
                     case "m" => controller.mirror()
                     case "e" => {
                         if (controller.canPlace()) {
-                            controller.placeBlock(5)
-                            controller.nextPlayer()
+                            controller.placeBlock()
                         } else {
                             println("Kann nicht an dieser Stelle Platziert werden!")
                         }

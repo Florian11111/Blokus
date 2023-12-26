@@ -11,14 +11,13 @@ import de.htwg.se.blokus.view.Gui
 import com.google.inject.Guice
 
 object Main {
-  
   def main(args: Array[String]): Unit = {
     val injector = Guice.createInjector(new BlokusModule)
     val controller = injector.getInstance(classOf[GameController])
     controller.start(2, 2, 20, 20)
     val tui = new Tui(controller)
     val gui = new Gui(controller, 480, 650)
-
+    
   
     // Hier wird die GUI in einem separaten Thread gestartet
     implicit val context: ExecutionContext = scala.concurrent.ExecutionContext.global
