@@ -10,10 +10,13 @@ trait HoverBlockInterface {
     def getRotation: Int
     def getMirrored: Boolean
 
+    def setX(newX: Int): Int
+    def setY(newY: Int): Int
     def setPlayer(newPlayer: Int): Int
     def setBlockType(newBlockType: Int): Int
     def setRotation(newRotation: Int): Int
     def setMirrored(newMirrored: Boolean): Boolean
+    
     
     def getOutOfCorner(height: Int, wight: Int): Boolean
 
@@ -34,5 +37,5 @@ trait HoverBlockInterface {
     // ----------------
 }
 object HoverBlockInterface {
-    def getInstance(playerAmount: Int, firstBlock: Int): HoverBlockInterface = new HoverBlock(playerAmount, firstBlock)
+    def getInstance(x: Int, y: Int, playerAmount: Int, blockType: Int, rotation: Int, mirrored: Boolean): HoverBlockInterface = new HoverBlock(x, y, playerAmount, blockType, rotation, mirrored)
 }

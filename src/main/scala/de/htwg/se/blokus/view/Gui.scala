@@ -158,7 +158,6 @@ class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) ext
             case 6 => {
                 if (controller.canPlace()) {
                     controller.placeBlock()
-                    controller.nextPlayer()
                 } else {
                     println("Kann nicht an dieser Stelle Platziert werden!")
                 }

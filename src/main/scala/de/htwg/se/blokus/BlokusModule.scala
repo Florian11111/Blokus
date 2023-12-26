@@ -14,9 +14,6 @@ import de.htwg.se.blokus.controller.GameController
 import de.htwg.se.blokus.controller.controllerInvImpl.Controller
 
 class BlokusModule extends AbstractModule {
-    private val gameSize: (Int, Int) = (20, 20)
-    private val playerAmount: Int = 2
-
     override def configure(): Unit = {
         bind(classOf[GameController]).toInstance(
             new Controller()

@@ -18,21 +18,6 @@ class Tui(controller: GameController) extends Observer[Event] {
         }
     }
 
-    def processInput(input: String): Unit = {
-        input match {
-        case "x" => System.exit(0)
-        case "s" => controller.move(0)
-        case "d" => controller.move(1)
-        case "w" => controller.move(2)
-        case "a" => controller.move(3)
-        case "r" => controller.rotate()
-        case "m" => controller.mirror()
-        case "e" => controller.placeBlock() 
-        case "u" => controller.undo()
-        case _   => println("Invalid command")
-        }
-    }
-
     def mergeFieldAndBlock(): Vector[Vector[Int]] = {
         val field = controller.getField()
         val block = controller.getBlock()
@@ -65,8 +50,9 @@ class Tui(controller: GameController) extends Observer[Event] {
     }
 
     override def update(event: Event): Unit = {
-        clearTerminal()
+        //clearTerminal()
         display()
+        /*
         println("\nBloecke:")
         print(controller.getBlocks())
         println("\nPlayer:")
@@ -77,7 +63,8 @@ class Tui(controller: GameController) extends Observer[Event] {
         println("m: Block spiegeln")
         println("s: Block platzieren")
         println("u: Undo")
-        println("x: Beenden")        
+        println("x: Beenden")      
+        */  
     }
 
     def inputLoop(): Unit = {

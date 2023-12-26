@@ -32,11 +32,11 @@ class BlockInventory(playerAmount: Int, initialCount: Int = 1) extends BlockInve
         }
     }
 
-    def getRandomBlock(spielerNumber: Int): Option[Int] = {
+    def getRandomBlock(spielerNumber: Int, rand: Random): Option[Int] = {
         if (spielerNumber >= 0 && spielerNumber < inventories.length) {
         val availableBlocks = getAvailableBlocks(spielerNumber)
         if (availableBlocks.nonEmpty) {
-            val randomIndex = Random.nextInt(availableBlocks.length)
+            val randomIndex = rand.nextInt(availableBlocks.length)
             val randomBlock = availableBlocks(randomIndex)
             Some(randomBlock)
         } else {
