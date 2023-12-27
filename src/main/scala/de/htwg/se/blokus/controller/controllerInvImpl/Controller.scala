@@ -31,8 +31,12 @@ class Controller extends GameController with Observable[Event] {
         this.playerAmount = playerAmt
         this.width = w
         this.height = h
-        assert(playerAmount >= 1 && playerAmount < 5)
-        blockInventory = BlockInventoryInterface.getInstance(playerAmount, 1)
+        assert(playerAmount > 1 && playerAmount < 5)
+        if (playerAmt == 2) {
+            blockInventory = BlockInventoryInterface.getInstance(playerAmount, 2)
+        } else {
+            blockInventory = BlockInventoryInterface.getInstance(playerAmount, 1)
+        }
         hoverBlock = HoverBlockInterface.getInstance(5, 5, playerAmount, 0, 0, false)
         field = FieldInterface.getInstance(width, height)
         notifyObservers(UpdateEvent)
@@ -148,6 +152,18 @@ class Controller extends GameController with Observable[Event] {
             false
         }
     } 
+
+    def setXandY(x: Int, y: Int): Boolean = {
+        val tempHoverBlock = HoverBlock.createInstance(x, y, playerAmount, hoverBlock.getBlockType, hoverBlock.getRotation, hoverBlock.getMirrored)
+        if (field.isInsideField(tempHoverBlock)) {
+            hoverBlock.setX(x)
+            hoverBlock.setY(y)
+            notifyObservers(UpdateEvent)
+            true
+        } else {
+            false
+        }
+    }
 
 
     def changeBlock(neuerBlock: Int): Int = {

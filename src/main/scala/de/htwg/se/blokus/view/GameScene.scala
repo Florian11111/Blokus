@@ -14,6 +14,9 @@ import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 import scalafx.application.Platform
 import scala.annotation.targetName
+import scalafx.scene.input.ScrollEvent
+import scalafx.scene.input.KeyEvent
+import scalafx.scene.input.KeyCode
 	
 
 class GameScene(controller: GameController, windowsWidth: Int, windowsHeight: Int, names: List[String], playerAmount: Int) extends JFXApp3 with Observer[Event] {
@@ -27,7 +30,8 @@ class GameScene(controller: GameController, windowsWidth: Int, windowsHeight: In
 
     private var stageWidth: Double = windowsWidth + 20
     private var stageHeight: Double = windowsHeight + 20
-
+    private var hoverX: Int = -1
+    private var hoverY: Int = -1
 
     override def start(): Unit = {
         stage = new JFXApp3.PrimaryStage {
@@ -35,13 +39,13 @@ class GameScene(controller: GameController, windowsWidth: Int, windowsHeight: In
             width = stageWidth
             height = stageHeight
             scene = createScene()
+            updateBoard()
+            updateLabels()
         }
-        updateBoard()
-        updateLabels()
     }
 
     def createScene(): Scene = {
-		new Scene {
+        new Scene {
             fill = Color.web("#333333",1)
             content = new VBox {
 				spacing = 10
@@ -59,54 +63,10 @@ class GameScene(controller: GameController, windowsWidth: Int, windowsHeight: In
 				children.add(boardPane)
 
 				// Erstelle eine HBox für die Buttons
-				val buttonBox1 = new HBox {
-					spacing = 10
-					alignment = scalafx.geometry.Pos.Center
-				}
-
-				// Füge 6 Buttons hinzu und weise ihnen eine Funktion zu
-				val button1 = new Button(s"Hoch")
-				styleButton(button1)
-				button1.onAction = _ => handleButtonAction(0)
-				buttonBox1.children.add(button1)
-
-				val button2 = new Button(s"Runter")
-				styleButton(button2)
-				button2.onAction = _ => handleButtonAction(1)
-				buttonBox1.children.add(button2)
-
-				val button3 = new Button(s"Links")
-				styleButton(button3)
-				button3.onAction = _ => handleButtonAction(2)
-				buttonBox1.children.add(button3)
-
-				val button4 = new Button(s"Rechts")
-				styleButton(button4)
-				button4.onAction = _ => handleButtonAction(3)
-				buttonBox1.children.add(button4)
-
-				val button5 = new Button(s"Spiegeln")
-				styleButton(button5)
-				button5.onAction = _ => handleButtonAction(4)
-				buttonBox1.children.add(button5)
-
-				val button6 = new Button(s"Drehen")
-				styleButton(button6)
-				button6.onAction = _ => handleButtonAction(5)
-				buttonBox1.children.add(button6)
-
-				children.add(buttonBox1)
-
-				// Erstelle eine HBox für die Buttons
 				val buttonBox2 = new HBox {
 					spacing = 10
 					alignment = scalafx.geometry.Pos.Center
 				}
-
-				val button7 = new Button(s"Setzten")
-				styleButton(button7)
-				button7.onAction = _ => handleButtonAction(6)
-				buttonBox2.children.add(button7)
 
 				val button8 = new Button(s"Undo")
 				styleButton(button8)
@@ -124,8 +84,18 @@ class GameScene(controller: GameController, windowsWidth: Int, windowsHeight: In
 				buttonBox2.children.add(numberTextField)
 				children.add(buttonBox2)
 			}
-}
-	}
+            onScroll = (event: ScrollEvent) => {
+                if (event.deltaY > 0) {
+                    controller.rotate()
+                }
+            }
+            onKeyPressed = (event: KeyEvent) => {
+                if (event.code == KeyCode.M) {
+                    controller.mirror()
+                }
+            }
+        }
+    }
 
     def styleButton(button: Button): Unit = {
         button.style = "-fx-font-size: 10pt;" +
@@ -212,6 +182,7 @@ class GameScene(controller: GameController, windowsWidth: Int, windowsHeight: In
         }
         merged
     }
+
 /*
     def updateBoard(): Unit = {
         val mergedFieldAndBlock = mergeFieldAndBlock()
@@ -230,44 +201,53 @@ class GameScene(controller: GameController, windowsWidth: Int, windowsHeight: In
         }
     }
 */
+
     def updateBoard(): Unit = {
         val mergedFieldAndBlock = mergeFieldAndBlock()
-        print(mergedFieldAndBlock)
         boardPane.children.clear()
         for {
-            (row, rowIndex) <- mergedFieldAndBlock.zipWithIndex
-            (value, columnIndex) <- row.zipWithIndex
+            (row, columnIndex) <- mergedFieldAndBlock.zipWithIndex
+            (value, rowIndex) <- row.zipWithIndex
         } {
             val button = new Button {
-                text = s"$rowIndex, $columnIndex"
+                //  text = s"$rowIndex, $columnIndex"
                 onAction = _ => handleButtonAction(rowIndex, columnIndex)
                 prefWidth = (windowsWidth / controller.getWidth()).toInt
                 prefHeight = (windowsWidth / controller.getWidth()).toInt
                 style = s"-fx-background-color: ${getFillColor(value)}"
+                onMouseEntered = _ => handleMouseHover(rowIndex, columnIndex)
             }
             boardPane.add(button, columnIndex, rowIndex)
         }
     }
+    def handleMouseHover(x: Int, y: Int): Unit = {
+        if (x == hoverX && y == hoverY)
+            return // do nothing
+        hoverX = x
+        hoverY = y
+        println(s"Mouse hovered over $x, $y")
+        controller.setXandY(x, y)
+    }
 
     def handleButtonAction(x: Int, y: Int): Unit = {
-        // Hier können Sie definieren, was passieren soll, wenn der Button gedrückt wird.
+        controller.placeBlock()
         println(s"Button at $x, $y was pressed.")
     }
 
-    def getFillColor(value: Int): Color = {
+    def getFillColor(value: Int): String = {
         value match {
-            case -1 => Color.White
-            case 0 => Color.Red
-            case 1 => Color.Green
-            case 2 => Color.Blue
-            case 3 => Color.Yellow
-            case 10 => Color.Gray
-            case 11 => Color.LightGray
-            case 20 => Color.web("#8b0000", 1)
-            case 21 => Color.web("#006400", 1)
-            case 22 => Color.web("#000088", 1)
-            case 23 => Color.web("#9B870C", 1)
-            case _ => Color.Black
+            case -1 => "#FFFFFF" // Weiß
+            case 0 => "#FF0000" // Rot
+            case 1 => "#008000" // Grün
+            case 2 => "#0000FF" // Blau
+            case 3 => "#FFFF00" // Gelb
+            case 10 => "#808080" // Grau
+            case 11 => "#D3D3D3" // Hellgrau
+            case 20 => "#8B0000" // Dunkelrot
+            case 21 => "#006400" // Dunkelgrün
+            case 22 => "#00008B" // Dunkelblau
+            case 23 => "#9B870C" // Dunkelgelb
+            case _ => "#000000" // Schwarz
         }
     }
 
