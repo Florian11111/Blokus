@@ -21,10 +21,8 @@ trait GameController extends Observer[Event] with Observable[Event] {
     def move(richtung: Int): Boolean
     def rotate(): Boolean
     def mirror(): Boolean
+    def exit(): Unit
     
-
-    //def nextPlayer(): Try[Unit]
-    //def changePlayer(newPlayer: Int): Try[Unit]
     def undo(): Try[Unit]
     def redo(): Try[Unit]
 }

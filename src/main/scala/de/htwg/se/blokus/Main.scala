@@ -23,11 +23,9 @@ object Main {
     val guiFuture: Future[Unit] = Future {
       gui.main(Array[String]())
     }
-
     // Starte die TUI
     tui.inputLoop()
     // Warten, bis die GUI initialisiert ist, bevor die TUI gestartet wird
     Await.result(guiFuture, Duration.Inf)
-
   }
 }

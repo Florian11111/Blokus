@@ -36,6 +36,20 @@ class Tui(controller: GameController) extends Observer[Event] {
         println(mergeFieldAndBlock().map(rowToString).mkString("\n"))
     }
 
+    def displayControlls(): Unit = {
+        println("\nBloecke:")
+        print(controller.getBlocks())
+        println("\nPlayer:")
+        print(controller.getCurrentPlayer() + 1)
+        println("\nSteuerung:")
+        println("w/a/s/d: Block bewegen")
+        println("r: Block rotieren")
+        println("m: Block spiegeln")
+        println("s: Block platzieren")
+        println("u: Undo")
+        println("x: Beenden")     
+    }
+
     def rowToString(row: Vector[Int]): String = {
         row.map {
             case -1 => "+ "
@@ -50,21 +64,9 @@ class Tui(controller: GameController) extends Observer[Event] {
     }
 
     override def update(event: Event): Unit = {
-        //clearTerminal()
+        clearTerminal()
         display()
-        /*
-        println("\nBloecke:")
-        print(controller.getBlocks())
-        println("\nPlayer:")
-        print(controller.getCurrentPlayer() + 1)
-        println("\nSteuerung:")
-        println("w/a/s/d: Block bewegen")
-        println("r: Block rotieren")
-        println("m: Block spiegeln")
-        println("s: Block platzieren")
-        println("u: Undo")
-        println("x: Beenden")      
-        */  
+        displayControlls()    
     }
 
     def inputLoop(): Unit = {

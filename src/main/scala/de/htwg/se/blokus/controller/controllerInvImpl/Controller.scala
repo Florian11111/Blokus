@@ -23,16 +23,19 @@ class Controller extends GameController with Observable[Event] {
     var hoverBlock: HoverBlockInterface = _
     var field: FieldInterface = _
 
+    def exit(): Unit = {
+        notifyObservers(ExitEvent)
+    }
+
     def start(playerAmt: Int, w: Int, h: Int): Unit = {
         this.playerAmount = playerAmt
         this.width = w
         this.height = h
-
         assert(playerAmount >= 1 && playerAmount < 5)
-
         blockInventory = BlockInventoryInterface.getInstance(playerAmount, 1)
         hoverBlock = HoverBlockInterface.getInstance(5, 5, playerAmount, 0, 0, false)
         field = FieldInterface.getInstance(width, height)
+        notifyObservers(UpdateEvent)
     }
 
     def getWidth(): Int = width
@@ -82,7 +85,6 @@ class Controller extends GameController with Observable[Event] {
             hoverBlock.setMirrored(false)
             hoverBlock.setPlayer((hoverBlock.getPlayer + 1) % playerAmount)
             hoverBlock.setBlockType(blockInventory.getRandomBlock(hoverBlock.getPlayer, Random).get)
-            println("ICH war hier")
             notifyObservers(UpdateEvent)
             true
         } else {
