@@ -7,7 +7,8 @@ import de.htwg.se.blokus.util.Observer
 
 class Tui(controller: GameController) extends Observer[Event] {
     controller.addObserver(this)
-    display()
+    var gameisStarted = false
+
     def clearTerminal(): Unit = {
         val os = System.getProperty("os.name").toLowerCase()
         if (os.contains("win")) {
@@ -33,6 +34,7 @@ class Tui(controller: GameController) extends Observer[Event] {
     }
 
     def display(): Unit = {
+        print("tetstest")
         println(mergeFieldAndBlock().map(rowToString).mkString("\n"))
     }
 
@@ -64,18 +66,37 @@ class Tui(controller: GameController) extends Observer[Event] {
     }
 
     override def update(event: Event): Unit = {
-        clearTerminal()
-        display()
-        displayControlls()    
+        event match {
+            case StartGameEvent => gameisStarted = true
+            case EndGameEvent => gameisStarted = false
+            case ExitEvent => System.exit(0)
+            case _ =>
+        }
+        if (gameisStarted) {
+            clearTerminal()
+            display()
+            displayControlls()   
+        }
     }
 
     def inputLoop(): Unit = {
+        if (!gameisStarted) {
+            println("Blokus")
+            println("Anzahl Spieler: ")
+            val playerCount = scala.io.StdIn.readInt()
+            println("Spielfeldgroesse X: ")
+            val fieldSizeX = scala.io.StdIn.readInt()
+            println("Spielfeldgroesse Y: ")
+            val fieldSizeY = scala.io.StdIn.readInt()
+            controller.start(playerCount, fieldSizeX, fieldSizeY)
+            return
+        } 
         try {
             var continue = true
             while (continue) {
                 val input = scala.io.StdIn.readLine()
                 input match {
-                    case "x" => continue = false
+                    case "x" => controller.exit()
                     case "w" => controller.move(2)
                     case "d" => controller.move(1)
                     case "s" => controller.move(0)

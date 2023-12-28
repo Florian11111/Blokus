@@ -9,8 +9,10 @@ import scalafx.scene.text.Font
 import scalafx.scene.paint.Color
 import scalafx.scene.layout.StackPane
 import scalafx.scene.layout.Pane
+import de.htwg.se.blokus.controller.GameController
+import javafx.stage.Stage
 
-class StartScene(gui: Gui) {
+class StartScene(gui: Gui, controller: GameController) {
     private val inputFields = new ObservableBuffer[Pane]()
 
     private val playerLabel = new Label("Players: 2") {
@@ -47,6 +49,7 @@ class StartScene(gui: Gui) {
     }
 
     def createScene(): Scene = {
+        //stage.setOnCloseRequest(_ => controller.exit())
         val rootPane = new BorderPane {
             style = "-fx-background-color: #191819;"
             top = new VBox {
@@ -110,8 +113,8 @@ class StartScene(gui: Gui) {
                             } else if (names.distinct.size != names.size) {
                                 errorLabel.text = "Error: Duplicate names are not allowed."
                             } else {
-                                // übergebe alle namen und anzahl spieler an switchToGameScene und spieler anzahl
-                                gui.switchToGameScene(names.toList, inputFields.size)
+                                controller.start(names.size, 20, 20)
+                                gui.switchToGameScene(names.toList)
                             }
                         }
                     }

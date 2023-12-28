@@ -39,7 +39,7 @@ class Controller extends GameController with Observable[Event] {
         }
         hoverBlock = HoverBlockInterface.getInstance(5, 5, playerAmount, 0, 0, false)
         field = FieldInterface.getInstance(width, height)
-        notifyObservers(UpdateEvent)
+        notifyObservers(StartGameEvent)
     }
 
     def getWidth(): Int = width
@@ -173,19 +173,6 @@ class Controller extends GameController with Observable[Event] {
     }
 
     def getRotation(): Int = hoverBlock.getRotation
-
-    /*
-    def nextPlayer(): Try[Unit] = {
-        changePlayer((hoverBlock.getCurrentPlayer + 1) % playerAmount)
-    }
-
-    def changePlayer(newPlayer: Int): Try[Unit] = {
-        Try {
-            hoverBlock.setPlayer(newPlayer)
-            hoverBlock.setCurrentBlock(blockInventory.getRandomBlock(newPlayer).get)
-            notifyObservers(UpdateEvent)
-        }
-    }*/
 
     private var undoStack: List[Command] = List()
     private var redoStack: List[Command] = List()

@@ -2,18 +2,40 @@ package de.htwg.se.blokus.view
 import de.htwg.se.blokus.controller.GameController
 import de.htwg.se.blokus.util.Observer
 import de.htwg.se.blokus.controller.Event
+import de.htwg.se.blokus.controller.StartGameEvent
+import de.htwg.se.blokus.controller.EndGameEvent
 
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
 import scalafx.stage.Stage
-
+import scalafx.application.Platform
+import de.htwg.se.blokus.controller.ExitEvent
 class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) extends JFXApp3 with Observer[Event] {
     
     private var myStage: Stage = _
+    private var gameSceneSwitched: Boolean = false
 
     controller.addObserver(this)
+
     def update(event: Event): Unit = {
-            // implementation of the update method
+        event match {
+            case StartGameEvent => 
+                Platform.runLater {
+                    if (!gameSceneSwitched) {
+                        switchToGameScene(List("Player1", "Player2", "Player3", "Player4"))
+                        gameSceneSwitched = true
+                    }
+                }
+            case EndGameEvent => 
+                Platform.runLater {
+                    switchToEndScene()
+                }
+            case ExitEvent => 
+                Platform.runLater {
+                    myStage.close()
+                }
+            case _ =>
+        }
     }
     
     override def start(): Unit = {
@@ -21,16 +43,18 @@ class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) ext
             title.value = "Blokus Game"
             width = windowsWidth + 20
             height = windowsHeight + 20
-            scene = new StartScene(Gui.this).createScene()
+            scene = new StartScene(Gui.this, controller).createScene()
         }
+        myStage.setOnCloseRequest(_ => controller.exit())
     }
 
     def switchToStartScene(): Unit = {
-        myStage.scene = new StartScene(this).createScene()
+        myStage.scene = new StartScene(this, controller).createScene()
     }
 
-    def switchToGameScene(names: List[String], playerAmount: Int): Unit = {
-        myStage.scene = new GameScene(controller, windowsWidth, windowsHeight, names, playerAmount).createScene()
+    def switchToGameScene(names: List[String]): Unit = {
+        gameSceneSwitched = true
+        myStage.scene = new GameScene(this, controller, windowsWidth, windowsHeight, names, myStage).createScene()
     }
 
     def switchToEndScene(): Unit = {
