@@ -9,6 +9,9 @@ trait Observable[T] {
     def addObserver(observer: Observer[T]): Unit = {
         observers = observer :: observers
     }
+    def removeObserver(observer: Observer[T]): Unit = {
+        observers = observers.filterNot(_ == observer)
+    }
     def notifyObservers(event: T): Unit = {
         observers.foreach(_.update(event))
     }

@@ -10,10 +10,12 @@ import scalafx.scene.Scene
 import scalafx.stage.Stage
 import scalafx.application.Platform
 import de.htwg.se.blokus.controller.ExitEvent
+import scalafx.scene.image.Image
 class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) extends JFXApp3 with Observer[Event] {
     
     private var myStage: Stage = _
     private var gameSceneSwitched: Boolean = false
+    private var nameList = List[String]()
 
     controller.addObserver(this)
 
@@ -22,14 +24,15 @@ class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) ext
             case StartGameEvent => 
                 Platform.runLater {
                     if (!gameSceneSwitched) {
-                        switchToGameScene(List("Player1", "Player2", "Player3", "Player4"))
+                        nameList = List("Player1", "Player2", "Player3", "Player4")
+                        switchToGameScene(nameList, false)
                         gameSceneSwitched = true
                     }
                 }
-            case EndGameEvent => 
-                Platform.runLater {
-                    switchToEndScene()
-                }
+            case EndGameEvent => {
+                switchToEndScene()
+            }
+                
             case ExitEvent => 
                 Platform.runLater {
                     myStage.close()
@@ -40,7 +43,9 @@ class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) ext
     
     override def start(): Unit = {
         myStage = new JFXApp3.PrimaryStage {
-            title.value = "Blokus Game"
+            val file = new java.io.File("./src/main/resources/gameIcon.png")
+            icons.add(new Image(file.toURI().toString()))
+            title.value = "Blokus"
             width = windowsWidth + 20
             height = windowsHeight + 20
             scene = new StartScene(Gui.this, controller).createScene()
@@ -53,12 +58,13 @@ class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) ext
         myStage.scene = new StartScene(this, controller).createScene()
     }
 
-    def switchToGameScene(names: List[String]): Unit = {
+    def switchToGameScene(names: List[String], highPerformentsMode: Boolean): Unit = {
+        nameList = names
         gameSceneSwitched = true
-        myStage.scene = new GameScene(this, controller, windowsWidth, windowsHeight, names, myStage).createScene()
+        myStage.scene = new GameScene(this, controller, windowsWidth, windowsHeight, names, highPerformentsMode).createScene()
     }
 
     def switchToEndScene(): Unit = {
-        myStage.scene = new EndScene(this, controller).createScene()
+        myStage.scene = new EndScene(this, controller, nameList).createScene()
     }
 }

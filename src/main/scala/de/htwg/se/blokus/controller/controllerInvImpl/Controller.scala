@@ -63,7 +63,6 @@ class Controller extends GameController with Observable[Event] {
     
     def getHeight(): Int = height
 
-
     def getPlayerAmount(): Int = playerAmount
 
     def placeBlock(): Try[Unit] = {
@@ -97,7 +96,6 @@ class Controller extends GameController with Observable[Event] {
             }
             hoverBlock.setPlayer(nextPlayer)
         }
-        print(getCurrentPlayer())
         false
     }
 

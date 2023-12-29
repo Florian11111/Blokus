@@ -21,9 +21,8 @@ import scalafx.scene.image.ImageView
 import javafx.scene.image.Image
 import javafx.scene.effect.ImageInput
 import javafx.stage.Stage
-	
 
-class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windowsHeight: Int, names: List[String], val stage: Stage) extends Observer[Event] {
+class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windowsHeight: Int, names: List[String], highPerformentsMode: Boolean) extends Observer[Event] {
 
     controller.addObserver(this)
     private var boardPane: GridPane = _
@@ -35,6 +34,25 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
     private var stageHeight: Double = windowsHeight + 20
     private var hoverX: Int = -1
     private var hoverY: Int = -1
+
+    private val imageBlue = loadBlockImage("blockBlue")
+    private val imageRed = loadBlockImage("blockRed")
+    private val imageGreen = loadBlockImage("blockGreen")
+    private val imageYellow = loadBlockImage("blockYellow")
+    private val imageDarkBlue = loadBlockImage("blockDarkBlue")
+    private val imageDarkRed = loadBlockImage("blockDarkRed")
+    private val imageDarkGreen = loadBlockImage("blockDarkGreen")
+    private val imageDarkYellow = loadBlockImage("blockDarkYellow")
+    private val imageDarkGrey = loadBlockImage("blockDarkGrey")
+    private val imageGrey = loadBlockImage("blockGrey")
+    private val imageLightGrey = loadBlockImage("blockLightGrey")
+    private val imageCyan = loadBlockImage("blockCyan")
+    private val imageBlack = loadBlockImage("blockBlack")
+
+    def loadBlockImage(name: String): Image = {
+        val file = new java.io.File("./src/main/resources/singleBlocks/" + name + ".png")
+        new Image(file.toURI().toString())
+    }
 
     def createScene(): Scene = {
         val scene = new Scene {
@@ -57,7 +75,6 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
                     children.add(boardPane)
 
                     buttonBox = new GridPane {
-                        // Replace spaces with tabs for indentation
                         spacing = 10
                         alignment = scalafx.geometry.Pos.Center
                     }
@@ -77,6 +94,9 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
                         minHeight = size
                         maxHeight = size
                         onMouseEntered = _ => handleMouseHover(rowIndex, columnIndex)
+                        if (!highPerformentsMode) {
+                            style = "-fx-background-color: transparent; -fx-border-color: transparent;"
+                        }
                     }
                     boardPane.add(button, rowIndex, columnIndex)
                     buttons(rowIndex)(columnIndex) = button
@@ -97,6 +117,11 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
                     controller.mirror()
                 }
             }
+            onKeyPressed = (event: KeyEvent) => {
+                if (event.code == KeyCode.R) {
+                    controller.rotate()
+                }
+            }
         }
         updateLabels()
         updateBoard()
@@ -109,12 +134,18 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
     }
 
     override def update(event: Event): Unit = {
-        updateBoard()
         event match {
-            case PlaceBlockEvent => updateLabels()
-            case EndGameEvent => Platform.runLater(gui.switchToEndScene())
+            case PlaceBlockEvent => {
+                updateBoard()
+                updateLabels() 
+            }
+            case UpdateEvent => updateBoard()
+            case EndGameEvent => {
+                controller.removeObserver(this)
+            }
             case _ =>
         }
+        
     }
 
     def mergeFieldAndBlock(): Vector[Vector[Int]] = {
@@ -125,12 +156,6 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
         // ---------
         var merged = field
 
-        for ((x, y) <- block) {
-            if (x >= 0 && x < controller.getWidth() && y >= 0 && y < controller.getHeight()){
-                val fieldValue = merged(y)(x)
-                merged = merged.updated(y, merged(y).updated(x, if (fieldValue != -1) 11 else 20 + controller.getCurrentPlayer()))
-            }
-        }
         // temporary for debugging
         merged = merged.indices.map { y =>
             if (corner.exists(_._2 == y)) {
@@ -140,9 +165,15 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
             } else {
                 merged(y)
             }
-        }.toVector
+        }.toVector// ---------
+
+        for ((x, y) <- block) {
+            if (x >= 0 && x < controller.getWidth() && y >= 0 && y < controller.getHeight()){
+                val fieldValue = merged(y)(x)
+                merged = merged.updated(y, merged(y).updated(x, if (fieldValue != -1) 11 else 20 + controller.getCurrentPlayer()))
+            }
+        }
         merged.transpose
-        // ---------
     }
 
     def updateBoard(): Unit = {
@@ -151,7 +182,11 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
             (row, columnIndex) <- mergedFieldAndBlock.zipWithIndex
             (value, rowIndex) <- row.zipWithIndex
         } {
-            buttons(columnIndex)(rowIndex).style = s"-fx-background-color: ${getFillColor(value)}"
+            if (!highPerformentsMode) {
+                buttons(columnIndex)(rowIndex).graphic = getFillColorImage(value)
+            } else {
+                buttons(columnIndex)(rowIndex).style = "-fx-background-color: " + getFillColor(value) + "; -fx-border-color: transparent;"
+            }
         }
     }
 
@@ -170,6 +205,28 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
             // TODO: error label
             println("Kann nicht an dieser Stelle Platziert werden!")
         }
+    }
+
+    def getFillColorImage(value: Int): ImageView = {
+        var image = value match {
+            case -1 => new ImageView(imageDarkGrey)
+            case 0 => new ImageView(imageRed)
+            case 1 => new ImageView(imageGreen)
+            case 2 => new ImageView(imageBlue)
+            case 3 => new ImageView(imageYellow)
+            case 10 => new ImageView(imageGrey)
+            case 11 => new ImageView(imageLightGrey)
+            case 20 => new ImageView(imageDarkRed)
+            case 21 => new ImageView(imageDarkGreen)
+            case 22 => new ImageView(imageDarkBlue)
+            case 23 => new ImageView(imageDarkYellow)
+            case 70 => new ImageView(imageCyan)
+            case _ => new ImageView(imageBlack)
+        }
+        val size = min(((windowsWidth - 250) / controller.getWidth()), ((windowsHeight - 120) / controller.getHeight())).doubleValue()
+        image.fitHeight = size
+        image.fitWidth = size
+        image
     }
 
     def getFillColor(value: Int): String = {
@@ -210,7 +267,7 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
         }
     }
 
-    def getImage(index: Int): ImageView = {
+    def getImageForButton(index: Int): ImageView = {
         val path = controller.getCurrentPlayer() match {
             case 0 => "./src/main/resources/red/"
             case 1 => "./src/main/resources/green/"
@@ -235,7 +292,7 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
                 onAction = _ => blockchange(index)
                 prefWidth = 60
                 prefHeight = 50
-                graphic = getImage(index)
+                graphic = getImageForButton(index)
                 style = "-fx-border-color: transparent; -fx-background-color: transparent;"
             }
             val columnIndex = index % 3

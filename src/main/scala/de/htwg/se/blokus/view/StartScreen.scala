@@ -3,7 +3,7 @@ package de.htwg.se.blokus.view
 import scalafx.collections.ObservableBuffer
 import scalafx.geometry.Pos
 import scalafx.scene.Scene
-import scalafx.scene.control.{Button, Label, TextField}
+import scalafx.scene.control.{Button, Label, TextField, CheckBox}
 import scalafx.scene.layout.{BorderPane, HBox, VBox}
 import scalafx.scene.text.Font
 import scalafx.scene.paint.Color
@@ -11,6 +11,7 @@ import scalafx.scene.layout.StackPane
 import scalafx.scene.layout.Pane
 import de.htwg.se.blokus.controller.GameController
 import javafx.stage.Stage
+import scalafx.application.Platform
 
 class StartScene(gui: Gui, controller: GameController) {
     private val inputFields = new ObservableBuffer[Pane]()
@@ -39,8 +40,25 @@ class StartScene(gui: Gui, controller: GameController) {
         })
         margin = scalafx.geometry.Insets(5) // Fügt einen Rand von 10 Pixeln hinzu
     }
-    
 
+    private val checkBox = new CheckBox {
+        text = "High Performance Mode"
+        style = "-fx-text-fill: white;"
+    }
+    private val sizeInputFields = Seq(
+        new TextField() {
+            style = "-fx-text-fill: white; -fx-background-color: black; -fx-alignment: center; -fx-border-color: #606060; -fx-border-radius: 5;"
+            promptText = "X"
+            text = "20"
+            prefColumnCount = 5  
+        },
+        new TextField() {
+            style = "-fx-text-fill: white; -fx-background-color: black; -fx-alignment: center; -fx-border-color: #606060; -fx-border-radius: 5;"
+            promptText = "Y"
+            text = "20"
+            prefColumnCount = 5  
+        }
+    )
     private val vbox = new VBox {
         alignment = Pos.CenterRight
     }
@@ -51,6 +69,12 @@ class StartScene(gui: Gui, controller: GameController) {
     def createScene(): Scene = {
         //stage.setOnCloseRequest(_ => controller.exit())
         val rootPane = new BorderPane {
+            right = new VBox {
+                spacing = 6
+                alignment = Pos.Center
+                children = sizeInputFields ++ Seq(checkBox)
+                margin = scalafx.geometry.Insets(0, 20, 0, 0)
+            }
             style = "-fx-background-color: #191819;"
             top = new VBox {
                 alignment = Pos.Center
@@ -72,16 +96,23 @@ class StartScene(gui: Gui, controller: GameController) {
                     style = "-fx-border-color: #b9b8b9; -fx-border-radius: 5; -fx-text-fill: white; -fx-background-color: #292829;"
                     onAction = _ => {
                         if (inputFields.size < 4) {
+                            val newTextField = new scalafx.scene.control.TextField() {
+                                style = "-fx-text-fill: white; -fx-background-color: black; -fx-alignment: center; -fx-padding: 10; -fx-border-color: #4CAF50; -fx-border-radius: 5;"
+                                promptText = "Name"
+                            }
+
                             val newField = new Pane {
-                                children = Seq(new scalafx.scene.control.TextField() {
-                                    style = "-fx-text-fill: white; -fx-background-color: black; -fx-alignment: center; -fx-padding: 10; -fx-border-color: #4CAF50; -fx-border-radius: 5;"
-                                    promptText = "Name"
-                                })
+                                children = Seq(newTextField)
                                 margin = scalafx.geometry.Insets(5)
                             }
+
                             inputFields += newField
                             vbox.children = inputFields ++ Seq(buttons)
+
+                            // Request focus on the new TextField
+                            Platform.runLater(() => newTextField.requestFocus())
                         }
+
                         playerLabel.text = s"Player: ${inputFields.size}"
                         errorLabel.text = ""
                     }
@@ -100,6 +131,8 @@ class StartScene(gui: Gui, controller: GameController) {
                     margin = scalafx.geometry.Insets(0, 25, 0, 0)
                 }
             )
+            // use the first element of the inputFields list to request focus
+            Platform.runLater(() => inputFields.head.children(0).requestFocus())
             vbox.children = inputFields ++ Seq(buttons)
             bottom = new StackPane {
                 alignment = Pos.Center
@@ -113,8 +146,18 @@ class StartScene(gui: Gui, controller: GameController) {
                             } else if (names.distinct.size != names.size) {
                                 errorLabel.text = "Error: Duplicate names are not allowed."
                             } else {
-                                controller.start(names.size, 20, 20)
-                                gui.switchToGameScene(names.toList)
+                                val x = sizeInputFields(0).getText
+                                val y = sizeInputFields(1).getText
+                                if (!x.matches("[0-9]+") || !y.matches("[0-9]+")) {
+                                    errorLabel.text = "Error: X and Y must be numbers."
+                                    
+                                } else {
+                                    // convert x and y to Numbers
+
+                                    controller.start(names.size, x.toInt, y.toInt)
+                                    gui.switchToGameScene(names.toList, checkBox.isSelected)
+                                }
+                                
                             }
                         }
                     }

@@ -74,13 +74,12 @@ class Tui(controller: GameController) extends Observer[Event] {
                 gameisStarted = false
                 isGameOver = true
                 printEndGame()
-                inputLoop()
             }
             case ExitEvent => System.exit(0)
             case _ => 
         }
         if (gameisStarted) {
-            //clearTerminal()
+            clearTerminal()
             display()
             displayControlls()   
         }
@@ -93,7 +92,6 @@ class Tui(controller: GameController) extends Observer[Event] {
         for (i <- 0 until results.size) {
             println("Player " + (i + 1) + ": " + results(i))
         }
-        // print winner (player with most blocks)
         val winner = results.indexOf(results.max)
         println("Player " + (winner + 1) + " has won!")    
         println("new Game? (n)")
@@ -102,6 +100,8 @@ class Tui(controller: GameController) extends Observer[Event] {
 
 
     def inputLoop(): Unit = {
+        var continue = true
+        while (continue) {
         if (isGameOver) {
             val input = scala.io.StdIn.readLine()
             if (input == "x") {
@@ -124,31 +124,30 @@ class Tui(controller: GameController) extends Observer[Event] {
         }
         print("test?")
         try { 
-            var continue = true
-            while (continue) {
-                val input = scala.io.StdIn.readLine()
-                input match {
-                    case "x" => controller.exit()
-                    case "w" => controller.move(2)
-                    case "d" => controller.move(1)
-                    case "s" => controller.move(0)
-                    case "a" => controller.move(3)
-                    case "u" => controller.undo()
-                    case "r" => controller.rotate()
-                    case "m" => controller.mirror()
-                    case "e" => {
-                        if (controller.canPlace()) {
-                            controller.placeBlock()
-                        } else {
-                            println("Kann nicht an dieser Stelle Platziert werden!")
-                        }
+            val input = scala.io.StdIn.readLine()
+            input match {
+                case "x" => controller.exit()
+                case "w" => controller.move(2)
+                case "d" => controller.move(1)
+                case "s" => controller.move(0)
+                case "a" => controller.move(3)
+                case "u" => controller.undo()
+                case "r" => controller.rotate()
+                case "m" => controller.mirror()
+                case "e" => {
+                    if (controller.canPlace()) {
+                        controller.placeBlock()
+                    } else {
+                        println("Kann nicht an dieser Stelle Platziert werden!")
                     }
-                    case _ =>
                 }
+                case _ =>
             }
+            
         } finally {
             // Reset any terminal configurations if needed
         }
+    }
     }
 }
 
