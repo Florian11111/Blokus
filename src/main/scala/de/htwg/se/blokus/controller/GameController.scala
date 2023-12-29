@@ -7,9 +7,16 @@ import de.htwg.se.blokus.util.{Observable, Observer}
 import scala.util.Try
 
 trait GameController extends Observer[Event] with Observable[Event] {
+    def TESTMETHOD(player: Int): List[(Int, Int)]
     def start(playerAmt: Int, w: Int, h: Int): Unit
+    def exit(): Unit
+
+
     def getWidth(): Int 
     def getHeight(): Int 
+    def getPlayerAmount(): Int
+    def getBlockAmount(): List[Int]
+    def isGameOverPlayer(player: Int): Boolean
     def placeBlock(): Try[Unit]
     def canPlace(): Boolean
     def changeCurrentBlock(newBlock: Int): Try[Unit]
@@ -21,7 +28,7 @@ trait GameController extends Observer[Event] with Observable[Event] {
     def setXandY(x: Int, y: Int): Boolean 
     def rotate(): Boolean
     def mirror(): Boolean
-    def exit(): Unit
+    
     
     def undo(): Try[Unit]
     def redo(): Try[Unit]

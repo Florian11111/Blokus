@@ -49,6 +49,7 @@ class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) ext
     }
 
     def switchToStartScene(): Unit = {
+        gameSceneSwitched = false
         myStage.scene = new StartScene(this, controller).createScene()
     }
 
@@ -58,6 +59,6 @@ class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) ext
     }
 
     def switchToEndScene(): Unit = {
-        myStage.scene = new EndScene(this).createScene()
+        myStage.scene = new EndScene(this, controller).createScene()
     }
 }

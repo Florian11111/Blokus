@@ -6,19 +6,18 @@ import scala.util.Random
 class BlockInventory(playerAmount: Int, initialCount: Int = 1) extends BlockInventoryInterface {
     private var inventories: Array[Array[Int]] = Array.fill(playerAmount, 21)(initialCount)
     private var isFirstBlock: Array[Boolean] = Array.fill(playerAmount)(true)
-    private var ecken: Array[List[(Int, Int)]] = Array.fill(playerAmount)(List.empty)
+    private var posPositions: Array[List[(Int, Int)]] = Array.fill(playerAmount)(List.empty)
     
-    // funktion to get and set ecken
-    def getEcken(playerNumber: Int): List[(Int, Int)] = {
-        if (playerNumber >= 0 && playerNumber < ecken.length) {
-            ecken(playerNumber)
+    def getPosPositions(playerNumber: Int): List[(Int, Int)] = {
+        if (playerNumber >= 0 && playerNumber < posPositions.length) {
+            posPositions(playerNumber)
         } else {
             throw new IllegalArgumentException(s"Invalid player number: $playerNumber")
         }
     }
-    def setEcken(playerNumber: Int, eckenList: List[(Int, Int)]): Unit = {
-        if (playerNumber >= 0 && playerNumber < ecken.length) {
-            ecken(playerNumber) = eckenList
+    def setPosPositions(playerNumber: Int, posPositionsList: List[(Int, Int)]): Unit = {
+        if (playerNumber >= 0 && playerNumber < posPositions.length) {
+            posPositions(playerNumber) = posPositionsList
         } else {
             throw new IllegalArgumentException(s"Invalid player number: $playerNumber")
         }

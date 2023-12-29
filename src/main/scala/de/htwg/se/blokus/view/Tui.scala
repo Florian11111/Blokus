@@ -8,6 +8,7 @@ import de.htwg.se.blokus.util.Observer
 class Tui(controller: GameController) extends Observer[Event] {
     controller.addObserver(this)
     var gameisStarted = false
+    var isGameOver = false
 
     def clearTerminal(): Unit = {
         val os = System.getProperty("os.name").toLowerCase()
@@ -22,34 +23,14 @@ class Tui(controller: GameController) extends Observer[Event] {
     def mergeFieldAndBlock(): Vector[Vector[Int]] = {
         val field = controller.getField()
         val block = controller.getBlock()
-
-        val merged = field.zipWithIndex.map { case (row, rowIndex) =>
+        
+        field.zipWithIndex.map { case (row, rowIndex) =>
             row.zipWithIndex.map { case (fieldValue, columnIndex) =>
             block.find { case (x, y) =>
                 x == columnIndex && y == rowIndex
             }.map(_ => if (fieldValue != -1) 11 else 10).getOrElse(fieldValue)
             }
         }
-        merged
-    }
-
-    def display(): Unit = {
-        print("tetstest")
-        println(mergeFieldAndBlock().map(rowToString).mkString("\n"))
-    }
-
-    def displayControlls(): Unit = {
-        println("\nBloecke:")
-        print(controller.getBlocks())
-        println("\nPlayer:")
-        print(controller.getCurrentPlayer() + 1)
-        println("\nSteuerung:")
-        println("w/a/s/d: Block bewegen")
-        println("r: Block rotieren")
-        println("m: Block spiegeln")
-        println("s: Block platzieren")
-        println("u: Undo")
-        println("x: Beenden")     
     }
 
     def rowToString(row: Vector[Int]): String = {
@@ -65,33 +46,84 @@ class Tui(controller: GameController) extends Observer[Event] {
         }.mkString
     }
 
+    def display(): Unit = {
+        println(mergeFieldAndBlock().map(rowToString).mkString("\n"))
+    }
+
+    def displayControlls(): Unit = {
+        println("\nBloecke:")
+        print(controller.getBlocks())
+        println("\nPlayer:")
+        print(controller.getCurrentPlayer() + 1)
+        println("\nSteuerung:")
+        println("w/a/s/d: Block bewegen")
+        println("r: Block rotieren")
+        println("m: Block spiegeln")
+        println("s: Block platzieren")
+        println("u: Undo")
+        println("x: Beenden")   
+    }
+
     override def update(event: Event): Unit = {
         event match {
-            case StartGameEvent => gameisStarted = true
-            case EndGameEvent => gameisStarted = false
+            case StartGameEvent => {
+                gameisStarted = true
+                isGameOver = false
+            }
+            case EndGameEvent => {
+                gameisStarted = false
+                isGameOver = true
+                printEndGame()
+                inputLoop()
+            }
             case ExitEvent => System.exit(0)
-            case _ =>
+            case _ => 
         }
         if (gameisStarted) {
-            clearTerminal()
+            //clearTerminal()
             display()
             displayControlls()   
         }
     }
 
+    def printEndGame(): Unit = {
+        clearTerminal()
+        println("Game Over!")
+        val results = controller.getBlockAmount()
+        for (i <- 0 until results.size) {
+            println("Player " + (i + 1) + ": " + results(i))
+        }
+        // print winner (player with most blocks)
+        val winner = results.indexOf(results.max)
+        println("Player " + (winner + 1) + " has won!")    
+        println("new Game? (n)")
+        println("Close? (x)")
+    }
+
+
     def inputLoop(): Unit = {
+        if (isGameOver) {
+            val input = scala.io.StdIn.readLine()
+            if (input == "x") {
+                controller.exit()
+            } else if (input == "n") {
+                controller.start(controller.getPlayerAmount(), controller.getWidth(), controller.getHeight())
+            } 
+        }
+        
         if (!gameisStarted) {
             println("Blokus")
             println("Anzahl Spieler: ")
             val playerCount = scala.io.StdIn.readInt()
+            assert(playerCount >= 1 && playerCount <= 4)
             println("Spielfeldgroesse X: ")
             val fieldSizeX = scala.io.StdIn.readInt()
             println("Spielfeldgroesse Y: ")
             val fieldSizeY = scala.io.StdIn.readInt()
             controller.start(playerCount, fieldSizeX, fieldSizeY)
-            return
-        } 
-        try {
+        }
+        print("test?")
+        try { 
             var continue = true
             while (continue) {
                 val input = scala.io.StdIn.readLine()

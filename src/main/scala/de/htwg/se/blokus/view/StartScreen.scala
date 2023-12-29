@@ -89,7 +89,7 @@ class StartScene(gui: Gui, controller: GameController) {
                 new Button("-") {
                     style = "-fx-border-color: #b9b8b9; -fx-border-radius: 5; -fx-text-fill: white; -fx-background-color: #292829;;"
                     onAction = _ => {
-                        if (inputFields.size > 2) {
+                        if (inputFields.size > 1) {
                             val lastField = inputFields.last
                             inputFields -= lastField
                             vbox.children = inputFields ++ Seq(buttons)

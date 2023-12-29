@@ -1,6 +1,6 @@
 package de.htwg.se.blokus.models
 
-import de.htwg.se.blokus.models.FieldImpl.* 
+import de.htwg.se.blokus.models.fieldImpl.* 
 
 trait FieldInterface {
     val width: Int
@@ -8,6 +8,8 @@ trait FieldInterface {
     def getFieldVector: Vector[Vector[Int]]
     
     // def isCorner(x: Int, y: Int): Boolean // ist private als muss nicht hier sein :) (Glaube ich)
+    def getBlockAmount(blockType: Int): Int
+    def isInBounds(x: Int, y : Int): Boolean
     def cornerCheck(hoverBlock: HoverBlockInterface): Boolean
     def isInCorner(hoverBlock: HoverBlockInterface): Boolean
     def isGameRuleConfirm(hoverBlock: HoverBlockInterface): Boolean

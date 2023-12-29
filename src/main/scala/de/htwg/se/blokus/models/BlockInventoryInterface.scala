@@ -6,8 +6,8 @@ import de.htwg.se.blokus.models.blockInvImpl.*
 import scala.util.Random
 
 trait BlockInventoryInterface {
-    def setEcken(playerNumber: Int, eckenList: List[(Int, Int)]): Unit
-    def getEcken(playerNumber: Int): List[(Int, Int)] 
+    def setPosPositions(playerNumber: Int, eckenList: List[(Int, Int)]): Unit
+    def getPosPositions(playerNumber: Int): List[(Int, Int)] 
     def getBlocks(playerNumber: Int): List[Int]
     def getRandomBlock(playerNumber: Int, rand: Random): Option[Int]
     def firstBlock(playerNumber: Int): Boolean

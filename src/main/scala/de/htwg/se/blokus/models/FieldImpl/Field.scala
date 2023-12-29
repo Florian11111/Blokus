@@ -1,7 +1,9 @@
-package de.htwg.se.blokus.models.FieldImpl
+package de.htwg.se.blokus.models.fieldImpl
+
 import de.htwg.se.blokus.models.FieldInterface
 import de.htwg.se.blokus.models.HoverBlockInterface
 import de.htwg.se.blokus.models.Block
+import de.htwg.se.blokus.models.hoverBlockImpl.HoverBlock
 
 
 class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface {
@@ -14,7 +16,11 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
         (x == 0 && y == 0) || (x == width - 1 && y == 0) || (x == 0 && y == height - 1) || (x == width - 1 && y == height - 1)
     }
 
-    private def isInBounds(x: Int, y: Int): Boolean = x >= 0 && x < width && y >= 0 && y < height
+    def getBlockAmount(blockType: Int): Int = {
+        fieldVector.flatten.count(_ == blockType)
+    }
+
+    def isInBounds(x: Int, y : Int): Boolean = x >= 0 && x < width && y >= 0 && y < height
 
     def isInsideField(hoverBlock: HoverBlockInterface): Boolean = {
         val block = Block.createBlock(hoverBlock.getBlockType, hoverBlock.getRotation, hoverBlock.getMirrored)
@@ -28,9 +34,13 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
 
     def cornerCheck(hoverBlock: HoverBlockInterface): Boolean = {
         val block = Block.createBlock(hoverBlock.getBlockType, hoverBlock.getRotation, hoverBlock.getMirrored)
-        block.corners.exists { ecke =>
-            val newX = hoverBlock.getX + ecke._1
-            val newY = hoverBlock.getY + ecke._2
+        val x = hoverBlock.getX
+        val y = hoverBlock.getY
+        block.baseForm.exists { blockcords =>
+            val newX = x + blockcords._1
+            val newY = y + blockcords._2
+            hoverBlock.setX(newX)
+            hoverBlock.setY(newY)
             isGameRuleConfirm(hoverBlock)
         }
     }

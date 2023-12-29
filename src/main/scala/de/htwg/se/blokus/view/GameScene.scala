@@ -30,6 +30,7 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
     private var currentPlayerLabel: Label = _
     private var buttonBox: GridPane = _
 
+    private var buttons: Array[Array[Button]] = Array.ofDim[Button](controller.getWidth(), controller.getHeight())
     private var stageWidth: Double = windowsWidth + 20
     private var stageHeight: Double = windowsHeight + 20
     private var hoverX: Int = -1
@@ -63,6 +64,24 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
                     children.add(buttonBox)
                 })
 
+                for {
+                    (row, rowIndex) <- buttons.zipWithIndex
+                    (columnIndex) <- row.indices
+                } {
+                    val size = min(((windowsWidth - 250) / controller.getWidth()), ((windowsHeight - 120) / controller.getHeight())).doubleValue()
+                    val button = new Button {
+                        focusTraversable = false
+                        onAction = _ => handleButtonAction(rowIndex, columnIndex)
+                        minWidth = size.doubleValue()
+                        maxWidth = size
+                        minHeight = size
+                        maxHeight = size
+                        onMouseEntered = _ => handleMouseHover(rowIndex, columnIndex)
+                    }
+                    boardPane.add(button, rowIndex, columnIndex)
+                    buttons(rowIndex)(columnIndex) = button
+                }
+
                 val undobutton = new Button(s"Undo")
                 styleButton(undobutton)
                 undobutton.onAction = _ => controller.undo()
@@ -89,47 +108,53 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
             "-fx-alignment: center; -fx-padding: 10; -fx-border-color: #4CAF50; -fx-border-radius: 5;"
     }
 
-
     override def update(event: Event): Unit = {
         updateBoard()
-        updateLabels()
+        event match {
+            case PlaceBlockEvent => updateLabels()
+            case EndGameEvent => Platform.runLater(gui.switchToEndScene())
+            case _ =>
+        }
     }
 
     def mergeFieldAndBlock(): Vector[Vector[Int]] = {
         val field = controller.getField()
         val block = controller.getBlock()
+        // temporary for debugging
+        val corner = controller.TESTMETHOD(controller.getCurrentPlayer())
+        // ---------
+        var merged = field
 
-        val merged = field.zipWithIndex.map { case (row, rowIndex) =>
-            row.zipWithIndex.map { case (fieldValue, columnIndex) =>
-                block.find { case (x, y) =>
-                    x == columnIndex && y == rowIndex
-                }.map(_ => if (fieldValue != -1) 11 else 20 + controller.getCurrentPlayer()).getOrElse(fieldValue)
+        for ((x, y) <- block) {
+            if (x >= 0 && x < controller.getWidth() && y >= 0 && y < controller.getHeight()){
+                val fieldValue = merged(y)(x)
+                merged = merged.updated(y, merged(y).updated(x, if (fieldValue != -1) 11 else 20 + controller.getCurrentPlayer()))
             }
         }
-        merged
+        // temporary for debugging
+        merged = merged.indices.map { y =>
+            if (corner.exists(_._2 == y)) {
+                merged(y).indices.map { x =>
+                    if (corner.contains((x, y))) 70 else merged(y)(x)
+                }.toVector
+            } else {
+                merged(y)
+            }
+        }.toVector
+        merged.transpose
+        // ---------
     }
 
     def updateBoard(): Unit = {
         val mergedFieldAndBlock = mergeFieldAndBlock()
-        boardPane.children.clear()
         for {
-            (row, rowIndex) <- mergedFieldAndBlock.zipWithIndex
-            (value, columnIndex) <- row.zipWithIndex
+            (row, columnIndex) <- mergedFieldAndBlock.zipWithIndex
+            (value, rowIndex) <- row.zipWithIndex
         } {
-            val button = new Button {
-                focusTraversable = false
-                val size = min(((windowsWidth - 250) / controller.getWidth()), ((windowsHeight - 120) / controller.getHeight())).doubleValue()
-                onAction = _ => handleButtonAction(rowIndex, columnIndex)
-                minWidth = size.doubleValue()
-                maxWidth = size
-                minHeight = size
-                maxHeight = size
-                style = s"-fx-background-color: ${getFillColor(value)}"
-                onMouseEntered = _ => handleMouseHover(columnIndex, rowIndex)
-            }
-            boardPane.add(button, columnIndex, rowIndex)
+            buttons(columnIndex)(rowIndex).style = s"-fx-background-color: ${getFillColor(value)}"
         }
     }
+
     def handleMouseHover(x: Int, y: Int): Unit = {
         if (x == hoverX && y == hoverY)
             return // do nothing
@@ -160,6 +185,7 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
             case 21 => "#006400" // Dunkelgrün
             case 22 => "#00008B" // Dunkelblau
             case 23 => "#9B870C" // Dunkelgelb
+            case 70 => "#00FFFF" // Dunkelgelb
             case _ => "#000000" // Schwarz
         }
     }
@@ -199,7 +225,6 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
         imageView.fitWidth = image.getWidth / 2
         imageView
     }
-    
 
     def updateBlockList(): Unit = {
         buttonBox.children.clear()  // Lösche alle alten Buttons
