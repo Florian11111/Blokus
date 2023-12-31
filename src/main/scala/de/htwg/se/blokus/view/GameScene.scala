@@ -116,8 +116,6 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
                 if (event.code == KeyCode.M) {
                     controller.mirror()
                 }
-            }
-            onKeyPressed = (event: KeyEvent) => {
                 if (event.code == KeyCode.R) {
                     controller.rotate()
                 }
@@ -157,6 +155,7 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
         var merged = field
 
         // temporary for debugging
+        /*
         merged = merged.indices.map { y =>
             if (corner.exists(_._2 == y)) {
                 merged(y).indices.map { x =>
@@ -166,6 +165,7 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
                 merged(y)
             }
         }.toVector// ---------
+        */
 
         for ((x, y) <- block) {
             if (x >= 0 && x < controller.getWidth() && y >= 0 && y < controller.getHeight()){
