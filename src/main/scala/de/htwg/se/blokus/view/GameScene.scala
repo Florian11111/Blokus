@@ -27,6 +27,9 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
 
     controller.addObserver(this)
     private var names = namesList
+    //make every value of oldField -2
+    private var oldField = controller.getField().map(_.map(_ => -2)).transpose
+
     private var boardPane: GridPane = _
     private var currentPlayerLabel: Label = _
     private var buttonBox: GridPane = _
@@ -181,11 +184,11 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
     def mergeFieldAndBlock(): Vector[Vector[Int]] = {
         val field = controller.getField()
         val block = controller.getBlock()
+        var merged = field
+        // ---------
         // temporary for debugging
        // val corner = controller.TESTMETHOD(controller.getCurrentPlayer())
-        // ---------
-        var merged = field
-
+        
         // temporary for debugging
         /*
         merged = merged.indices.map { y =>
@@ -234,21 +237,29 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
             boardPane.add(button, rowIndex, columnIndex)
             buttons(rowIndex)(columnIndex) = button
         }
+        oldField = controller.getField().map(_.map(_ => -2)).transpose
         updateBoard()
     }
 
     def updateBoard(): Unit = {
+        val start = System.nanoTime()
         val mergedFieldAndBlock = mergeFieldAndBlock()
         for {
             (row, columnIndex) <- mergedFieldAndBlock.zipWithIndex
             (value, rowIndex) <- row.zipWithIndex
         } {
-            if (!highPerformentsMode) {
-                buttons(columnIndex)(rowIndex).graphic = getFillColorImage(value)
-            } else {
-                buttons(columnIndex)(rowIndex).style = "-fx-background-color: " + getFillColor(value) + "; -fx-border-color: transparent;"
+            if (mergedFieldAndBlock(columnIndex)(rowIndex) != oldField(columnIndex)(rowIndex)) {
+                if (!highPerformentsMode) {
+                    buttons(columnIndex)(rowIndex).graphic = getFillColorImage(value)
+                } else {
+                    buttons(columnIndex)(rowIndex).style = "-fx-background-color: " + getFillColor(value) + "; -fx-border-color: transparent;"
+                }
             }
         }
+        oldField = mergedFieldAndBlock
+        val end = System.nanoTime()
+        println("updateBoard: " + (end - start) / 1000000 + "ms")
+        
     }
 
     def handleMouseHover(x: Int, y: Int): Unit = {

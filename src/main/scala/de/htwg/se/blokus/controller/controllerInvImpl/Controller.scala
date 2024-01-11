@@ -251,7 +251,6 @@ class Controller extends GameController with Observable[Event] {
     def getRotation(): Int = hoverBlock.getRotation
 
     def load(path: String): Try[Unit] = {
-        // check if path ends with.xml or .json
         var gameState: GameState = null 
         Try {
             val fileIo = path match {

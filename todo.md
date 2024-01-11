@@ -3,9 +3,6 @@
     Mit den tasten R und M soll man Rotieren und Mirrown können. 
     Mit LinksClick soll man platziern können. 
 
-## Code: Methoden mit Klammer und ohne Klammer
-    Tauschen ob mit Klammern oder ohne 
-
 ## Farbe wenn man nicht platzieren kann
 
 ## fehler meldung wenn man an falscher stelle clickt 
@@ -14,8 +11,8 @@
 
 ## wenn 3 spieler neues balancing
 
+## border wenn man über einen block hovert (beim auswählen)
+
 ## farben von hoverblock dunkler
 
 ## todo error label
-
-## @Arthur2500 fix bitte noch gui sachen
