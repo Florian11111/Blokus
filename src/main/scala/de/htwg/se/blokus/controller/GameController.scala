@@ -19,11 +19,12 @@ trait GameController extends Observer[Event] with Observable[Event] {
     def placeBlock(): Try[Unit]
     def canPlace(): Boolean
     def changeCurrentBlock(newBlock: Int): Try[Unit]
+    def setNextBLock(): Try[Unit]
     def getCurrentPlayer(): Int
     def getField(): Vector[Vector[Int]]
     def getBlocks(): List[Int]
     def getBlock(): List[(Int, Int)]
-    def move(richtung: Int): Boolean
+    def move(x: Int, y: Int): Boolean
     def setXandY(x: Int, y: Int): Boolean 
     def rotate(): Boolean
     def mirror(): Boolean

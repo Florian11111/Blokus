@@ -176,6 +176,20 @@ class Controller extends GameController with Observable[Event] {
         notifyObservers(UpdateEvent)
     }
 
+    def setNextBLock(): Try[Unit] = Try {
+        val blocks = blockInventory.getBlocks(getCurrentPlayer())
+        if (blocks.forall(_ <= 0)) {
+            throw new IllegalArgumentException("No blocks left!")
+        }
+        val current = hoverBlock.getBlockType
+        var next = (current + 1) % 21
+        while (blocks(next) <= 0) {
+            next = (next + 1) % 21
+        }
+        hoverBlock.setBlockType(next)
+        notifyObservers(UpdateEvent)
+    }
+
     def getCurrentPlayer(): Int = hoverBlock.getPlayer
 
     def getNextPlayer(): Int = (getCurrentPlayer() + 1) % playerAmount
@@ -185,13 +199,9 @@ class Controller extends GameController with Observable[Event] {
     def getBlock(): List[(Int, Int)] = Block.createBlock(hoverBlock.getBlockType, 
         hoverBlock.getRotation, hoverBlock.getMirrored).baseForm.map(e => (e._1 + hoverBlock.getX, e._2 + hoverBlock.getY))
 
-    def move(richtung: Int): Boolean = {
-        val (x, y) = richtung match {
-            case 0 => (hoverBlock.getX, hoverBlock.getY + 1)
-            case 1 => (hoverBlock.getX + 1, hoverBlock.getY)
-            case 2 => (hoverBlock.getX, hoverBlock.getY - 1)
-            case 3 => (hoverBlock.getX - 1, hoverBlock.getY)
-        }
+    def move(xCord: Int, yCord: Int): Boolean = {
+        val x = hoverBlock.getX + xCord
+        val y = hoverBlock.getY + yCord
         val tempHoverBlock = HoverBlock.createInstance(x, y, playerAmount, hoverBlock.getBlockType, hoverBlock.getRotation, hoverBlock.getMirrored)
         tempHoverBlock.setPlayer(hoverBlock.getPlayer)
         if (field.isInsideField(tempHoverBlock)) {

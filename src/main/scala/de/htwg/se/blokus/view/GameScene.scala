@@ -22,15 +22,24 @@ import javafx.scene.image.Image
 import javafx.scene.effect.ImageInput
 import scalafx.stage.FileChooser
 import javafx.stage.Stage
+import javafx.geometry.Insets
+import scala.compiletime.ops.boolean
 
-class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windowsHeight: Int, namesList: List[String], highPerformentsMode: Boolean) extends Observer[Event] {
+class GameScene(gui: Gui, 
+    controller: GameController, 
+    windowsWidth: Int, 
+    windowsHeight: Int, 
+    namesList: List[String],
+    highPerformentsMode: Boolean, 
+    info: Boolean) extends Observer[Event] {
 
     controller.addObserver(this)
     private var names = namesList
-    //make every value of oldField -2
     private var oldField = controller.getField().map(_.map(_ => -2)).transpose
 
     private var boardPane: GridPane = _
+    private var infoHeader: Label = _
+    private var infoText: Label = _
     private var currentPlayerLabel: Label = _
     private var buttonBox: GridPane = _
 
@@ -48,6 +57,10 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
     private val imageDarkRed = loadBlockImage("blockDarkRed")
     private val imageDarkGreen = loadBlockImage("blockDarkGreen")
     private val imageDarkYellow = loadBlockImage("blockDarkYellow")
+    private val imageVeryDarkYellow = loadBlockImage("blockVeryDarkYellow")
+    private val imageVeryDarkBlue = loadBlockImage("blockVeryDarkBlue")
+    private val imageVeryDarkRed = loadBlockImage("blockVeryDarkRed")
+    private val imageVeryDarkGreen = loadBlockImage("blockVeryDarkGreen")
     private val imageDarkGrey = loadBlockImage("blockDarkGrey")
     private val imageGrey = loadBlockImage("blockGrey")
     private val imageLightGrey = loadBlockImage("blockLightGrey")
@@ -60,12 +73,32 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
     }
 
     def createScene(): Scene = {
+        val undobutton = new Button(s"Undo")
+        styleButton(undobutton)
+        undobutton.margin = scalafx.geometry.Insets(5, 5, 5, 5)
+        undobutton.onAction = _ => controller.undo()
+
+        val savebutton = new Button(s"Save")
+        styleButton(savebutton)
+        savebutton.margin = scalafx.geometry.Insets(5, 5, 5, 5)
+        savebutton.onAction = _ => saveGame()
+
+        val loadbutton = new Button(s"Load")
+        styleButton(loadbutton)
+        loadbutton.margin = scalafx.geometry.Insets(5, 5, 5, 5)
+        loadbutton.onAction = _ => loadGame()
+
+        val box = new HBox()
+        box.margin = scalafx.geometry.Insets(10, 0, 0, 0)
+        box.children.addAll(undobutton, savebutton, loadbutton)
+        box.alignment = scalafx.geometry.Pos.Center
+        
         val scene = new Scene {
-            fill = Color.web("#191819", 1)
-            content = new VBox {
+            root = new VBox {
+                // add background coler to VBox
+                style = "-fx-background-color: #191819;"
                 spacing = 10
                 alignment = scalafx.geometry.Pos.Center
-
                 // Initialisiere currentPlayerLabel hier
                 currentPlayerLabel = new Label("Current Player: ")
                 children.add(currentPlayerLabel)
@@ -74,41 +107,44 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
                     spacing = 10
                     // add margin to HBox
                     margin = scalafx.geometry.Insets(0, 0, 0, 10)
-                    alignment = scalafx.geometry.Pos.Center
+                    children.add(new VBox {
+                        boardPane = new GridPane {}
+                        children.add(boardPane)
+                        children.add(box)
+                    })
 
-                    boardPane = new GridPane {}
-                    children.add(boardPane)
+                    children.add(new VBox {
+                        buttonBox = new GridPane {
+                            spacing = 10
+                            alignment = scalafx.geometry.Pos.Center
+                        }
+                        children.add(buttonBox)
+                        if (info) {
+                            children.add(new VBox {
+                                // add margin
+                                spacing = 2
+                                alignment = scalafx.geometry.Pos.Center
+                                style = "-fx-background-color: #151515; -fx-border-color: #333333; -fx-border-radius: 5;"
+                                infoHeader = new Label("Controlls: ")
+                                infoHeader.style = "-fx-text-fill: #999999; -fx-font-size: 16px; -fx-font-weight: bold;"
+                                children.add(infoHeader)
 
-                    buttonBox = new GridPane {
-                        spacing = 10
+                                infoText = new Label("w/a/s/d \t=> \tMove Block\n" +
+                                    "r \t\t=> \tRotate\n" +
+                                    "m \t\t=> \tMirror\n" +
+                                    "e \t\t=> \tPlace Block\n" +
+                                    "u \t\t=> \tUndo\n" +
+                                    "q \t\t=> \tNew Random Block\n" +
+                                    "x \t\t=> \tExit")
+                                infoText.style = "-fx-text-fill: white; -fx-font-size: 12px;"
+                                VBox.setMargin(infoText, new Insets(0, 0, 10, 0))
+                                children.add(infoText)
+                            })
+                        }
                         alignment = scalafx.geometry.Pos.Center
-                    }
-                    children.add(buttonBox)
+                    })
                 })
-
                 updateHoleBoard()
-
-                val undobutton = new Button(s"Undo")
-                styleButton(undobutton)
-                undobutton.margin = scalafx.geometry.Insets(5, 5, 5, 5)
-                undobutton.onAction = _ => controller.undo()
-
-                val savebutton = new Button(s"Save")
-                styleButton(savebutton)
-                savebutton.margin = scalafx.geometry.Insets(5, 5, 5, 5)
-                savebutton.onAction = _ => saveGame()
-
-                val loadbutton = new Button(s"Load")
-                styleButton(loadbutton)
-                loadbutton.margin = scalafx.geometry.Insets(5, 5, 5, 5)
-                loadbutton.onAction = _ => loadGame()
-
-                val box = new HBox()
-                box.children.addAll(undobutton, savebutton, loadbutton)
-                box.alignment = scalafx.geometry.Pos.Center
-                
-                children.add(box)
-
             }
             onScroll = (event: ScrollEvent) => {
                 if (event.deltaY > 0) {
@@ -118,9 +154,24 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
             onKeyPressed = (event: KeyEvent) => {
                 if (event.code == KeyCode.M) {
                     controller.mirror()
-                }
-                if (event.code == KeyCode.R) {
+                } else if (event.code == KeyCode.R) {
                     controller.rotate()
+                } else if (event.code == KeyCode.W) {
+                    controller.move(0, -1)
+                } else if (event.code == KeyCode.A) {
+                    controller.move(-1, 0)
+                } else if (event.code == KeyCode.S) {
+                    controller.move(0, 1)
+                } else if (event.code == KeyCode.D) {
+                    controller.move(1, 0)
+                } else if (event.code == KeyCode.Q) {
+                    controller.setNextBLock()
+                } else if (event.code == KeyCode.E) {
+                    controller.placeBlock()
+                } else if (event.code == KeyCode.U) {
+                    controller.undo()
+                } else if (event.code == KeyCode.ESCAPE) {
+                    controller.exit()
                 }
             }
         }
@@ -138,7 +189,7 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
         // open file chooser and save the path
         val fileChooser = new FileChooser()
         fileChooser.title = "Open Game File (.json / .xml)"
-        fileChooser.initialDirectory = new java.io.File("./")
+        fileChooser.initialDirectory = new java.io.File("./saves")
         fileChooser.extensionFilters.addAll(
             new FileChooser.ExtensionFilter("JSON", "*.json"),
             new FileChooser.ExtensionFilter("XML", "*.xml")
@@ -154,7 +205,7 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
         // open file chooser and save the path
         val fileChooser = new FileChooser()
         fileChooser.title = "Save Game File (.json / .xml)"
-        fileChooser.initialDirectory = new java.io.File("./")
+        fileChooser.initialDirectory = new java.io.File("./saves")
         fileChooser.extensionFilters.addAll(
             new FileChooser.ExtensionFilter("JSON", "*.json"),
             new FileChooser.ExtensionFilter("XML", "*.xml")
@@ -184,6 +235,7 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
     def mergeFieldAndBlock(): Vector[Vector[Int]] = {
         val field = controller.getField()
         val block = controller.getBlock()
+        val canPlace = if (controller.canPlace()) 0 else 10
         var merged = field
         // ---------
         // temporary for debugging
@@ -205,7 +257,7 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
         for ((x, y) <- block) {
             if (x >= 0 && x < controller.getWidth() && y >= 0 && y < controller.getHeight()){
                 val fieldValue = merged(y)(x)
-                merged = merged.updated(y, merged(y).updated(x, if (fieldValue != -1) 11 else 20 + controller.getCurrentPlayer()))
+                merged = merged.updated(y, merged(y).updated(x, if (fieldValue != -1) 11 else 20 + controller.getCurrentPlayer() + canPlace))
             }
         }
         merged.transpose
@@ -221,7 +273,7 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
             (row, rowIndex) <- buttons.zipWithIndex
             (columnIndex) <- row.indices
         } {
-            val size = min(((windowsWidth - 250) / controller.getWidth()), ((windowsHeight - 120) / controller.getHeight())).doubleValue()
+            val size = min(((windowsWidth - 280) / controller.getWidth()), ((windowsHeight - 120) / controller.getHeight())).doubleValue()
             val button = new Button {
                 focusTraversable = false
                 onAction = _ => handleButtonAction(rowIndex, columnIndex)
@@ -242,7 +294,6 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
     }
 
     def updateBoard(): Unit = {
-        val start = System.nanoTime()
         val mergedFieldAndBlock = mergeFieldAndBlock()
         for {
             (row, columnIndex) <- mergedFieldAndBlock.zipWithIndex
@@ -257,9 +308,6 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
             }
         }
         oldField = mergedFieldAndBlock
-        val end = System.nanoTime()
-        println("updateBoard: " + (end - start) / 1000000 + "ms")
-        
     }
 
     def handleMouseHover(x: Int, y: Int): Unit = {
@@ -292,12 +340,16 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
             case 21 => new ImageView(imageDarkGreen)
             case 22 => new ImageView(imageDarkBlue)
             case 23 => new ImageView(imageDarkYellow)
+            case 30 => new ImageView(imageVeryDarkRed)
+            case 31 => new ImageView(imageVeryDarkGreen)
+            case 32 => new ImageView(imageVeryDarkBlue)
+            case 33 => new ImageView(imageVeryDarkYellow)
             case 70 => new ImageView(imageCyan)
             case _ => new ImageView(imageBlack)
         }
         var size = 0.0
         if (controller.getWidth() > 0 && controller.getHeight() > 0) {
-            size = min(((windowsWidth - 250) / controller.getWidth()), ((windowsHeight - 120) / controller.getHeight())).doubleValue()
+            size = min(((windowsWidth - 280) / controller.getWidth()), ((windowsHeight - 120) / controller.getHeight())).doubleValue()
         }
         image.fitHeight = size
         image.fitWidth = size
@@ -317,6 +369,10 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
             case 21 => "#006400" // Dunkelgrün
             case 22 => "#00008B" // Dunkelblau
             case 23 => "#9B870C" // Dunkelgelb
+            case 30 => "#4B0000" // Sehr dunkelrot
+            case 31 => "#003200" // Sehr dunkelgrün
+            case 32 => "#00004B" // Sehr dunkelblau
+            case 33 => "#4B470C" // Sehr dunkelgelb
             case 70 => "#00FFFF" // Dunkelgelb
             case _ => "#000000" // Schwarz
         }
@@ -365,10 +421,13 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
         blocks.zipWithIndex.filter { case (block, _) => block != 0 }.foreach { case (block, index) =>
             val button = new Button {
                 onAction = _ => blockchange(index)
+                // on hover change border
+                style = "-fx-border-color: transparent; -fx-background-color: transparent;"
+                onMouseEntered = _ => style = "-fx-border-color: #4CAF50; -fx-background-color: transparent;"
+                onMouseExited = _ => style = "-fx-border-color: transparent; -fx-background-color: transparent;"
                 prefWidth = 60
                 prefHeight = 50
                 graphic = getImageForButton(index)
-                style = "-fx-border-color: transparent; -fx-background-color: transparent;"
             }
             val columnIndex = index % 3
             val rowIndex = index / 3

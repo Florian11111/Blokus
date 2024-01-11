@@ -1,18 +1,3 @@
-## Feature: Man kann mit der maus und Tastatur den Block stuern:
-    Das spielfeld soll mit Knöpfen umgesetzt werden. Wenn man über einen hovert soll dieser als block ausgewählt werden.
-    Mit den tasten R und M soll man Rotieren und Mirrown können. 
-    Mit LinksClick soll man platziern können. 
-
-## Farbe wenn man nicht platzieren kann
-
-## fehler meldung wenn man an falscher stelle clickt 
-
-## spielhilfe (ein und ausstellbar)
-
 ## wenn 3 spieler neues balancing
 
-## border wenn man über einen block hovert (beim auswählen)
-
-## farben von hoverblock dunkler
-
-## todo error label
+## todo error label / fehler meldung wenn man an falscher stelle clickt 

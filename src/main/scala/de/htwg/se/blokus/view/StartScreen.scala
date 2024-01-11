@@ -41,9 +41,14 @@ class StartScene(gui: Gui, controller: GameController) {
         margin = scalafx.geometry.Insets(5) // Fügt einen Rand von 10 Pixeln hinzu
     }
 
-    private val checkBox = new CheckBox {
+    private val performanceCheckBox = new CheckBox {
         text = "High Performance Mode"
         style = "-fx-text-fill: white;"
+    }
+    private val infoCheckBox = new CheckBox {
+        text = "Info"
+        style = "-fx-text-fill: white;"
+        selected = true
     }
     private val sizeInputFields = Seq(
         new TextField() {
@@ -71,8 +76,8 @@ class StartScene(gui: Gui, controller: GameController) {
         val rootPane = new BorderPane {
             right = new VBox {
                 spacing = 6
-                alignment = Pos.Center
-                children = sizeInputFields ++ Seq(checkBox)
+                alignment = Pos.CenterLeft
+                children = sizeInputFields ++ Seq(performanceCheckBox) ++ Seq(infoCheckBox)
                 margin = scalafx.geometry.Insets(0, 20, 0, 0)
             }
             style = "-fx-background-color: #191819;"
@@ -155,7 +160,7 @@ class StartScene(gui: Gui, controller: GameController) {
                                     // convert x and y to Numbers
 
                                     controller.start(names.size, x.toInt, y.toInt)
-                                    gui.switchToGameScene(names.toList, checkBox.isSelected)
+                                    gui.switchToGameScene(names.toList, performanceCheckBox.isSelected, infoCheckBox.isSelected)
                                 }
                                 
                             }
