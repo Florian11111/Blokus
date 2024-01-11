@@ -20,11 +20,13 @@ import scalafx.scene.input.KeyCode
 import scalafx.scene.image.ImageView
 import javafx.scene.image.Image
 import javafx.scene.effect.ImageInput
+import scalafx.stage.FileChooser
 import javafx.stage.Stage
 
-class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windowsHeight: Int, names: List[String], highPerformentsMode: Boolean) extends Observer[Event] {
+class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windowsHeight: Int, namesList: List[String], highPerformentsMode: Boolean) extends Observer[Event] {
 
     controller.addObserver(this)
+    private var names = namesList
     private var boardPane: GridPane = _
     private var currentPlayerLabel: Label = _
     private var buttonBox: GridPane = _
@@ -81,31 +83,29 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
                     children.add(buttonBox)
                 })
 
-                for {
-                    (row, rowIndex) <- buttons.zipWithIndex
-                    (columnIndex) <- row.indices
-                } {
-                    val size = min(((windowsWidth - 250) / controller.getWidth()), ((windowsHeight - 120) / controller.getHeight())).doubleValue()
-                    val button = new Button {
-                        focusTraversable = false
-                        onAction = _ => handleButtonAction(rowIndex, columnIndex)
-                        minWidth = size.doubleValue()
-                        maxWidth = size
-                        minHeight = size
-                        maxHeight = size
-                        onMouseEntered = _ => handleMouseHover(rowIndex, columnIndex)
-                        if (!highPerformentsMode) {
-                            style = "-fx-background-color: transparent; -fx-border-color: transparent;"
-                        }
-                    }
-                    boardPane.add(button, rowIndex, columnIndex)
-                    buttons(rowIndex)(columnIndex) = button
-                }
+                updateHoleBoard()
 
                 val undobutton = new Button(s"Undo")
                 styleButton(undobutton)
+                undobutton.margin = scalafx.geometry.Insets(5, 5, 5, 5)
                 undobutton.onAction = _ => controller.undo()
-                children.add(undobutton)
+
+                val savebutton = new Button(s"Save")
+                styleButton(savebutton)
+                savebutton.margin = scalafx.geometry.Insets(5, 5, 5, 5)
+                savebutton.onAction = _ => saveGame()
+
+                val loadbutton = new Button(s"Load")
+                styleButton(loadbutton)
+                loadbutton.margin = scalafx.geometry.Insets(5, 5, 5, 5)
+                loadbutton.onAction = _ => loadGame()
+
+                val box = new HBox()
+                box.children.addAll(undobutton, savebutton, loadbutton)
+                box.alignment = scalafx.geometry.Pos.Center
+                
+                children.add(box)
+
             }
             onScroll = (event: ScrollEvent) => {
                 if (event.deltaY > 0) {
@@ -128,29 +128,61 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
 
     def styleButton(button: Button): Unit = {
         button.style = "-fx-text-fill: white; -fx-background-color: black; " +
-            "-fx-alignment: center; -fx-padding: 10; -fx-border-color: #4CAF50; -fx-border-radius: 5;"
+            "-fx-alignment: center; -fx-border-color: #4CAF50; -fx-border-radius: 5;"
+    }
+
+    def loadGame(): Unit = {
+        // open file chooser and save the path
+        val fileChooser = new FileChooser()
+        fileChooser.title = "Open Game File (.json / .xml)"
+        fileChooser.initialDirectory = new java.io.File("./")
+        fileChooser.extensionFilters.addAll(
+            new FileChooser.ExtensionFilter("JSON", "*.json"),
+            new FileChooser.ExtensionFilter("XML", "*.xml")
+        )
+        val selectedFile = fileChooser.showOpenDialog(null)
+        if (selectedFile != null) {
+            names = List("Player1", "Player2", "Player3", "Player4")
+            controller.load(selectedFile.getAbsolutePath())
+        }
+    }
+
+    def saveGame(): Unit = {
+        // open file chooser and save the path
+        val fileChooser = new FileChooser()
+        fileChooser.title = "Save Game File (.json / .xml)"
+        fileChooser.initialDirectory = new java.io.File("./")
+        fileChooser.extensionFilters.addAll(
+            new FileChooser.ExtensionFilter("JSON", "*.json"),
+            new FileChooser.ExtensionFilter("XML", "*.xml")
+        )
+        val selectedFile = fileChooser.showSaveDialog(null)
+        if (selectedFile != null) {
+            controller.save(selectedFile.getAbsolutePath())
+        }
     }
 
     override def update(event: Event): Unit = {
-        event match {
-            case PlaceBlockEvent => {
-                updateBoard()
-                updateLabels() 
+        Platform.runLater {
+            event match {
+                case PlaceBlockEvent => {
+                    updateHoleBoard()
+                    updateLabels() 
+                }
+                case UpdateEvent => updateBoard()
+                case EndGameEvent => {
+                    controller.removeObserver(this)
+                }
+                case _ =>
             }
-            case UpdateEvent => updateBoard()
-            case EndGameEvent => {
-                controller.removeObserver(this)
-            }
-            case _ =>
         }
-        
     }
 
     def mergeFieldAndBlock(): Vector[Vector[Int]] = {
         val field = controller.getField()
         val block = controller.getBlock()
         // temporary for debugging
-        val corner = controller.TESTMETHOD(controller.getCurrentPlayer())
+       // val corner = controller.TESTMETHOD(controller.getCurrentPlayer())
         // ---------
         var merged = field
 
@@ -174,6 +206,35 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
             }
         }
         merged.transpose
+    }
+
+    def updateHoleBoard(): Unit = {
+        // clear old board
+        boardPane.children.clear()
+        print("controlelr withd: " + controller.getWidth())
+        buttons = Array.ofDim[Button](controller.getWidth(), controller.getHeight())
+
+        for {
+            (row, rowIndex) <- buttons.zipWithIndex
+            (columnIndex) <- row.indices
+        } {
+            val size = min(((windowsWidth - 250) / controller.getWidth()), ((windowsHeight - 120) / controller.getHeight())).doubleValue()
+            val button = new Button {
+                focusTraversable = false
+                onAction = _ => handleButtonAction(rowIndex, columnIndex)
+                minWidth = size.doubleValue()
+                maxWidth = size
+                minHeight = size
+                maxHeight = size
+                onMouseEntered = _ => handleMouseHover(rowIndex, columnIndex)
+                if (!highPerformentsMode) {
+                    style = "-fx-background-color: transparent; -fx-border-color: transparent;"
+                }
+            }
+            boardPane.add(button, rowIndex, columnIndex)
+            buttons(rowIndex)(columnIndex) = button
+        }
+        updateBoard()
     }
 
     def updateBoard(): Unit = {
@@ -223,7 +284,10 @@ class GameScene(gui: Gui, controller: GameController, windowsWidth: Int, windows
             case 70 => new ImageView(imageCyan)
             case _ => new ImageView(imageBlack)
         }
-        val size = min(((windowsWidth - 250) / controller.getWidth()), ((windowsHeight - 120) / controller.getHeight())).doubleValue()
+        var size = 0.0
+        if (controller.getWidth() > 0 && controller.getHeight() > 0) {
+            size = min(((windowsWidth - 250) / controller.getWidth()), ((windowsHeight - 120) / controller.getHeight())).doubleValue()
+        }
         image.fitHeight = size
         image.fitWidth = size
         image

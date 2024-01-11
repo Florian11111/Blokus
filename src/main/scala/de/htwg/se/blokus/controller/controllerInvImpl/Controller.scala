@@ -13,6 +13,8 @@ import com.google.inject.Guice
 import com.google.inject.*
 import scala.util.Random
 import org.checkerframework.checker.units.qual.h
+import de.htwg.se.blokus.models.FileIOInterface
+import de.htwg.se.blokus.models.GameState
 
 class Controller extends GameController with Observable[Event] {
 
@@ -23,6 +25,8 @@ class Controller extends GameController with Observable[Event] {
     var blockInventory: BlockInventoryInterface = _
     var hoverBlock: HoverBlockInterface = _
     var field: FieldInterface = _
+    val fileIoJson: FileIOInterface = FileIOInterface.getInstanceJson()
+    val fileIoXml: FileIOInterface = FileIOInterface.getInstanceXml()
 
     def exit(): Unit = {
         notifyObservers(ExitEvent)
@@ -246,6 +250,33 @@ class Controller extends GameController with Observable[Event] {
 
     def getRotation(): Int = hoverBlock.getRotation
 
+    def load(path: String): Try[Unit] = {
+        // check if path ends with.xml or .json
+        var gameState: GameState = null 
+        Try {
+            val fileIo = path match {
+                case p if p.endsWith(".xml") => gameState = fileIoXml.load(path)
+                case p if p.endsWith(".json") => gameState  = fileIoJson.load(path)
+                case _ => throw new IllegalArgumentException("File type not supported!")
+            } 
+            start(gameState.getBlockInventory().getPlayerAmount(), gameState.getField().width, gameState.getField().height)
+            field = gameState.getField()
+            hoverBlock.setPlayer(gameState.getCurrentPlayer())
+            blockInventory = gameState.getBlockInventory()
+            notifyObservers(PlaceBlockEvent)
+        }
+    }
+    def save(path: String): Try[Unit] = {
+        Try {
+            val fileIo = path match {
+                case p if p.endsWith(".xml") => fileIoXml.save(new GameState(field, getCurrentPlayer(), blockInventory), path)
+                case p if p.endsWith(".json") => fileIoJson.save(new GameState(field, getCurrentPlayer(), blockInventory), path)
+                case _ => throw new IllegalArgumentException("File type not supported!")
+            }
+            notifyObservers(PlaceBlockEvent)
+        }
+    }
+    
     private var undoStack: List[Command] = List()
     private var redoStack: List[Command] = List()
 

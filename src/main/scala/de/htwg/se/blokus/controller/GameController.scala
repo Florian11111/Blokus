@@ -10,8 +10,7 @@ trait GameController extends Observer[Event] with Observable[Event] {
     def TESTMETHOD(player: Int): List[(Int, Int)]
     def start(playerAmt: Int, w: Int, h: Int): Unit
     def exit(): Unit
-
-
+    
     def getWidth(): Int 
     def getHeight(): Int 
     def getPlayerAmount(): Int
@@ -29,7 +28,9 @@ trait GameController extends Observer[Event] with Observable[Event] {
     def rotate(): Boolean
     def mirror(): Boolean
     
-    
+    def load(path: String): Try[Unit]
+    def save(path: String): Try[Unit]
+
     def undo(): Try[Unit]
     def redo(): Try[Unit]
 }

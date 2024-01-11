@@ -114,15 +114,20 @@ class Tui(controller: GameController) extends Observer[Event] {
         if (!gameisStarted) {
             println("Blokus")
             println("Anzahl Spieler: ")
-            val playerCount = scala.io.StdIn.readInt()
-            assert(playerCount >= 1 && playerCount <= 4)
-            println("Spielfeldgroesse X: ")
-            val fieldSizeX = scala.io.StdIn.readInt()
-            println("Spielfeldgroesse Y: ")
-            val fieldSizeY = scala.io.StdIn.readInt()
-            controller.start(playerCount, fieldSizeX, fieldSizeY)
+            try {
+                val playerCount = scala.io.StdIn.readInt()
+                assert(playerCount >= 1 && playerCount <= 4)
+                println("Spielfeldgroesse X: ")
+                val fieldSizeX = scala.io.StdIn.readInt()
+                println("Spielfeldgroesse Y: ")
+                val fieldSizeY = scala.io.StdIn.readInt()
+                controller.start(playerCount, fieldSizeX, fieldSizeY)
+            } catch {
+                case e: Exception => println("")
+                inputLoop()
+                return
+            }
         }
-        print("test?")
         try { 
             val input = scala.io.StdIn.readLine()
             input match {
