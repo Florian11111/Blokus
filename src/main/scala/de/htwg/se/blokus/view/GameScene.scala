@@ -98,7 +98,7 @@ class GameScene(gui: Gui,
                 // add background coler to VBox
                 style = "-fx-background-color: #191819;"
                 spacing = 10
-                alignment = scalafx.geometry.Pos.Center
+                alignment = scalafx.geometry.Pos.TopCenter
                 // Initialisiere currentPlayerLabel hier
                 currentPlayerLabel = new Label("Current Player: ")
                 children.add(currentPlayerLabel)
@@ -266,7 +266,6 @@ class GameScene(gui: Gui,
     def updateHoleBoard(): Unit = {
         // clear old board
         boardPane.children.clear()
-        print("controlelr withd: " + controller.getWidth())
         buttons = Array.ofDim[Button](controller.getWidth(), controller.getHeight())
 
         for {

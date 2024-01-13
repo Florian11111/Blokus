@@ -65,18 +65,14 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
 
     def isGameRuleConfirm(hoverBlock: HoverBlockInterface): Boolean = {
         val block = Block.createBlock(hoverBlock.getBlockType, hoverBlock.getRotation, hoverBlock.getMirrored)
-        if (isInsideField(hoverBlock) && isNoBlocksOnTop(hoverBlock)) {
-            if (block.edges.forall { case (dx, dy) => !isInBounds(hoverBlock.getX + dx, hoverBlock.getY + dy) ||
-                (isInBounds(hoverBlock.getX + dx, hoverBlock.getY + dy) && 
-                fieldVector(hoverBlock.getY + dy)(hoverBlock.getX + dx) != hoverBlock.getPlayer)}) {
-                block.corners.exists { case (dx, dy) => isInBounds(hoverBlock.getX + dx, hoverBlock.getY + dy) && 
-                    fieldVector(hoverBlock.getY + dy)(hoverBlock.getX + dx) == hoverBlock.getPlayer}
-            } else {
-                false
-            }
-        } else {
-            false
-        }
+        isInsideField(hoverBlock) && isNoBlocksOnTop(hoverBlock) &&
+            block.edges.forall { case (dx, dy) => !isInBounds(hoverBlock.getX + dx, hoverBlock.getY + dy) ||
+            isInBounds(hoverBlock.getX + dx, hoverBlock.getY + dy) && 
+            fieldVector(hoverBlock.getY + dy)(hoverBlock.getX + dx) != hoverBlock.getPlayer &&
+            block.corners.exists { case (dx, dy) => isInBounds(hoverBlock.getX + dx, hoverBlock.getY + dy) && 
+            fieldVector(hoverBlock.getY + dy)(hoverBlock.getX + dx) == hoverBlock.getPlayer}
+            
+        } 
     }
 
     def placeBlock(hoverBlock: HoverBlockInterface, firstPlace: Boolean): Field = {

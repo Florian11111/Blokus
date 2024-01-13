@@ -79,9 +79,9 @@ class Tui(controller: GameController) extends Observer[Event] {
             case _ => 
         }
         if (gameisStarted) {
-            clearTerminal()
-            display()
-            displayControlls()   
+            // clearTerminal()
+            // display()
+            // displayControlls()   
         }
     }
 

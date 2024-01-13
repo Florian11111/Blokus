@@ -84,7 +84,6 @@ class Controller extends GameController with Observable[Event] {
     }
 
     def switchPlayerAndCheckGameOver(): Boolean = {
-        print(getCurrentPlayer())
         if (playerAmount == 1 && isGameOverPlayer(0)) {
             notifyObservers(EndGameEvent)
         } else {
@@ -138,14 +137,13 @@ class Controller extends GameController with Observable[Event] {
                             val ergebenis = field.cornerCheck(tempHoverBlock)
                             ergebenis
                         }
-                    } 
+                    }
                 } else {
                     false
                 }
             }
         }
     }
-
 
     def isValidPotentialPositions(x: Int, y: Int): Boolean = {
         val neighbors = List((x-1, y), (x+1, y), (x, y-1), (x, y+1))
