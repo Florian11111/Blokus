@@ -19,12 +19,18 @@ class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) ext
 
     controller.addObserver(this)
 
+    def setNames(names: List[String]): List[String] = {
+        val oldNameList = nameList
+        nameList = names
+        oldNameList
+    }
+
     def update(event: Event): Unit = {
         event match {
             case StartGameEvent => 
                 Platform.runLater {
                     if (!gameSceneSwitched) {
-                        nameList = List("Player1", "Player2", "Player3", "Player4")
+                        setNames(List("Player1", "Player2", "Player3", "Player4"))
                         switchToGameScene(nameList, false, true)
                         gameSceneSwitched = true
                     }
@@ -59,7 +65,7 @@ class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) ext
     }
 
     def switchToGameScene(names: List[String], highPerformentsMode: Boolean, info: Boolean): Unit = {
-        nameList = names
+        setNames(names)
         gameSceneSwitched = true
         myStage.scene = new GameScene(this, controller, windowsWidth, windowsHeight, names, highPerformentsMode, info).createScene()
     }

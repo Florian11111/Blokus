@@ -27,11 +27,8 @@ hoverBlock.setPlayer(1)
 place()
 field.getFieldVector
 
-val result1 = blockInventory.getPosPositions(1)
 
-result1
-
-hoverBlock = HoverBlockInterface.getInstance(3, 2, 2, 0, 0, false)
+hoverBlock = HoverBlockInterface.getInstance(4, 4, 2, 0, 2, false)
 hoverBlock.setPlayer(0)
 place()
 field.getFieldVector
@@ -117,10 +114,12 @@ def isValidPotentialPositions(x: Int, y: Int, player: Int): Boolean = {
 
 def filterPotentialPositions(player: Int): List[(Int, Int)] = {
     var posPositions = blockInventory.getPosPositions(player)
+    print("Spieler: " + player + " davor:" + posPositions + "\n")
     val blocks = blockInventory.getBlocks(player)
     posPositions = posPositions.filter { ecke =>
         isValidPotentialPositions(ecke._1, ecke._2, player)
     }
+    print("Spieler: " + player + " danach:" + posPositions + "\n")
     posPositions.filter { ecke =>
         blocks.zipWithIndex.exists { case (blockamount, block) =>
             if (blockamount > 0) {

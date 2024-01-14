@@ -197,6 +197,7 @@ class GameScene(gui: Gui,
         val selectedFile = fileChooser.showOpenDialog(null)
         if (selectedFile != null) {
             names = List("Player1", "Player2", "Player3", "Player4")
+            gui.setNames(names)
             controller.load(selectedFile.getAbsolutePath())
         }
     }

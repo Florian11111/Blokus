@@ -74,7 +74,7 @@ class Controller extends GameController with Observable[Event] {
     }
 
     def isGameOverPlayer(player: Int): Boolean = {
-        var posPositions = filterPotentialPositions(player)
+        var posPositions = blockInventory.getPosPositions(player)
         posPositions.isEmpty && !blockInventory.firstBlock(player) || blockInventory.getBlocks(getCurrentPlayer()).forall(_ == 0)
     }
 
@@ -91,7 +91,6 @@ class Controller extends GameController with Observable[Event] {
                 notifyObservers(EndGameEvent)
             }
             var nextPlayer = (getCurrentPlayer() + 1) % playerAmount
-            
             for (i <- 0 until playerAmount) {
                 if (isGameOverPlayer(nextPlayer)) {
                     nextPlayer = (nextPlayer + 1) % playerAmount
@@ -107,13 +106,15 @@ class Controller extends GameController with Observable[Event] {
             field = field.placeBlock(hoverBlock, blockInventory.firstBlock(getCurrentPlayer()))
             blockInventory.useBlock(getCurrentPlayer(), hoverBlock.getBlockType)
             blockInventory.setPosPositions(getCurrentPlayer(), addPotentialPositionsToInventory(getCurrentPlayer()))
+            for (i <- 0 until playerAmount) {
+                blockInventory.setPosPositions(i, filterPotentialPositions(i))
+            }
             hoverBlock.setX((field.width / 2) - 1)
             hoverBlock.setY((field.height / 2) - 1)
             hoverBlock.setRotation(0)
             hoverBlock.setMirrored(false)
             switchPlayerAndCheckGameOver()
             hoverBlock.setBlockType(blockInventory.getRandomBlock(hoverBlock.getPlayer, Random).get)
-            blockInventory.setPosPositions(getCurrentPlayer(), filterPotentialPositions(getCurrentPlayer()))
             notifyObservers(PlaceBlockEvent)
             true
         } else {
@@ -121,18 +122,18 @@ class Controller extends GameController with Observable[Event] {
         }
     }
 
-    private def filterPotentialPositions(player: Int): List[(Int, Int)] = {
+    def filterPotentialPositions(player: Int): List[(Int, Int)] = {
         var posPositions = blockInventory.getPosPositions(player)
         val blocks = blockInventory.getBlocks(player)
         posPositions = posPositions.filter { ecke =>
-            isValidPotentialPositions(ecke._1, ecke._2)
+            isValidPotentialPositions(ecke._1, ecke._2, player)
         }
         posPositions.filter { ecke =>
             blocks.zipWithIndex.exists { case (blockamount, block) =>
                 if (blockamount > 0) {
                     (0 to 3).exists { i =>
                         List(false, true).exists { j =>
-                            val tempHoverBlock =  HoverBlock.createInstance(ecke._1, ecke._2, playerAmount, block, i, j)
+                            val tempHoverBlock =  HoverBlock.createInstance(ecke._1, ecke._2, 2, block, i, j)
                             tempHoverBlock.setPlayer(player)
                             val ergebenis = field.cornerCheck(tempHoverBlock)
                             ergebenis
@@ -145,15 +146,14 @@ class Controller extends GameController with Observable[Event] {
         }
     }
 
-    def isValidPotentialPositions(x: Int, y: Int): Boolean = {
+    def isValidPotentialPositions(x: Int, y: Int, player: Int): Boolean = {
         val neighbors = List((x-1, y), (x+1, y), (x, y-1), (x, y+1))
         val fieldtemp = field.getFieldVector.transpose
         val ergenis = field.isInBounds(x, y) && fieldtemp(x)(y) == -1
-        
         var allValid = true
         for ((nx, ny) <- neighbors) {
             if (!(nx < 0 || ny < 0 || nx >= field.width || ny >= field.height ||
-                (nx >= 0 && ny >= 0 && nx < field.width && ny < field.height && fieldtemp(nx)(ny) != getCurrentPlayer()))) {
+                (nx >= 0 && ny >= 0 && nx < field.width && ny < field.height && fieldtemp(nx)(ny) != player))) {
                 allValid = false
             }
         }
@@ -340,7 +340,6 @@ class Controller extends GameController with Observable[Event] {
             controller.hoverBlock.setPlayer(player)
             controller.blockInventory = originalBlocksBefore
             controller.changeBlock(currentBlock)
-            controller.hoverBlock.setBlockType(originalCurrentBlock)
             notifyObservers(PlaceBlockEvent)
         }
         override def redo(): Try[Unit] = execute()

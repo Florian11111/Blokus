@@ -98,12 +98,12 @@ class BlockInventory(playerAmount2: Int, initialCount: Int = 1) extends BlockInv
 
     def deepCopy: BlockInventory = {
         val copy = new BlockInventory(playerAmount)
-        for {
-            player <- 0 until playerAmount
-            block <- 0 until inventories(player).length
-        } {
-            copy.inventories(player) = copy.inventories(player).updated(block, inventories(player)(block))
+        for (player <- 0 until playerAmount) {
+            val copiedInventory = inventories(player).map(identity) // clone each block
+            copy.inventories(player) = copiedInventory
         }
+        copy.isFirstBlock = isFirstBlock.clone() // clone isFirstBlock
+        copy.posPositions = posPositions.map(_.map(identity)) // clone posPositions
         copy
     }
 
