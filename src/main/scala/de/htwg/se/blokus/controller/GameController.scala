@@ -7,7 +7,7 @@ import de.htwg.se.blokus.util.{Observable, Observer}
 import scala.util.Try
 
 trait GameController extends Observer[Event] with Observable[Event] {
-    def TESTMETHOD(player: Int): List[(Int, Int)]
+    def getPosPositions(player: Int): List[(Int, Int)]
     def start(playerAmt: Int, w: Int, h: Int): Unit
     def exit(): Unit
     

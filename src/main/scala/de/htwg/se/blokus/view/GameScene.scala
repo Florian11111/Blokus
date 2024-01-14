@@ -34,6 +34,10 @@ class GameScene(gui: Gui,
     info: Boolean) extends Observer[Event] {
 
     controller.addObserver(this)
+
+    // True if the pot should be shown
+    private val showPotPos = true
+
     private var names = namesList
     private var oldField = controller.getField().map(_.map(_ => -2)).transpose
 
@@ -238,22 +242,19 @@ class GameScene(gui: Gui,
         val block = controller.getBlock()
         val canPlace = if (controller.canPlace()) 0 else 10
         var merged = field
-        // ---------
-        // temporary for debugging
-       // val corner = controller.TESTMETHOD(controller.getCurrentPlayer())
         
-        // temporary for debugging
-        /*
-        merged = merged.indices.map { y =>
-            if (corner.exists(_._2 == y)) {
-                merged(y).indices.map { x =>
-                    if (corner.contains((x, y))) 70 else merged(y)(x)
-                }.toVector
-            } else {
-                merged(y)
-            }
-        }.toVector// ---------
-        */
+        if (showPotPos) {
+            val corner = controller.getPosPositions(controller.getCurrentPlayer())
+            merged = merged.indices.map { y =>
+                if (corner.exists(_._2 == y)) {
+                    merged(y).indices.map { x =>
+                        if (corner.contains((x, y))) 70 else merged(y)(x)
+                    }.toVector
+                } else {
+                    merged(y)
+                }
+            }.toVector 
+        }
 
         for ((x, y) <- block) {
             if (x >= 0 && x < controller.getWidth() && y >= 0 && y < controller.getHeight()){

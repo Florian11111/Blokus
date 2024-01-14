@@ -42,10 +42,10 @@ class fileIoXmlImpl extends FileIOInterface {
             }.toList
         }.toArray
 
-        var blockInventory = new BlockInventory(playerAmount, initialCount = -1);
-        blockInventory.setAllInventories(inventories)
-        blockInventory.setAllFirstBlock(firstBlocks.toArray)
-        blockInventory.setAllPosPositions(posPositions)
+        var blockInventory = new BlockInventory(playerAmount, 
+            inventories,
+            firstBlocks.toArray,
+            posPositions)
 
         new GameState(newfield, currentPlayer, blockInventory)
     }

@@ -22,10 +22,11 @@ class fileIoJsonImpl extends FileIOInterface {
         val newCurrentPlayer = (json \ "currentPlayer").as[Int]
         val newPlayerAmount = (json \ "blockInventory" \ "playerAmount").as[Int]
         
-        var newBlockInverntory = new BlockInventory(newPlayerAmount, -1)
-        newBlockInverntory.setAllFirstBlock((json \ "blockInventory" \ "firstBlocks").as[Array[Boolean]])
-        newBlockInverntory.setAllInventories((json \ "blockInventory" \ "inventory").as[Array[List[Int]]])
-        newBlockInverntory.setAllPosPositions((json \ "blockInventory" \ "posPositions").as[Array[List[(Int, Int)]]])
+        var newBlockInverntory = new BlockInventory(newPlayerAmount, 
+        (json \ "blockInventory" \ "inventory").as[Array[List[Int]]], 
+        (json \ "blockInventory" \ "firstBlocks").as[Array[Boolean]], 
+        (json \ "blockInventory" \ "posPositions").as[Array[List[(Int, Int)]]])
+
         GameState(newField, newCurrentPlayer, newBlockInverntory)
     }
 

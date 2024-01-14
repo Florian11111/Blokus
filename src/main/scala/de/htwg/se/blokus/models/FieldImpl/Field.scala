@@ -18,8 +18,8 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
         (x == 0 && y == 0) || (x == width - 1 && y == 0) || (x == 0 && y == height - 1) || (x == width - 1 && y == height - 1)
     }
 
-    def getBlockAmount(blockType: Int): Int = {
-        fieldVector.flatten.count(_ == blockType)
+    def getBlockAmount(player: Int): Int = {
+        fieldVector.flatten.count(_ == player)
     }
 
     def isInBounds(x: Int, y : Int): Boolean = x >= 0 && x < width && y >= 0 && y < height
@@ -39,10 +39,8 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
         val x = hoverBlock.getX
         val y = hoverBlock.getY
         block.baseForm.exists { blockcords =>
-            val newX = x + blockcords._1
-            val newY = y + blockcords._2
-            hoverBlock.setX(newX)
-            hoverBlock.setY(newY)
+            val hoverBlock2 = hoverBlock.newInstance(x + blockcords._1, y + blockcords._2, hoverBlock.getPlayer, hoverBlock.getBlockType, 
+                hoverBlock.getPlayer, hoverBlock.getRotation, hoverBlock.getMirrored)
             isGameRuleConfirm(hoverBlock)
         }
     }
