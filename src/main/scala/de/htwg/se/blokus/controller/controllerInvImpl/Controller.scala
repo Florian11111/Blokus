@@ -101,7 +101,6 @@ class Controller extends GameController with Observable[Event] {
         false
     }
 
-    var counter = 0
     def place(): Boolean = {
         if (canPlace()) {
             field = field.placeBlock(hoverBlock, blockInventory.firstBlock(getCurrentPlayer()))
@@ -115,10 +114,6 @@ class Controller extends GameController with Observable[Event] {
             hoverBlock = hoverBlock.newInstance((field.width / 2) - 1, (field.height / 2) - 1, playerAmount, getCurrentPlayer(), 
                 newBlock, 0, false)
 
-            // remove later
-            save("saves/test " + counter +".json")
-            counter += 1
-            // remove 
             notifyObservers(PlaceBlockEvent)
             true
         } else {
