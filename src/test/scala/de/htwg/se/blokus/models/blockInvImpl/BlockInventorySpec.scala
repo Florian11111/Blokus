@@ -3,131 +3,247 @@ package de.htwg.se.blokus.models.blockInvImpl
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import scala.util.Random
+import de.htwg.se.blokus.models.blockInvImpl.BlockInventory
 
 class BlockInventorySpec extends AnyWordSpec with Matchers {
+
   "A BlockInventory" when {
-    val playerAmount = 4
-    val initialCount = 1
-    val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
-    val rand = new Random()
+    "created with default values" should {
+      "initialize all inventories and isFirstBlock correctly" in {
+        val playerAmount = 4
+        val initialCount = 1
 
-    "initialized" should {
-      "have the correct playerAmount and initial block count" in {
-        blockInventory.getBlocks(0) shouldEqual List.fill(21)(initialCount)
-        blockInventory.firstBlock(0) shouldEqual true
-        blockInventory.getPosPositions(0) shouldEqual List.empty
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        blockInventory.getPlayerAmount() shouldEqual playerAmount
+        blockInventory.getAllInventories().foreach(inventory => inventory shouldEqual List.fill(21)(initialCount))
+        blockInventory.getAllFirstBlock().foreach(isFirstBlock => isFirstBlock shouldEqual true)
+      }
+
+      "initialize all posPositions as empty lists" in {
+        val playerAmount = 4
+        val initialCount = 1
+
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        blockInventory.getAllPosPositions().foreach(posPositions => posPositions shouldEqual List.empty)
       }
     }
 
-    "using getRandomBlock" should {
-      "return a random block if available" in {
-        blockInventory.getRandomBlock(0, rand) should not be empty
-      }
+    "withPosPositions" should {
+      "update the posPositions correctly for a valid playerNumber" in {
+        val playerAmount = 4
+        val initialCount = 1
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
 
-      "return RuntimeException if no block is available" in {
-        val emptyInventory = BlockInventory.getInstance(playerAmount, 0)
-        val exception = intercept[java.lang.RuntimeException] {
-            emptyInventory.getRandomBlock(0, rand)
-        }
-        exception shouldBe an[java.lang.RuntimeException]
-        exception.getMessage shouldBe "No Block is available for Player 0."
-      }
-
-      "return IllegalArgumentException if no block is available" in {
-        val emptyInventory = BlockInventory.getInstance(playerAmount, 0)
-        val exception = intercept[java.lang.IllegalArgumentException] {
-            emptyInventory.getRandomBlock(40, rand)
-        }
-        exception shouldBe an[java.lang.IllegalArgumentException]
-        exception.getMessage shouldBe "Invalid player number: 40"
-      }
-    }
-
-    "using isAvailable" should {
-      "return true for available blocks" in {
-        blockInventory.isAvailable(0, 0) shouldEqual true
-      }
-
-      "return ArrayIndexOutOfBoundsException for unavailable blocks" in {
-        val exception = intercept[java.lang.ArrayIndexOutOfBoundsException] {
-            blockInventory.isAvailable(0, 22)
-        }
-        exception shouldBe an[java.lang.ArrayIndexOutOfBoundsException]
-      }
-
-      "throw an exception for an invalid player number" in {
-        val exception = intercept[java.lang.IllegalArgumentException] {
-            blockInventory.isAvailable(-1, 0)
-        }
-        exception shouldBe an[java.lang.IllegalArgumentException]
-      }
-    }
-
-    "using useBlock" should {
-      "decrease block count and set isFirstBlock to false" in {
-        val playerNumber = 0
-        val blockNumber = 0
-        blockInventory.useBlock(0, 1) shouldEqual List(1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-        blockInventory.firstBlock(playerNumber) shouldEqual false
-      }
-
-      "throw an exception for an invalid player number" in {
-        val exception = intercept[java.lang.RuntimeException] {
-            blockInventory.useBlock(-1, 0)
-        }
-        exception shouldBe an[java.lang.RuntimeException]
-        exception.getMessage shouldBe "Invalid player number: -1"
-      }
-
-      "throw an exception for an invalid block number" in {
-        val exception = intercept[java.lang.RuntimeException] {
-            blockInventory.useBlock(0, 1)
-        }
-        exception shouldBe an[java.lang.RuntimeException]
-        exception.getMessage shouldBe "Block 1 is not available for Player 0."
-      }
-    }
-
-    "creating a deep copy" should {
-      "return a new BlockInventory instance with the same state" in {
-        val copy = blockInventory.deepCopy
-        copy should not be theSameInstanceAs(blockInventory)
-        copy.getBlocks(0) shouldEqual blockInventory.getBlocks(0)
-      }
-    }
-
-    "Get blocks and error check" should {
-        "throw an exception for an invalid player number" in {
-        val exception = intercept[java.lang.IllegalArgumentException] {
-            blockInventory.getBlocks(40)
-        }
-        exception shouldBe an[java.lang.IllegalArgumentException]
-        exception.getMessage shouldBe "Invalid player number: 40"
-      }
-    }
-
-    "getting and setting posPositions" should {
-      "return the correct positions and update them" in {
         val playerNumber = 0
         val newPosPositions = List((1, 2), (3, 4))
-        blockInventory.setPosPositions(playerNumber, newPosPositions)
-        blockInventory.getPosPositions(playerNumber) shouldEqual newPosPositions
+
+        val updatedBlockInventory = blockInventory.withPosPositions(playerNumber, newPosPositions)
+
+        updatedBlockInventory.getPosPositions(playerNumber) shouldEqual newPosPositions
       }
 
-      "throw an exception for an invalid player number bei set" in {
-        val exception = intercept[java.lang.IllegalArgumentException] {
-            blockInventory.setPosPositions(40, List.empty)
+      "throw an exception for an invalid playerNumber" in {
+        val playerAmount = 4
+        val initialCount = 1
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        val playerNumber = 5
+        val newPosPositions = List((1, 2), (3, 4))
+
+        val exception = intercept[IllegalArgumentException] {
+        blockInventory.withPosPositions(playerNumber, newPosPositions)
         }
-        exception shouldBe an[java.lang.IllegalArgumentException]
-        exception.getMessage shouldBe "Invalid player number: 40"
+        exception shouldBe a[IllegalArgumentException]
+        exception.getMessage shouldEqual s"Invalid player number: $playerNumber"
       }
 
-      "throw an exception for an invalid player number bei get" in {
-        val exception = intercept[java.lang.IllegalArgumentException] {
-            blockInventory.getPosPositions(40)
-        }
-        exception shouldBe an[java.lang.IllegalArgumentException]
-        exception.getMessage shouldBe "Invalid player number: 40"
+      "throw an exception for an negative playerNumber" in {
+        val playerAmount = 4
+        val initialCount = 1
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        val playerNumber = -5
+        val newPosPositions = List((1, 2), (3, 4))
+
+        an[IllegalArgumentException] should be thrownBy blockInventory.withPosPositions(playerNumber, newPosPositions)
+      }
+    }
+
+    "getBlocks" should {
+      "return the correct list of blocks for a valid playerNumber" in {
+        val playerAmount = 4
+        val initialCount = 1
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        val playerNumber = 2
+
+        blockInventory.getBlocks(playerNumber) shouldEqual List.fill(21)(initialCount)
+      }
+
+      "throw an exception for an invalid playerNumber" in {
+        val playerAmount = 4
+        val initialCount = 1
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        val playerNumber = 5
+
+        an[IllegalArgumentException] should be thrownBy blockInventory.getBlocks(playerNumber)
+      }
+    }
+
+    "getRandomBlock" should {
+      "return a random block for a valid playerNumber" in {
+        val playerAmount = 4
+        val initialCount = 3
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+        val rand = new Random(42)
+
+        val playerNumber = 1
+        val availableBlocks = blockInventory.getAllInventories()(playerNumber)
+
+        val randomBlock = blockInventory.getRandomBlock(playerNumber, rand)
+
+        randomBlock.isDefined shouldEqual true
+        availableBlocks.contains(randomBlock.get) shouldEqual true
+      }
+
+      "throw an exception if no blocks are available for the player" in {
+        val playerAmount = 4
+        val initialCount = 0
+        val blockInventory = new BlockInventory(playerAmount,Array.fill(playerAmount)(List.empty[Int]),Array.fill(playerAmount)(false), Array.fill(playerAmount)(List.empty[(Int, Int)]))
+        val rand = new Random(42)
+
+        val playerNumber = 1
+
+        an[RuntimeException] should be thrownBy blockInventory.getRandomBlock(playerNumber, rand)
+      }
+
+      "throw an exception for an invalid playerNumber" in {
+        val playerAmount = 4
+        val initialCount = 3
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+        val rand = new Random(42)
+
+        val playerNumber = 5
+
+        an[IllegalArgumentException] should be thrownBy blockInventory.getRandomBlock(playerNumber, rand)
+      }
+    }
+
+    "firstBlock" should {
+      "return true for a player's first block" in {
+        val playerAmount = 4
+        val initialCount = 1
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        val playerNumber = 3
+
+        blockInventory.firstBlock(playerNumber) shouldEqual true
+      }
+
+      "return false for a player's non-first block" in {
+        val playerAmount = 4
+        val initialCount = 1
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        val playerNumber = 2
+        val blockType = 5
+
+        blockInventory.withUsedBlock(playerNumber, blockType).firstBlock(playerNumber) shouldEqual false
+      }
+    }
+
+    "isAvailable" should {
+      "return true for an available block" in {
+        val playerAmount = 4
+        val initialCount = 3
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        val playerNumber = 2
+        val blockType = 10
+
+        blockInventory.isAvailable(playerNumber, blockType) shouldEqual true
+      }
+
+      "return false for a used block" in {
+        val playerAmount = 4
+        val initialCount = 1
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        val playerNumber = 1
+        val blockType = 7
+
+        blockInventory.withUsedBlock(playerNumber, blockType).isAvailable(playerNumber, blockType) shouldEqual false
+      }
+
+      "throw an exception for an invalid playerNumber" in {
+        val playerAmount = 4
+        val initialCount = 3
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        val playerNumber = 5
+        val blockType = 10
+
+        an[IllegalArgumentException] should be thrownBy blockInventory.isAvailable(playerNumber, blockType)
+      }
+    }
+
+    "withUsedBlock" should {
+      "update the inventories correctly for a valid playerNumber and blockType" in {
+        val playerAmount = 4
+        val initialCount = 3
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        val playerNumber = 2
+        val blockType = 14
+
+        val updatedBlockInventory = blockInventory.withUsedBlock(playerNumber, blockType)
+
+        updatedBlockInventory.getBlocks(playerNumber)(blockType) shouldEqual initialCount - 1
+      }
+
+      "throw an exception for an invalid playerNumber" in {
+        val playerAmount = 4
+        val initialCount = 3
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        val playerNumber = 5
+        val blockType = 10
+
+        an[IllegalArgumentException] should be thrownBy blockInventory.withUsedBlock(playerNumber, blockType)
+      }
+
+      "throw an exception for an unavailable blockType" in {
+        val playerAmount = 4
+        val initialCount = 0
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        val playerNumber = 3
+        val blockType = 2
+
+        an[RuntimeException] should be thrownBy blockInventory.withUsedBlock(playerNumber, blockType)
+      }
+    }
+
+    "newInstance" should {
+      "create a new BlockInventory instance with the specified values" in {
+        val playerAmount = 4
+        val initialCount = 1
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+
+        val newPlayerAmount = 2
+        val newInventories = Array.fill(newPlayerAmount)(List.fill(21)(3))
+        val newIsFirstBlock = Array.fill(newPlayerAmount)(false)
+        val newPosPositions = Array.fill(newPlayerAmount)(List((1, 2), (3, 4)))
+
+        val newInstance = blockInventory.newInstance(newPlayerAmount, newInventories, newIsFirstBlock, newPosPositions)
+
+        newInstance.getPlayerAmount() shouldEqual newPlayerAmount
+        newInstance.getAllInventories() shouldEqual newInventories
+        newInstance.getAllFirstBlock() shouldEqual newIsFirstBlock
+        newInstance.getAllPosPositions() shouldEqual newPosPositions
       }
     }
   }

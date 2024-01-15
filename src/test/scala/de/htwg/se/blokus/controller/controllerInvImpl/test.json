@@ -1,0 +1,10 @@
+{
+  "field" : [ [ 1, 2 ], [ 3, 4 ] ],
+  "currentPlayer" : 1,
+  "blockInventory" : {
+    "playerAmount" : 4,
+    "inventory" : [ [ 1, 2, 3, 4 ], [ 1, 2, 3, 4 ], [ 1, 2, 3, 4 ], [ 1, 2, 3, 4 ] ],
+    "firstBlocks" : [ true, true, true, true ],
+    "posPositions" : [ [ [ 1, 1 ], [ 2, 2 ] ], [ [ 1, 1 ], [ 2, 2 ] ], [ [ 1, 1 ], [ 2, 2 ] ], [ [ 1, 1 ], [ 2, 2 ] ] ]
+  }
+}

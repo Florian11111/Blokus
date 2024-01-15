@@ -42,7 +42,7 @@ class Controller extends GameController with Observable[Event] {
         this.height = h
         assert(playerAmount >= 1 && playerAmount < 5)
         assert(width > 0 && height > 0)
-        if (playerAmt == 1) { 
+        if (playerAmt == 1) {
             blockInventory = BlockInventoryInterface.getInstance(playerAmount, 4)
         } else if (playerAmt == 2 || playerAmt == 3) {
             blockInventory = BlockInventoryInterface.getInstance(playerAmount, 2)
@@ -63,7 +63,7 @@ class Controller extends GameController with Observable[Event] {
     }
 
     def getWidth(): Int = width
-    
+
     def getHeight(): Int = height
 
     def getPlayerAmount(): Int = playerAmount
@@ -85,20 +85,23 @@ class Controller extends GameController with Observable[Event] {
     def switchPlayerAndCheckGameOver(): Boolean = {
         if (playerAmount == 1 && isGameOverPlayer(0)) {
             notifyObservers(EndGameEvent)
+            true
         } else {
             if ((0 until playerAmount).forall(isGameOverPlayer)) {
                 notifyObservers(EndGameEvent)
-            }
+                true
+            } else {
             var nextPlayer = (getCurrentPlayer() + 1) % playerAmount
             for (i <- 0 until playerAmount) {
                 if (isGameOverPlayer(nextPlayer)) {
                     nextPlayer = (nextPlayer + 1) % playerAmount
                 }
             }
-            hoverBlock = hoverBlock.newInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, 
+            hoverBlock = hoverBlock.newInstance(hoverBlock.getX, hoverBlock.getY, playerAmount,
                 nextPlayer, hoverBlock.getBlockType, hoverBlock.getRotation, hoverBlock.getMirrored)
+            false
+            }
         }
-        false
     }
 
     def place(): Boolean = {
@@ -111,7 +114,7 @@ class Controller extends GameController with Observable[Event] {
             }
             switchPlayerAndCheckGameOver()
             val newBlock = blockInventory.getRandomBlock(hoverBlock.getPlayer, Random).get
-            hoverBlock = hoverBlock.newInstance((field.width / 2) - 1, (field.height / 2) - 1, playerAmount, getCurrentPlayer(), 
+            hoverBlock = hoverBlock.newInstance((field.width / 2) - 1, (field.height / 2) - 1, playerAmount, getCurrentPlayer(),
                 newBlock, 0, false)
 
             notifyObservers(PlaceBlockEvent)
@@ -167,7 +170,14 @@ class Controller extends GameController with Observable[Event] {
     def getBlocks(): List[Int] = blockInventory.getBlocks(getCurrentPlayer())
 
     def changeCurrentBlock(newBlock: Int): Try[Unit] = Try {
-        hoverBlock = hoverBlock.newInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, hoverBlock.getPlayer, 
+        if(newBlock < 0 | newBlock > 20){
+            throw new IllegalArgumentException(s"Invalid Block number: $newBlock")
+        }
+        val blocks = blockInventory.getBlocks(getCurrentPlayer())
+        if(blocks(newBlock) <= 0){
+            throw new RuntimeException(s"Block $newBlock is not available for Player.")
+        }
+        hoverBlock = hoverBlock.newInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, hoverBlock.getPlayer,
             newBlock, hoverBlock.getRotation, hoverBlock.getMirrored)
 
         notifyObservers(UpdateEvent)
@@ -183,7 +193,7 @@ class Controller extends GameController with Observable[Event] {
         while (blocks(next) <= 0) {
             next = (next + 1) % 21
         }
-        hoverBlock = hoverBlock.newInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, hoverBlock.getPlayer, 
+        hoverBlock = hoverBlock.newInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, hoverBlock.getPlayer,
             next, hoverBlock.getRotation, hoverBlock.getMirrored)
         notifyObservers(UpdateEvent)
     }
@@ -194,16 +204,16 @@ class Controller extends GameController with Observable[Event] {
 
     def getField(): Vector[Vector[Int]] = field.copy().getFieldVector
 
-    def getBlock(): List[(Int, Int)] = Block.createBlock(hoverBlock.getBlockType, 
+    def getBlock(): List[(Int, Int)] = Block.createBlock(hoverBlock.getBlockType,
         hoverBlock.getRotation, hoverBlock.getMirrored).baseForm.map(e => (e._1 + hoverBlock.getX, e._2 + hoverBlock.getY))
 
     def move(xCord: Int, yCord: Int): Boolean = {
         val x = hoverBlock.getX + xCord
         val y = hoverBlock.getY + yCord
-        val tempHoverBlock = HoverBlock.createInstance(x, y, playerAmount, hoverBlock.getPlayer, hoverBlock.getBlockType, 
+        val tempHoverBlock = HoverBlock.createInstance(x, y, playerAmount, hoverBlock.getPlayer, hoverBlock.getBlockType,
             hoverBlock.getRotation, hoverBlock.getMirrored)
         if (field.isInsideField(tempHoverBlock)) {
-            hoverBlock = hoverBlock.newInstance(x, y, playerAmount, hoverBlock.getPlayer, hoverBlock.getBlockType, 
+            hoverBlock = hoverBlock.newInstance(x, y, playerAmount, hoverBlock.getPlayer, hoverBlock.getBlockType,
                 hoverBlock.getRotation, hoverBlock.getMirrored)
             notifyObservers(UpdateEvent)
             true
@@ -213,7 +223,7 @@ class Controller extends GameController with Observable[Event] {
     }
 
     def rotate(): Boolean = {
-        val tempHoverBlock = HoverBlock.createInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, hoverBlock.getPlayer, 
+        val tempHoverBlock = HoverBlock.createInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, hoverBlock.getPlayer,
             hoverBlock.getBlockType, (hoverBlock.getRotation + 1) % 4, hoverBlock.getMirrored)
         if (field.isInsideField(tempHoverBlock)) {
             hoverBlock = hoverBlock.newInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, hoverBlock.getPlayer, hoverBlock.getBlockType, (hoverBlock.getRotation + 1) % 4, hoverBlock.getMirrored)
@@ -228,20 +238,20 @@ class Controller extends GameController with Observable[Event] {
         val tempHoverBlock = HoverBlock.createInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, hoverBlock.getPlayer,
             hoverBlock.getBlockType, hoverBlock.getRotation, !hoverBlock.getMirrored)
         if (field.isInsideField(tempHoverBlock)) {
-            hoverBlock = hoverBlock.newInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, 
+            hoverBlock = hoverBlock.newInstance(hoverBlock.getX, hoverBlock.getY, playerAmount,
                 hoverBlock.getPlayer, hoverBlock.getBlockType, hoverBlock.getRotation, !hoverBlock.getMirrored)
             notifyObservers(UpdateEvent)
             true
         } else {
             false
         }
-    } 
+    }
 
     def setXandY(x: Int, y: Int): Boolean = {
-        val tempHoverBlock = HoverBlock.createInstance(x, y, playerAmount, hoverBlock.getPlayer,  hoverBlock.getBlockType, 
+        val tempHoverBlock = HoverBlock.createInstance(x, y, playerAmount, hoverBlock.getPlayer,  hoverBlock.getBlockType,
             hoverBlock.getRotation, hoverBlock.getMirrored)
         if (field.isInsideField(tempHoverBlock)) {
-            hoverBlock = hoverBlock.newInstance(x, y, playerAmount, hoverBlock.getPlayer, hoverBlock.getBlockType, 
+            hoverBlock = hoverBlock.newInstance(x, y, playerAmount, hoverBlock.getPlayer, hoverBlock.getBlockType,
                 hoverBlock.getRotation, hoverBlock.getMirrored)
             notifyObservers(UpdateEvent)
             true
@@ -253,24 +263,25 @@ class Controller extends GameController with Observable[Event] {
 
     def changeBlock(neuerBlock: Int): Int = {
         val currentBlock = hoverBlock.getBlockType
-        hoverBlock = hoverBlock.newInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, hoverBlock.getPlayer, 
+        hoverBlock = hoverBlock.newInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, hoverBlock.getPlayer,
             neuerBlock, hoverBlock.getRotation, hoverBlock.getMirrored)
         currentBlock
     }
 
     def getRotation(): Int = hoverBlock.getRotation
+    def getMirrored(): Boolean = hoverBlock.getMirrored
 
     def load(path: String): Try[Unit] = {
-        var gameState: GameState = null 
+        var gameState: GameState = null
         Try {
             val fileIo = path match {
                 case p if p.endsWith(".xml") => gameState = fileIoXml.load(path)
                 case p if p.endsWith(".json") => gameState  = fileIoJson.load(path)
                 case _ => throw new IllegalArgumentException("File type not supported!")
-            } 
+            }
             start(gameState.getBlockInventory().getPlayerAmount(), gameState.getField().width, gameState.getField().height)
             field = gameState.getField()
-            hoverBlock = hoverBlock.newInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, gameState.getCurrentPlayer(), 
+            hoverBlock = hoverBlock.newInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, gameState.getCurrentPlayer(),
                 gameState.getBlockInventory().getBlocks(gameState.getCurrentPlayer()).head, 0, false)
             blockInventory = gameState.getBlockInventory()
             notifyObservers(PlaceBlockEvent)
@@ -286,7 +297,7 @@ class Controller extends GameController with Observable[Event] {
             notifyObservers(PlaceBlockEvent)
         }
     }
-    
+
     private var undoStack: List[Command] = List()
     private var redoStack: List[Command] = List()
 
@@ -340,7 +351,7 @@ class Controller extends GameController with Observable[Event] {
 
         override def undo(): Unit = {
             controller.field = originalField
-            controller.hoverBlock = controller.hoverBlock.newInstance(controller.hoverBlock.getX, controller.hoverBlock.getY, 
+            controller.hoverBlock = controller.hoverBlock.newInstance(controller.hoverBlock.getX, controller.hoverBlock.getY,
                 controller.playerAmount, controller.hoverBlock.getPlayer, originalCurrentBlock, controller.hoverBlock.getRotation, controller.hoverBlock.getMirrored)
             controller.blockInventory = originalBlocksBefore
             controller.changeBlock(currentBlock)

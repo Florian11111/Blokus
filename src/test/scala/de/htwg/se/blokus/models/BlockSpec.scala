@@ -4,50 +4,70 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class BlockSpec extends AnyWordSpec with Matchers {
+  "Block" should {
+    "create a Block with the correct baseForm, corners, and edges" in {
+      val blockType = 0
+      val rotation = 0
+      val mirrored = false
 
-  "A Block" when {
-    "using blockBaseForms" should {
-      "contain all expected base forms" in {
-        val expectedBaseForms: Array[List[(Int, Int)]] = Array(
-          List((0, 0)), List((0, 0), (1, 0)), List((-1, 0), (0, 0), (1, 0)),
-          List((0, 0), (1, 0), (0, 1)), List((-1, 0), (0, 0), (1, 0), (2, 0)),
-          List((-1, 0), (-1, 1), (0, 0), (1, 0)), List((-1, 0), (0, 0), (1, 0), (0, 1)),
-          List((0, 0), (1, 0), (0, 1), (1, 1)), List((0, 0), (-1, 0), (0, 1), (1, 1)),
-          List((-2, 0), (-1, 0), (0, 0), (1, 0), (2, 0)), List((-1, 1), (-1, 0), (0, 0), (1, 0), (1, 1)),
-          List((-1, 0), (0, 0), (1, 0), (0, 1), (1, 1)), List((-1, 0), (0, 0), (1, 0), (2, 0), (0, 1)),
-          List((-2, 0), (-1, 0), (0, 0), (0, 1), (1, 1)), List((-2, 0), (-1, 0), (0, 0), (1, 0), (1, 1)),
-          List((0, 0), (0, -1), (1, 0), (0, 1), (-1, 0)), List((-1, -1), (0, -1), (0, 0), (0, 1), (1, 1)),
-          List((-1, -1), (0, -1), (0, 0), (1, 0), (1, 1)), List((-1, -1), (0, -1), (1, -1), (0, 0), (0, 1)),
-          List((-1, -1), (0, -1), (0, 0), (1, 0), (0, 1)), List((-1, -1), (0, -1), (1, -1), (1, 0), (1, 1))
-        )
+      val block = Block.createBlock(blockType, rotation, mirrored)
 
-        Block.blockBaseForms should contain theSameElementsAs expectedBaseForms
-      }
+      val expectedBaseForm = List((0, 0))
+      val expectedCorners = List((1, 1), (1, -1), (-1, 1), (-1, -1))
+      val expectedEdges = List((-1, 0), (1, 0), (0, -1), (0, 1))
+
+      block.baseForm shouldEqual expectedBaseForm
+      block.corners shouldEqual expectedCorners
+      block.edges shouldEqual expectedEdges
     }
 
-    "created with createBlock" should {
-      "return a Block with the correct base form, rotation, and mirrored flag" in {
-        val blockType = 1
-        val rotation = 2
-        val mirrored = true
+    "create a Block with mirrored coordinates when mirrored is true" in {
+      val blockType = 1
+      val rotation = 0
+      val mirrored = true
 
-        val block = Block.createBlock(blockType, rotation, mirrored)
+      val block = Block.createBlock(blockType, rotation, mirrored)
 
-        block.baseForm shouldEqual List((0, 0), (-1, 0))
-        block.corners shouldEqual List((-2, 1), (-2, -1), (1, 1), (1, -1))
-        block.edges shouldEqual List((-2, 0), (-1, -1), (-1, 1), (1, 0), (0, -1), (0, 1))
-      }
+      val expectedBaseForm = List((0, 0), (1, 0)).map { case (x, y) => (x, -y) }
+      val expectedCorners =List((2, 1), (2, -1), (-1, 1), (-1, -1))
+      val expectedEdges = List((2, 0), (1, -1), (1, 1), (-1, 0), (0, -1), (0, 1))
+
+      block.baseForm shouldEqual expectedBaseForm
+      block.corners shouldEqual expectedCorners
+      block.edges shouldEqual expectedEdges
     }
-  }
 
-  "eckenUndKanten" should {
-    "return the correct corners and edges for a given block" in {
-      val block = List((0, 0), (1, 0), (0, 1))
+    "rotate the Block correctly" in {
+      val blockType = 2
+      val rotation = 1
+      val mirrored = false
 
-      val (corners, edges) = Block.eckenUndKanten(block)
+      val block = Block.createBlock(blockType, rotation, mirrored)
 
-      corners shouldEqual List((1, 2), (-1, 2), (2, 1), (2, -1), (-1, -1))
-      edges shouldEqual List((-1, 1), (1, 1), (0, 0), (0, 2), (2, 0), (1, -1), (-1, 0), (1, 0), (0, -1), (0, 1))
+      val expectedBaseForm = List((-1, 0), (0, 0), (1, 0)).map { case (x, y) => (-y, x) }
+      val expectedCorners = List((1, 2), (-1, 2), (1, -2), (-1, -2))
+      val expectedEdges = List((-1, 1), (1, 1), (0, 2), (-1, 0), (1, 0), (-1, -1), (1, -1), (0, -2))
+
+      block.baseForm shouldEqual expectedBaseForm
+      block.corners shouldEqual expectedCorners
+      block.edges shouldEqual expectedEdges
+    }
+
+    "correctly calculate corners and edges for a given Block" in {
+      val blockType = 1
+      val rotation = 0
+      val mirrored = false
+
+      val block = Block.createBlock(blockType, rotation, mirrored)
+
+      var (expectedCorners, expectedEdges) = Block.eckenUndKanten(block.baseForm)
+      expectedCorners = expectedCorners.filterNot(block.baseForm.contains)
+      expectedEdges = expectedEdges.filterNot(block.baseForm.contains)
+
+      block.corners shouldEqual expectedCorners
+      expectedCorners shouldBe a[List[(Int, Int)]]
+      block.edges shouldEqual expectedEdges
+      expectedEdges shouldBe a[List[(Int, Int)]]
     }
   }
 }

@@ -8,8 +8,9 @@ class HoverBlock(val currentX: Int, val currentY: Int, val playerAmount: Int, va
 
     def getX: Int = currentX
     def getY: Int = currentY
-    
+
     def getPlayer: Int = currentPlayer
+    def getplayerAmount: Int = playerAmount
     def getBlockType: Int = blockType
     def getRotation: Int = rotation
     def getMirrored: Boolean = mirrored

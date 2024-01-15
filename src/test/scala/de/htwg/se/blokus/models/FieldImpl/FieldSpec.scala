@@ -4,7 +4,6 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import de.htwg.se.blokus.models.hoverBlockImpl.HoverBlock
 import de.htwg.se.blokus.models.fieldImpl.Field
-import de.htwg.se.blokus.models.Block
 
 class FieldSpec extends AnyWordSpec with Matchers {
 
@@ -14,7 +13,7 @@ class FieldSpec extends AnyWordSpec with Matchers {
         val width = 5
         val height = 5
 
-        var field = Field.getInstance(width, height)
+        val field = Field(width, height)
 
         field.width shouldEqual width
         field.height shouldEqual height
@@ -24,7 +23,7 @@ class FieldSpec extends AnyWordSpec with Matchers {
         val width = 5
         val height = 5
 
-        var field = Field.getInstance(width, height)
+        val field = Field(width, height)
 
         field.getFieldVector shouldEqual Vector.fill(height, width)(-1)
       }
@@ -32,7 +31,7 @@ class FieldSpec extends AnyWordSpec with Matchers {
 
     "isCorner" should {
       "return true for the corner coordinates" in {
-        var field = Field.getInstance(5, 5)
+        val field = Field(5, 5)
 
         field.isCorner(0, 0) shouldEqual true
         field.isCorner(4, 0) shouldEqual true
@@ -41,7 +40,7 @@ class FieldSpec extends AnyWordSpec with Matchers {
       }
 
       "return false for non-corner coordinates" in {
-        var field = Field.getInstance(5, 5)
+        val field = Field(5, 5)
 
         field.isCorner(2, 2) shouldEqual false
         field.isCorner(3, 1) shouldEqual false
@@ -52,10 +51,10 @@ class FieldSpec extends AnyWordSpec with Matchers {
 
     "getBlockAmount" should {
       "return the correct number of blocks of a given type" in {
-        var field = Field.getInstance(5, 5) // Get the instance
+        var field = Field(5, 5)
 
-        var hoverBlock = HoverBlock.createInstance(0, 0, 0, 0, 0, false)
-        var hoverBlock3 = HoverBlock.createInstance(4, 4, 1, 0, 0, false)
+        val hoverBlock = HoverBlock(0, 0, 0, 0, 0, 0, false)
+        val hoverBlock3 = HoverBlock(4, 4, 1, 0, 0, 0, false)
 
         field = field.placeBlock(hoverBlock, firstPlace = true)
         field = field.placeBlock(hoverBlock3, firstPlace = true)
@@ -64,7 +63,7 @@ class FieldSpec extends AnyWordSpec with Matchers {
       }
 
       "return 0 if no blocks of the given type are on the field" in {
-        var field = Field.getInstance(5, 5)
+        val field = Field(5, 5)
 
         field.getBlockAmount(1) shouldEqual 0
       }
@@ -72,13 +71,13 @@ class FieldSpec extends AnyWordSpec with Matchers {
 
     "isInBounds" should {
       "return true for coordinates within the field" in {
-        var field = Field.getInstance(5, 5)
+        val field = Field(5, 5)
 
         field.isInBounds(2, 2) shouldEqual true
       }
 
       "return false for coordinates outside the field" in {
-        var field = Field.getInstance(5, 5)
+        val field = Field(5, 5)
 
         field.isInBounds(-1, 2) shouldEqual false
         field.isInBounds(2, -1) shouldEqual false
@@ -89,15 +88,15 @@ class FieldSpec extends AnyWordSpec with Matchers {
 
     "isInsideField" should {
       "return true for a valid hoverBlock placement" in {
-        var field = Field.getInstance(5, 5)
-        var hoverBlock = HoverBlock.createInstance(2, 2, 0, 0, 0, false)
+        val field = Field(5, 5)
+        val hoverBlock = HoverBlock(2, 2, 0, 0, 0, 0, false)
 
         field.isInsideField(hoverBlock) shouldEqual true
       }
 
       "return false for an invalid hoverBlock placement" in {
-        var field = Field.getInstance(5, 5)
-        var hoverBlock = HoverBlock.createInstance(5, 2, 0, 0, 0, false)
+        val field = Field(5, 5)
+        val hoverBlock = HoverBlock(5, 2, 0, 0, 0, 0, false)
 
         field.isInsideField(hoverBlock) shouldEqual false
       }
@@ -105,15 +104,15 @@ class FieldSpec extends AnyWordSpec with Matchers {
 
     "cornerCheck" should {
       "return true for a valid hoverBlock placement in a corner" in {
-        var field = Field.getInstance(5, 5)
-        var hoverBlock = HoverBlock.createInstance(0, 4, 0, 0, 0, false)
+        val field = Field(5, 5)
+        val hoverBlock = HoverBlock(0, 4, 0, 0, 0, 0, false)
 
         field.isInCorner(hoverBlock) shouldEqual true
       }
 
       "return false for an invalid hoverBlock placement" in {
-        var field = Field.getInstance(5, 5)
-        var hoverBlock = HoverBlock.createInstance(4, 2, 0, 0, 0, false)
+        val field = Field(5, 5)
+        val hoverBlock = HoverBlock(4, 2, 0, 0, 0, 0, false)
 
         field.cornerCheck(hoverBlock) shouldEqual false
       }
@@ -121,17 +120,17 @@ class FieldSpec extends AnyWordSpec with Matchers {
 
     "isNoBlocksOnTop" should {
       "return true for a valid hoverBlock placement with no blocks on top" in {
-        var field = Field.getInstance(5, 5)
-        var hoverBlock = HoverBlock.createInstance(2, 2, 0, 0, 0, false)
+        val field = Field(5, 5)
+        val hoverBlock = HoverBlock(2, 2, 0, 0, 0, 0, false)
 
         field.isNoBlocksOnTop(hoverBlock) shouldEqual true
       }
 
       "return false for an invalid hoverBlock placement with blocks on top" in {
-        var field = Field.getInstance(5, 5)
-        var hoverBlock = HoverBlock.createInstance(2, 2, 0, 0, 0, false)
+        val field = Field(5, 5)
+        val hoverBlock = HoverBlock(2, 2, 0, 0, 0, 0, false)
 
-        var hoverBlock2 = HoverBlock.createInstance(2, 2, 0, 0, 0, false)
+        val hoverBlock2 = HoverBlock(2, 2, 0, 0, 0, 0, false)
 
         val exception = intercept[IllegalArgumentException] {
             field.placeBlock(hoverBlock, firstPlace = true)
@@ -142,15 +141,15 @@ class FieldSpec extends AnyWordSpec with Matchers {
 
     "isInCorner" should {
       "return true for a valid hoverBlock placement in a corner" in {
-        var field = Field.getInstance(5, 5)
-        var hoverBlock = HoverBlock.createInstance(4, 4, 0, 0, 0, false)
+        val field = Field(5, 5)
+        val hoverBlock = HoverBlock(4, 4, 0, 0, 0, 0, false)
 
         field.isInCorner(hoverBlock) shouldEqual true
       }
 
       "return false for an invalid hoverBlock placement" in {
-        var field = Field.getInstance(5, 5)
-        var hoverBlock = HoverBlock.createInstance(4, 2, 0, 0, 0, false)
+        val field = Field(5, 5)
+        val hoverBlock = HoverBlock(4, 2, 0, 0, 0, 0, false)
 
         field.isInCorner(hoverBlock) shouldEqual false
       }
@@ -158,20 +157,21 @@ class FieldSpec extends AnyWordSpec with Matchers {
 
     "isGameRuleConfirm" should {
       "return true for a valid hoverBlock placement following game rules" in {
-        var field = Field.getInstance(5, 5)
-        var hoverBlock = HoverBlock.createInstance(0, 0, 0, 0, 0, false)
-        var hoverBlock2 = HoverBlock.createInstance(1, 1, 0, 0, 0, false)
+        var field = Field(5, 5)
+        val hoverBlock = HoverBlock(0, 0, 0, 0, 0, 0, false)
+        val hoverBlock2 = HoverBlock(1, 1, 0, 0, 1, 0, false)
 
         field = field.placeBlock(hoverBlock, true)
+
         field.isGameRuleConfirm(hoverBlock2) shouldEqual true
       }
 
       "return an IllegalArgumentException for an invalid hoverBlock placement not following game rules" in {
-        var field = Field.getInstance(5, 5)
-        var hoverBlock = HoverBlock.createInstance(0, 0, 0, 3, 0, false)
-        field = field.placeBlock(hoverBlock, firstPlace = true)
+        val field = Field(5, 5)
+        val hoverBlock = HoverBlock(0, 0, 0, 3, 0, 0, false)
+        field.placeBlock(hoverBlock, firstPlace = true)
 
-        var hoverBlock2 = HoverBlock.createInstance(3, 3, 0, 1, 0, false)
+        val hoverBlock2 = HoverBlock(3, 3, 0, 1, 0, 0, false)
 
         field.isGameRuleConfirm(hoverBlock2) shouldEqual false
       }
@@ -179,8 +179,8 @@ class FieldSpec extends AnyWordSpec with Matchers {
 
     "placeBlock" should {
       "return a new field with the hoverBlock placed on it" in {
-        var field = Field.getInstance(5, 5)
-        var hoverBlock = HoverBlock.createInstance(0, 0, 0, 3, 0, false)
+        val field = Field(5, 5)
+        val hoverBlock = HoverBlock(0, 0, 0, 3, 0, 0, false)
 
         val newField = field.placeBlock(hoverBlock, firstPlace = true)
 
@@ -188,8 +188,8 @@ class FieldSpec extends AnyWordSpec with Matchers {
       }
 
       "throw an exception for an invalid hoverBlock placement" in {
-        var field = Field.getInstance(5, 5)
-        var hoverBlock = HoverBlock.createInstance(4, 2, 0, 0, 0, false)
+        val field = Field(5, 5)
+        val hoverBlock = HoverBlock(4, 2, 0, 0, 0, 0, false)
 
         an[IllegalArgumentException] should be thrownBy field.placeBlock(hoverBlock, firstPlace = true)
       }
@@ -197,8 +197,8 @@ class FieldSpec extends AnyWordSpec with Matchers {
 
     "copy" should {
       "return a deep copy of the field" in {
-        var field = Field.getInstance(5, 5)
-        var hoverBlock = HoverBlock.createInstance(4, 4, 0, 0, 0, false)
+        val field = Field(5, 5)
+        val hoverBlock = HoverBlock(4, 4, 0, 0, 0, 0, false)
         field.placeBlock(hoverBlock, firstPlace = true)
 
         val copiedField = field.copy()
@@ -207,24 +207,15 @@ class FieldSpec extends AnyWordSpec with Matchers {
       }
     }
 
-    "Field's apply method" should {
-      "create a Field with the specified width and height" in {
-        val width = 5
-        val height = 5
+    "getInstance" should {
+      "return the same instance when getInstance is called multiple times" in {
+      val width = 10
+      val height = 10
 
-        val field = Field(width, height)
+      val field1 = Field.getInstance(width, height)
+      val field2 = Field.getInstance(width, height)
 
-        field.width shouldEqual width
-        field.height shouldEqual height
-      }
-
-      "initialize the created Field with -1 values" in {
-        val width = 5
-        val height = 5
-
-        val field = Field(width, height)
-
-        field.getFieldVector shouldEqual Vector.fill(height, width)(-1)
+      field1 should be theSameInstanceAs field2
       }
     }
   }

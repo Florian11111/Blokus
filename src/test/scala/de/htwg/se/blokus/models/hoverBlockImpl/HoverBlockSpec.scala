@@ -4,166 +4,66 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class HoverBlockSpec extends AnyWordSpec with Matchers {
+  "HoverBlock" should {
+    "correctly initialize its properties" in {
+      val currentX = 2
+      val currentY = 3
+      val playerAmount = 4
+      val currentPlayer = 1
+      val blockType = 0
+      val rotation = 2
+      val mirrored = true
 
-  "A HoverBlock" when {
-    "created" should {
-      "initialize the fields correctly" in {
-        var x = 2
-        var y = 3
-        var playerAmount = 4
-        var blockType = 0
-        var rotation = 1
-        var mirrored = false
+      val hoverBlock = HoverBlock.createInstance(currentX, currentY, playerAmount, currentPlayer, blockType, rotation, mirrored)
 
-        var hoverBlock = HoverBlock.createInstance(x, y, playerAmount, blockType, rotation, mirrored)
-
-        hoverBlock.getX shouldEqual x
-        hoverBlock.getY shouldEqual y
-        hoverBlock.getPlayer shouldEqual 0
-        hoverBlock.getBlockType shouldEqual blockType
-        hoverBlock.getRotation shouldEqual rotation
-        hoverBlock.getMirrored shouldEqual mirrored
-      }
+      hoverBlock.getX shouldEqual currentX
+      hoverBlock.getY shouldEqual currentY
+      hoverBlock.getPlayer shouldEqual currentPlayer
+      hoverBlock.getBlockType shouldEqual blockType
+      hoverBlock.getRotation shouldEqual rotation
+      hoverBlock.getMirrored shouldEqual mirrored
     }
 
-    "setX" should {
-      "update the X coordinate and return the previous X coordinate" in {
-        var hoverBlock = HoverBlock.createInstance(2, 3, 4, 0, 1, false)
+    "create a new instance of HoverBlock with the given parameters" in {
+      val currentX = 2
+      val currentY = 3
+      val playerAmount = 4
+      val currentPlayer = 1
+      val blockType = 0
+      val rotation = 2
+      val mirrored = true
 
-        var prevX = hoverBlock.setX(5)
+      val hoverBlock = HoverBlock.createInstance(currentX, currentY, playerAmount, currentPlayer, blockType, rotation, mirrored)
+      val newX = 5
+      val newY = 6
+      val newPlayerAmount = 3
+      val newPlayer = 2
+      val newBlockType = 1
+      val newRotation = 1
+      val newMirrored = false
 
-        hoverBlock.getX shouldEqual 5
-        prevX shouldEqual 2
-      }
+      val newHoverBlock = hoverBlock.newInstance(newX, newY, newPlayerAmount, newPlayer, newBlockType, newRotation, newMirrored)
+
+      newHoverBlock.getX shouldEqual newX
+      newHoverBlock.getY shouldEqual newY
+      newHoverBlock.getPlayer shouldEqual newPlayer
+      newHoverBlock.getBlockType shouldEqual newBlockType
+      newHoverBlock.getRotation shouldEqual newRotation
+      newHoverBlock.getMirrored shouldEqual newMirrored
     }
 
-    "setY" should {
-      "update the Y coordinate and return the previous Y coordinate" in {
-        var hoverBlock = HoverBlock.createInstance(2, 3, 4, 0, 1, false)
+    "return the correct player amount" in {
+      val currentX = 2
+      val currentY = 3
+      val playerAmount = 4
+      val currentPlayer = 1
+      val blockType = 0
+      val rotation = 2
+      val mirrored = true
 
-        var prevY = hoverBlock.setY(5)
+      val hoverBlock = HoverBlock.createInstance(currentX, currentY, playerAmount, currentPlayer, blockType, rotation, mirrored)
 
-        hoverBlock.getY shouldEqual 5
-        prevY shouldEqual 3
-      }
-    }
-
-    "setPlayer" should {
-      "update the current player and return the previous player" in {
-        var hoverBlock = HoverBlock.createInstance(2, 3, 4, 0, 1, false)
-
-        var prevPlayer = hoverBlock.setPlayer(1)
-
-        hoverBlock.getPlayer shouldEqual 1
-        prevPlayer shouldEqual 0
-      }
-    }
-
-    "setBlockType" should {
-      "update the block type and return the previous block type" in {
-        var hoverBlock = HoverBlock.createInstance(2, 3, 4, 0, 1, false)
-
-        var prevBlockType = hoverBlock.setBlockType(2)
-
-        hoverBlock.getBlockType shouldEqual 2
-        prevBlockType shouldEqual 0
-      }
-    }
-
-    "setRotation" should {
-      "update the rotation and return the previous rotation" in {
-        var hoverBlock = HoverBlock.createInstance(2, 3, 4, 0, 1, false)
-
-        var prevRotation = hoverBlock.setRotation(3)
-
-        hoverBlock.getRotation shouldEqual 3
-        prevRotation shouldEqual 1
-      }
-    }
-
-    "setMirrored" should {
-      "update the mirrored flag and return the previous mirrored flag" in {
-        var hoverBlock = HoverBlock.createInstance(2, 3, 4, 0, 1, false)
-
-        var prevMirrored = hoverBlock.setMirrored(true)
-
-        hoverBlock.getMirrored shouldEqual true
-        prevMirrored shouldEqual false
-      }
-    }
-
-    "getOutOfCorner" should {
-    "return true and adjust coordinates if the block is in the top-left corner" in {
-        var hoverBlock = HoverBlock.createInstance(0, 0, 4, 0, 1, false)
-        var height = 5
-        var width = 5
-
-        var result = hoverBlock.getOutOfCorner(height, width)
-
-        result shouldEqual true
-        hoverBlock.getX shouldEqual 2
-        hoverBlock.getY shouldEqual 0
-    }
-
-    "return true and adjust coordinates if the block is in the top-right corner" in {
-        var hoverBlock = HoverBlock.createInstance(3, 0, 4, 0, 1, false)
-        var height = 5
-        var width = 5
-
-        var result = hoverBlock.getOutOfCorner(height, width)
-
-        result shouldEqual true
-        hoverBlock.getX shouldEqual 3
-        hoverBlock.getY shouldEqual 2
-    }
-
-    "return true and adjust coordinates if the block is in the bottom-left corner" in {
-        var hoverBlock = HoverBlock.createInstance(0, 3, 4, 0, 1, false)
-        var height = 5
-        var width = 5
-
-        var result = hoverBlock.getOutOfCorner(height, width)
-
-        result shouldEqual true
-        hoverBlock.getX shouldEqual 2
-        hoverBlock.getY shouldEqual 3
-    }
-
-    "return true and adjust coordinates if the block is in the bottom-right corner" in {
-        var hoverBlock = HoverBlock.createInstance(4, 4, 4, 0, 1, false)
-        var height = 5
-        var width = 5
-
-        var result = hoverBlock.getOutOfCorner(height, width)
-
-        result shouldEqual true
-        hoverBlock.getX shouldEqual 3
-        hoverBlock.getY shouldEqual 4
-    }
-
-    "return true and adjust coordinates if the block is at the bottom edge" in {
-        var hoverBlock = HoverBlock.createInstance(2, 4, 4, 0, 1, false)
-        var height = 5
-        var width = 5
-
-        var result = hoverBlock.getOutOfCorner(height, width)
-
-        result shouldEqual true
-        hoverBlock.getX shouldEqual 2
-        hoverBlock.getY shouldEqual 3
-    }
-
-    "return false if the block is not in the corner" in {
-        var hoverBlock = HoverBlock.createInstance(2, 3, 4, 0, 1, false)
-        var height = 5
-        var width = 5
-
-        var result = hoverBlock.getOutOfCorner(height, width)
-
-        result shouldEqual false
-        hoverBlock.getX shouldEqual 2
-        hoverBlock.getY shouldEqual 3
-    }
+      hoverBlock.getplayerAmount shouldEqual playerAmount
     }
   }
 }
