@@ -17,6 +17,5 @@ object Main {
     val tui = new Tui(controller)
 
     tui.inputLoop()
-    Await.result(guiFuture, Duration.Inf)
   }
 }
