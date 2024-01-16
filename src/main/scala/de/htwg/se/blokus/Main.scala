@@ -15,12 +15,6 @@ object Main {
     val injector = Guice.createInjector(new BlokusModule)
     val controller = injector.getInstance(classOf[GameController])
     val tui = new Tui(controller)
-    val gui = new Gui(controller, 770, 620)
-
-    implicit val context: ExecutionContext = scala.concurrent.ExecutionContext.global
-    val guiFuture: Future[Unit] = Future {
-      gui.main(Array[String]())
-    }
 
     tui.inputLoop()
     Await.result(guiFuture, Duration.Inf)
