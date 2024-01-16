@@ -569,4 +569,78 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         result.failed.get.getMessage shouldBe "File type not supported!"
       }
     }
+
+    "saving a game state to XML" should {
+      val xmlPath = "src/test/scala/de/htwg/se/blokus/controller/controllerInvImpl/save.xml"
+
+      "successfully save the game state to XML" in {
+        val controller = new Controller()
+        val controller2 = new Controller()
+        controller.start(2,10,10)
+        val blockInventory = new BlockInventory(2, Array.fill(2)(List(1, 2, 3, 4)), Array.fill(2)(true), Array.fill(2)(List((1, 1), (2, 2))))
+        controller.blockInventory = blockInventory
+        controller.setXandY(0,0)
+        controller.placeBlock()
+        val fieldbefore = controller.field.getFieldVector
+        val blockinventorybefore = controller.blockInventory.getAllInventories().mkString
+
+        val result: Try[Unit] = controller.save(xmlPath)
+
+        result shouldBe a[Success[Unit]]
+        val file = new File(xmlPath)
+        file.exists() shouldBe true
+
+        val result2: Try[Unit] = controller2.load(xmlPath)
+        controller2.field.getFieldVector shouldBe fieldbefore
+        controller2.blockInventory.getAllInventories().mkString shouldBe blockinventorybefore
+        result2 shouldBe a[Success[Unit]]
+      }
+    }
+
+    "saving a game state to JSON" should {
+      val jsonPath = "src/test/scala/de/htwg/se/blokus/controller/controllerInvImpl/save.json"
+
+      "successfully save the game state to JSON" in {
+        val controller = new Controller()
+        val controller2 = new Controller()
+        controller.start(2,10,10)
+        val blockInventory = new BlockInventory(2, Array.fill(2)(List(1, 2, 3, 4)), Array.fill(2)(true), Array.fill(2)(List((1, 1), (2, 2))))
+        controller.blockInventory = blockInventory
+        controller.setXandY(0,0)
+        controller.placeBlock()
+        val fieldbefore = controller.field.getFieldVector
+        val blockinventorybefore = controller.blockInventory.getAllInventories().mkString
+
+        val result: Try[Unit] = controller.save(jsonPath)
+
+        result shouldBe a[Success[Unit]]
+        val file = new File(jsonPath)
+        file.exists() shouldBe true
+
+        val result2: Try[Unit] = controller2.load(jsonPath)
+        controller2.field.getFieldVector shouldBe fieldbefore
+        controller2.blockInventory.getAllInventories().mkString shouldBe blockinventorybefore
+        result2 shouldBe a[Success[Unit]]
+      }
+    }
+
+    "saving a game state with an unsupported file type" should {
+      val filePath = "src/test/scala/de/htwg/se/blokus/controller/controllerInvImpl/save.txt"
+
+      "fail with an IllegalArgumentException" in {
+        val controller = new Controller()
+        val controller2 = new Controller()
+        controller.start(2,10,10)
+        val blockInventory = new BlockInventory(2, Array.fill(2)(List(1, 2, 3, 4)), Array.fill(2)(true), Array.fill(2)(List((1, 1), (2, 2))))
+        controller.blockInventory = blockInventory
+        controller.setXandY(0,0)
+        controller.placeBlock()
+
+        val result: Try[Unit] = controller.save(filePath)
+
+        result shouldBe a[Failure[Unit]]
+        result.failed.get shouldBe an[IllegalArgumentException]
+        result.failed.get.getMessage shouldBe "File type not supported!"
+      }
+    }
 }
