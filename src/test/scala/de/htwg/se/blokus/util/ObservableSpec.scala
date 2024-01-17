@@ -65,5 +65,17 @@ class ObservableSpec extends AnyWordSpec with Matchers {
 
       observer1.receivedEvents shouldBe empty
     }
+
+    "list observers" in {
+      val observable = new TestObservable
+      val observer1 = new TestObserver
+      val observer2 = new TestObserver
+
+      observable.addObserver(observer1)
+      observable.addObserver(observer2)
+
+      observable.getObservers() should contain (observer1)
+      observable.getObservers() should contain (observer2)
+    }
   }
 }

@@ -15,4 +15,5 @@ trait Observable[T] {
     def notifyObservers(event: T): Unit = {
         observers.foreach(_.update(event))
     }
+    def getObservers(): List[Observer[T]] = observers
 }

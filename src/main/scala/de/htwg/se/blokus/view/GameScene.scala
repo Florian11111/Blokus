@@ -25,12 +25,12 @@ import javafx.stage.Stage
 import javafx.geometry.Insets
 import scala.compiletime.ops.boolean
 
-class GameScene(gui: Gui, 
-    controller: GameController, 
-    windowsWidth: Int, 
-    windowsHeight: Int, 
+class GameScene(gui: Gui,
+    controller: GameController,
+    windowsWidth: Int,
+    windowsHeight: Int,
     namesList: List[String],
-    highPerformentsMode: Boolean, 
+    highPerformanceMode: Boolean,
     info: Boolean) extends Observer[Event] {
 
     controller.addObserver(this)
@@ -96,7 +96,7 @@ class GameScene(gui: Gui,
         box.margin = scalafx.geometry.Insets(10, 0, 0, 0)
         box.children.addAll(undobutton, savebutton, loadbutton)
         box.alignment = scalafx.geometry.Pos.Center
-        
+
         val scene = new Scene {
             root = new VBox {
                 // add background coler to VBox
@@ -226,7 +226,7 @@ class GameScene(gui: Gui,
             event match {
                 case PlaceBlockEvent => {
                     updateHoleBoard()
-                    updateLabels() 
+                    updateLabels()
                 }
                 case UpdateEvent => updateBoard()
                 case EndGameEvent => {
@@ -242,7 +242,7 @@ class GameScene(gui: Gui,
         val block = controller.getBlock()
         val canPlace = if (controller.canPlace()) 0 else 10
         var merged = field
-        
+
         if (showPotPos) {
             val corner = controller.getPosPositions(controller.getCurrentPlayer())
             merged = merged.indices.map { y =>
@@ -253,7 +253,7 @@ class GameScene(gui: Gui,
                 } else {
                     merged(y)
                 }
-            }.toVector 
+            }.toVector
         }
 
         for ((x, y) <- block) {
@@ -283,7 +283,7 @@ class GameScene(gui: Gui,
                 minHeight = size
                 maxHeight = size
                 onMouseEntered = _ => handleMouseHover(rowIndex, columnIndex)
-                if (!highPerformentsMode) {
+                if (!highPerformanceMode) {
                     style = "-fx-background-color: transparent; -fx-border-color: transparent;"
                 }
             }
@@ -301,7 +301,7 @@ class GameScene(gui: Gui,
             (value, rowIndex) <- row.zipWithIndex
         } {
             if (mergedFieldAndBlock(columnIndex)(rowIndex) != oldField(columnIndex)(rowIndex)) {
-                if (!highPerformentsMode) {
+                if (!highPerformanceMode) {
                     buttons(columnIndex)(rowIndex).graphic = getFillColorImage(value)
                 } else {
                     buttons(columnIndex)(rowIndex).style = "-fx-background-color: " + getFillColor(value) + "; -fx-border-color: transparent;"
