@@ -4,6 +4,8 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import de.htwg.se.blokus.controller.*
 import de.htwg.se.blokus.controller.controllerInvImpl.Controller
+import scala.util.{Success, Failure}
+
 
 
 class TuiSpec extends AnyWordSpec with Matchers {
@@ -37,6 +39,12 @@ class TuiSpec extends AnyWordSpec with Matchers {
         "calling rowToString" should {
             "convert a row to a string correctly" in {
                 tui.rowToString(Vector(10, 10, -1, 0, 1, 2, 3, 11, 81, -1)) shouldBe "# # + 1 2 3 4 ? ? + "
+            }
+        }
+        "calling displayControlls()" should {
+            "print out the controlls correctly" in {
+                val result = tui.displayControlls()
+                result shouldBe a [scala.runtime.BoxedUnit]
             }
         }
     }
