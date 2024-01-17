@@ -36,7 +36,7 @@ sbt und so
 ## Testing
 
 [![Scala CI](https://github.com/Florian11111/blokus/actions/workflows/scala.yml/badge.svg)](https://github.com/Florian11111/blokus/actions/workflows/scala.yml)
-[![Coverage Status](https://coveralls.io/repos/github/Florian11111/blokus/badge.svg?branch=main)](https://coveralls.io/github/Florian11111/blokus?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/Florian11111/blokus/badge.svg?branch=Befor-Gui-Finish-%28Arthur-will-weiterarbeiten%29)](https://coveralls.io/github/Florian11111/blokus?branch=Befor-Gui-Finish-%28Arthur-will-weiterarbeiten%29)
 
 Manuell:<br>
 sbt clean coverage test<br>
