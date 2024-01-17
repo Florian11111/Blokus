@@ -16,6 +16,7 @@ import de.htwg.se.blokus.controller.*
 import scala.util.{Try, Success}
 import java.util.Random
 import de.htwg.se.blokus.models.fileIoImpl.fileIoXmlImpl
+import de.htwg.se.blokus.models.Block.blockBaseForms
 
 
 class ControllerSpec extends AnyWordSpec with Matchers {
@@ -277,6 +278,18 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         controller.start(2, 10, 10)
         val result: Try[Unit] = controller.changeCurrentBlock(-1)
         result shouldBe a [Failure[Unit]]
+        result.failed.get shouldBe a[IllegalArgumentException]
+        result.failed.get.getMessage shouldBe "Invalid Block number: -1"
+      }
+
+      "return a RuntimeException when block is no longer available" in {
+        val controller = new Controller
+        controller.start(2, 10, 10)
+        controller.blockInventory = BlockInventory.getInstance(2,0)
+        val result: Try[Unit] = controller.changeCurrentBlock(1)
+        result shouldBe a[Failure[_]]
+        result.failed.get shouldBe a[RuntimeException]
+        result.failed.get.getMessage shouldBe "Block 1 is not available for Player."
       }
     }
 
@@ -318,11 +331,34 @@ class ControllerSpec extends AnyWordSpec with Matchers {
     }
 
     "getBlock()" should {
-    "return a list of coordinates" in {
-      val controller = new Controller
-      controller.start(2,10,10)
-      val result = controller.getBlock()
-      result should contain theSameElementsAs List((5, 5)) // Passen Sie die erwarteten Koordinaten an
+      "return a list of coordinates" in {
+        val controller = new Controller
+        controller.start(2,10,10)
+        controller.changeBlock(3)
+        val blocktype = controller.hoverBlock.getBlockType
+        val goal = blockBaseForms(blocktype).map(e => (e._1 + controller.hoverBlock.getX, e._2 + controller.hoverBlock.getY))
+        val result = controller.getBlock()
+        result shouldBe goal
+      }
+  }
+
+  "isValidPotentialPositions()" should {
+    val controller = new Controller
+    controller.start(2,10,10)
+    "return true if its a valid position" in {
+      controller.setXandY(0,0)
+      controller.place()
+      controller.setXandY(0,9)
+      controller.place()
+      controller.isValidPotentialPositions(1,1,0) shouldBe true
+    }
+
+    "return false if its an invalid position" in {
+      controller.isValidPotentialPositions(1,-1,1) shouldBe false
+      controller.isValidPotentialPositions(-1,1,1) shouldBe false
+      controller.isValidPotentialPositions(15,1,1) shouldBe false
+      controller.isValidPotentialPositions(1,15,1) shouldBe false
+      controller.isValidPotentialPositions(0,0,0) shouldBe false
     }
   }
 

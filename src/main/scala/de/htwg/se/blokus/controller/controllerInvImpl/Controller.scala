@@ -150,7 +150,7 @@ class Controller extends GameController with Observable[Event] {
     def isValidPotentialPositions(x: Int, y: Int, player: Int): Boolean = {
         val neighbors = List((x-1, y), (x+1, y), (x, y-1), (x, y+1))
         val fieldtemp = field.getFieldVector.transpose
-        val ergenis = field.isInBounds(x, y) && fieldtemp(x)(y) == -1
+        val ergebnis = field.isInBounds(x, y) && fieldtemp(x)(y) == -1
         var allValid = true
         for ((nx, ny) <- neighbors) {
             if (!(nx < 0 || ny < 0 || nx >= field.width || ny >= field.height ||
@@ -158,7 +158,7 @@ class Controller extends GameController with Observable[Event] {
                 allValid = false
             }
         }
-        allValid && ergenis
+        allValid && ergebnis
     }
 
     def addPotentialPositionsToInventory(player: Int): List[(Int, Int)] = {

@@ -71,6 +71,15 @@ class BlockInventorySpec extends AnyWordSpec with Matchers {
       }
     }
 
+    "getPosPositions" should {
+      "throw an Illegalargumentexception if player number invalid" in {
+        val playerAmount = 4
+        val initialCount = 1
+        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
+        an[IllegalArgumentException] should be thrownBy blockInventory.getPosPositions(-1)
+      }
+    }
+
     "getBlocks" should {
       "return the correct list of blocks for a valid playerNumber" in {
         val playerAmount = 4
