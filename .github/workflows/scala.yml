@@ -7,9 +7,9 @@ name: Scala CI
 
 on:
   push:
-    branches: [ "main", "coveralls", "Befor-Gui-Finish-(Arthur-will-weiterarbeiten)"]
+    branches: [ "main", "coveralls"]
   pull_request:
-    branches: [ "main", "coveralls", "Befor-Gui-Finish-(Arthur-will-weiterarbeiten)" ]
+    branches: [ "main", "coveralls" ]
 
 permissions:
   contents: read
