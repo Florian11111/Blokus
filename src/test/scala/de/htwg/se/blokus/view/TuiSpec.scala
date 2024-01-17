@@ -41,9 +41,13 @@ class TuiSpec extends AnyWordSpec with Matchers {
                 tui.rowToString(Vector(10, 10, -1, 0, 1, 2, 3, 11, 81, -1)) shouldBe "# # + 1 2 3 4 ? ? + "
             }
         }
-        "calling displayControlls()" should {
+        "calling display functions" should {
             "print out the controlls correctly" in {
                 val result = tui.displayControlls()
+                result shouldBe a [scala.runtime.BoxedUnit]
+            }
+            "print field correctly" in {
+                val result = tui.display()
                 result shouldBe a [scala.runtime.BoxedUnit]
             }
         }
