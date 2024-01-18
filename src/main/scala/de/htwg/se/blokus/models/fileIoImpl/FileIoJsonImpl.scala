@@ -65,7 +65,7 @@ class fileIoJsonImpl extends FileIOInterface {
         val playerAmount = blockInventory.getPlayerAmount()
         val inventory = blockInventory.getAllInventories()
         val firstBlocks = blockInventory.getAllFirstBlock()
-        val posPositions = blockInventory.getAllPosPositions()
+        val posPositions = blockInventory.getAllPotPositions()
 
         Json.obj(
             "playerAmount" -> playerAmount,

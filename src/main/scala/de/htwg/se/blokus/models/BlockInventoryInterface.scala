@@ -10,10 +10,10 @@ import scala.util.Try
 trait BlockInventoryInterface {
     def getAllInventories(): Array[List[Int]]
     def getAllFirstBlock(): Array[Boolean]
-    def getAllPosPositions(): Array[List[(Int, Int)]]
+    def getAllPotPositions(): Array[List[(Int, Int)]]
     def getPlayerAmount(): Int
-    def getPosPositions(playerNumber: Int): List[(Int, Int)]
-    def withPosPositions(playerNumber: Int, posPositionsList: List[(Int, Int)]): BlockInventory
+    def getPotPositions(playerNumber: Int): List[(Int, Int)]
+    def withPotPositions(playerNumber: Int, potPositionsList: List[(Int, Int)]): BlockInventory
     def getBlocks(playerNumber: Int): List[Int]
     def setNextBLock(player: Int, currentBlock: Int): Int
     def firstBlock(playerNumber: Int): Boolean

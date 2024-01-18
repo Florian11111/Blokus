@@ -36,8 +36,8 @@ class Controller extends GameController with Observable[Event] {
         notifyObservers(ExitEvent)
     }
 
-    def getPosPositions(player: Int): List[(Int, Int)] = {
-        blockInventory.getPosPositions(player)
+    def getPotPositions(player: Int): List[(Int, Int)] = {
+        blockInventory.getPotPositions(player)
     }
 
     def start(playerAmt: Int, w: Int, h: Int): Unit = {
@@ -79,8 +79,8 @@ class Controller extends GameController with Observable[Event] {
     }
 
     def isGameOverPlayer(player: Int): Boolean = {
-        var posPositions = blockInventory.getPosPositions(player)
-        posPositions.isEmpty && !blockInventory.firstBlock(player) || blockInventory.getBlocks(getCurrentPlayer()).forall(_ == 0)
+        var potPositions = blockInventory.getPotPositions(player)
+        potPositions.isEmpty && !blockInventory.firstBlock(player) || blockInventory.getBlocks(getCurrentPlayer()).forall(_ == 0)
     }
 
     def canPlace(): Boolean = {
@@ -115,9 +115,9 @@ class Controller extends GameController with Observable[Event] {
             redoStack = List()
             field = field.placeBlock(hoverBlock, blockInventory.firstBlock(getCurrentPlayer()))
             blockInventory = blockInventory.withUsedBlock(getCurrentPlayer(), hoverBlock.getBlockType)
-            blockInventory = blockInventory.withPosPositions(getCurrentPlayer(), addPotentialPositionsToInventory(getCurrentPlayer()))
+            blockInventory = blockInventory.withPotPositions(getCurrentPlayer(), addPotentialPositionsToInventory(getCurrentPlayer()))
             for (i <- 0 until playerAmount) {
-                blockInventory = blockInventory.withPosPositions(i, filterPotentialPositions(i))
+                blockInventory = blockInventory.withPotPositions(i, filterPotentialPositions(i))
             }
             switchPlayerAndCheckGameOver()
             val nextBlock = blockInventory.setNextBLock(getCurrentPlayer(), hoverBlock.getBlockType)
@@ -131,18 +131,18 @@ class Controller extends GameController with Observable[Event] {
     }
 
     def filterPotentialPositions(player: Int): List[(Int, Int)] = {
-        var posPositions = blockInventory.getPosPositions(player)
+        var potPositions = blockInventory.getPotPositions(player)
         val blocks = blockInventory.getBlocks(player)
-        posPositions = posPositions.filter { ecke =>
+        potPositions = potPositions.filter { ecke =>
             isValidPotentialPositions(ecke._1, ecke._2, player)
         }
-        posPositions.filter { ecke =>
+        potPositions.filter { ecke =>
             blocks.zipWithIndex.exists { case (blockamount, block) =>
                 if (blockamount > 0) {
                     (0 to 3).exists { i =>
                         List(false, true).exists { j =>
                             val tempHoverBlock =  HoverBlock.createInstance(ecke._1, ecke._2, playerAmount, player, block, i, j)
-                            val ergebenis = field.posPositionsCheck(tempHoverBlock)
+                            val ergebenis = field.potPositionsCheck(tempHoverBlock)
                             ergebenis
                         }
                     }
@@ -169,8 +169,8 @@ class Controller extends GameController with Observable[Event] {
 
     def addPotentialPositionsToInventory(player: Int): List[(Int, Int)] = {
         val block = Block.createBlock(hoverBlock.getBlockType, hoverBlock.getRotation, hoverBlock.getMirrored)
-        var posPositions = blockInventory.getPosPositions(player)
-        (posPositions ++ block.corners.map(e => (e._1 + hoverBlock.getX, e._2 + hoverBlock.getY)))
+        var potPositions = blockInventory.getPotPositions(player)
+        (potPositions ++ block.corners.map(e => (e._1 + hoverBlock.getX, e._2 + hoverBlock.getY)))
     }
 
     def getBlocks(): List[Int] = blockInventory.getBlocks(getCurrentPlayer())

@@ -26,7 +26,7 @@ class BlockInventorySpec extends AnyWordSpec with Matchers {
 
         val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
 
-        blockInventory.getAllPosPositions().foreach(posPositions => posPositions shouldEqual List.empty)
+        blockInventory.getAllPotPositions().foreach(posPositions => posPositions shouldEqual List.empty)
       }
     }
 
@@ -39,9 +39,9 @@ class BlockInventorySpec extends AnyWordSpec with Matchers {
         val playerNumber = 0
         val newPosPositions = List((1, 2), (3, 4))
 
-        val updatedBlockInventory = blockInventory.withPosPositions(playerNumber, newPosPositions)
+        val updatedBlockInventory = blockInventory.withPotPositions(playerNumber, newPosPositions)
 
-        updatedBlockInventory.getPosPositions(playerNumber) shouldEqual newPosPositions
+        updatedBlockInventory.getPotPositions(playerNumber) shouldEqual newPosPositions
       }
 
       "throw an exception for an invalid playerNumber" in {
@@ -53,7 +53,7 @@ class BlockInventorySpec extends AnyWordSpec with Matchers {
         val newPosPositions = List((1, 2), (3, 4))
 
         val exception = intercept[IllegalArgumentException] {
-        blockInventory.withPosPositions(playerNumber, newPosPositions)
+        blockInventory.withPotPositions(playerNumber, newPosPositions)
         }
         exception shouldBe a[IllegalArgumentException]
         exception.getMessage shouldEqual s"Invalid player number: $playerNumber"
@@ -67,7 +67,7 @@ class BlockInventorySpec extends AnyWordSpec with Matchers {
         val playerNumber = -5
         val newPosPositions = List((1, 2), (3, 4))
 
-        an[IllegalArgumentException] should be thrownBy blockInventory.withPosPositions(playerNumber, newPosPositions)
+        an[IllegalArgumentException] should be thrownBy blockInventory.withPotPositions(playerNumber, newPosPositions)
       }
     }
 
@@ -76,7 +76,7 @@ class BlockInventorySpec extends AnyWordSpec with Matchers {
         val playerAmount = 4
         val initialCount = 1
         val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
-        an[IllegalArgumentException] should be thrownBy blockInventory.getPosPositions(-1)
+        an[IllegalArgumentException] should be thrownBy blockInventory.getPotPositions(-1)
       }
     }
 
@@ -256,7 +256,7 @@ class BlockInventorySpec extends AnyWordSpec with Matchers {
         newInstance.getPlayerAmount() shouldEqual newPlayerAmount
         newInstance.getAllInventories() shouldEqual newInventories
         newInstance.getAllFirstBlock() shouldEqual newIsFirstBlock
-        newInstance.getAllPosPositions() shouldEqual newPosPositions
+        newInstance.getAllPotPositions() shouldEqual newPosPositions
       }
     }
   }

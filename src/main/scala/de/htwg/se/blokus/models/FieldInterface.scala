@@ -11,7 +11,7 @@ trait FieldInterface {
     def isInBounds(x: Int, y : Int): Boolean
 
     /* checks all checks if a block can be placed in any way on a given position */
-    def posPositionsCheck(hoverBlock: HoverBlockInterface): Boolean
+    def potPositionsCheck(hoverBlock: HoverBlockInterface): Boolean
 
     /* checks if a block is in a Corner */
     def isInCorner(hoverBlock: HoverBlockInterface): Boolean

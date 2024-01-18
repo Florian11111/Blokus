@@ -33,7 +33,7 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
         }
     }
 
-    def posPositionsCheck(hoverBlock: HoverBlockInterface): Boolean = {
+    def potPositionsCheck(hoverBlock: HoverBlockInterface): Boolean = {
         val block = Block.createBlock(hoverBlock.getBlockType, hoverBlock.getRotation, hoverBlock.getMirrored)
         val x = hoverBlock.getX
         val y = hoverBlock.getY

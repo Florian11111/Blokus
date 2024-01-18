@@ -173,7 +173,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       "return false if a player still has positions or blocks" in {
         controller.blockInventory = BlockInventory.getInstance(2,2)
         controller.blockInventory.withUsedBlock(0, 1)
-        controller.blockInventory.withPosPositions(0, List((1, 0),(1,0),(1,1)))
+        controller.blockInventory.withPotPositions(0, List((1, 0),(1,0),(1,1)))
         controller.isGameOverPlayer(0) should be(false)
       }
     }
@@ -217,7 +217,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         controller.blockInventory = fullBlockInventory
         controller.blockInventory.withUsedBlock(0, 0)
         controller.blockInventory.withUsedBlock(1, 0)
-        controller.blockInventory.withPosPositions(0, List((0, 0)))
+        controller.blockInventory.withPotPositions(0, List((0, 0)))
         controller.switchPlayerAndCheckGameOver() should be(false)
       }
 
@@ -225,7 +225,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         val blockInventory = BlockInventory.getInstance(2, 0)
         val fullBlockInventory = blockInventory.newInstance(2, Array(List.fill(21)(0), List.fill(21)(1)), Array(true, true), Array(List.empty, List.empty))
         controller.blockInventory = fullBlockInventory
-        controller.blockInventory.withPosPositions(0, List())
+        controller.blockInventory.withPotPositions(0, List())
         controller.switchPlayerAndCheckGameOver() should be(false)
       }
     }
@@ -267,7 +267,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         controller.start(2, 10, 10)
         controller.setXandY(0,0)
         controller.placeBlock()
-        controller.getPosPositions(0) shouldBe List((1, 1))
+        controller.getPotPositions(0) shouldBe List((1, 1))
         }
     }
 
@@ -281,7 +281,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         result shouldBe a [Success[Unit]]
         controller.hoverBlock.getBlockType should be(newBlockType)
         controller.hoverBlock.getX should be < 10 // Ensure getOutOfCorner was called
-         }
+        }
       }
 
       "return a Try.Failure when changing to an invalid block type" in {
@@ -334,9 +334,9 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         controller.getMirrored() shouldBe false
         val blockInventory = BlockInventoryInterface.getInstance(2)
         controller.blockInventory = blockInventory
-        val positionsBefore = controller.blockInventory.getPosPositions(0)
+        val positionsBefore = controller.blockInventory.getPotPositions(0)
         controller.addPotentialPositionsToInventory(0)
-        val positionsAfter = controller.blockInventory.getPosPositions(0)
+        val positionsAfter = controller.blockInventory.getPotPositions(0)
         positionsAfter should contain theSameElementsAs positionsBefore
       }
     }
