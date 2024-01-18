@@ -34,7 +34,7 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
         }
     }
 
-    def cornerCheck(hoverBlock: HoverBlockInterface): Boolean = {
+    def posPositionsCheck(hoverBlock: HoverBlockInterface): Boolean = {
         val block = Block.createBlock(hoverBlock.getBlockType, hoverBlock.getRotation, hoverBlock.getMirrored)
         val x = hoverBlock.getX
         val y = hoverBlock.getY
@@ -69,7 +69,6 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
             fieldVector(hoverBlock.getY + dy)(hoverBlock.getX + dx) != hoverBlock.getPlayer &&
             block.corners.exists { case (dx, dy) => isInBounds(hoverBlock.getX + dx, hoverBlock.getY + dy) && 
             fieldVector(hoverBlock.getY + dy)(hoverBlock.getX + dx) == hoverBlock.getPlayer}
-            
         } 
     }
 
