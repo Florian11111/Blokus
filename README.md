@@ -39,8 +39,7 @@ sbt und so
 [![Coverage Status](https://coveralls.io/repos/github/Florian11111/blokus/badge.svg?branch=main)](https://coveralls.io/github/Florian11111/blokus?branch=main)
 
 Manuell:<br>
-sbt clean coverage test<br>
-sbt cleanCoverage
+einfach coverage.sh ausführen
 
 ## Quellen
 [1] https://de.wikipedia.org/wiki/Blokus
