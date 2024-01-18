@@ -7,8 +7,6 @@ trait FieldInterface {
     val height: Int
     def getFieldVector: Vector[Vector[Int]]
     def setFieldVector(newFieldVector: Vector[Vector[Int]]): FieldInterface
-
-    // def isCorner(x: Int, y: Int): Boolean // ist private als muss nicht hier sein :) (Glaube ich)
     def getBlockAmount(blockType: Int): Int
     def isInBounds(x: Int, y : Int): Boolean
     def cornerCheck(hoverBlock: HoverBlockInterface): Boolean
