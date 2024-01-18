@@ -60,6 +60,7 @@ class Tui(controller: GameController) extends Observer[Event] {
         println("r: Block rotieren")
         println("m: Block spiegeln")
         println("s: Block platzieren")
+        println("n: Neuer Block")
         println("u: Undo")
         println("x: Beenden")   
     }
@@ -79,9 +80,9 @@ class Tui(controller: GameController) extends Observer[Event] {
             case _ => 
         }
         if (gameisStarted) {
-            // clearTerminal()
-            // display()
-            // displayControlls()   
+            clearTerminal()
+            display()
+            displayControlls()   
         }
     }
 
@@ -139,6 +140,7 @@ class Tui(controller: GameController) extends Observer[Event] {
                 case "u" => controller.undo()
                 case "r" => controller.rotate()
                 case "m" => controller.mirror()
+                case "n" => controller.setNextBLock()
                 case "e" => {
                     if (controller.canPlace()) {
                         controller.placeBlock()
@@ -150,7 +152,6 @@ class Tui(controller: GameController) extends Observer[Event] {
             }
             
         } finally {
-            // Reset any terminal configurations if needed
         }
     }
     }
