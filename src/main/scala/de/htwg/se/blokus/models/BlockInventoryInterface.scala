@@ -3,7 +3,7 @@ package de.htwg.se.blokus.models
 import de.htwg.se.blokus.controller
 
 import de.htwg.se.blokus.models.blockInvImpl.*
-import scala.util.Random
+import scala.util.Try
 
 trait BlockInventoryInterface {
     def getAllInventories(): Array[List[Int]]
@@ -20,7 +20,7 @@ trait BlockInventoryInterface {
     
     def getBlocks(playerNumber: Int): List[Int]
 
-    def getRandomBlock(playerNumber: Int, rand: Random): Option[Int]
+    def setNextBLock(player: Int, currentBlock: Int): Int
 
     def firstBlock(playerNumber: Int): Boolean
 
