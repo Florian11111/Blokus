@@ -127,7 +127,7 @@ class FieldSpec extends AnyWordSpec with Matchers {
         val field = Field(5, 5)
         val hoverBlock = HoverBlock(4, 2, 0, 0, 0, 0, false)
 
-        field.cornerCheck(hoverBlock) shouldEqual false
+        field.isInCorner(hoverBlock) shouldEqual false
       }
     }
 
