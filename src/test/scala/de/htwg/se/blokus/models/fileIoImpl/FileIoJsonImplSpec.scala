@@ -33,7 +33,7 @@ class FileIoJsonImplSpec extends AnyWordSpec with Matchers {
       loadedGameState.getBlockInventory().getPlayerAmount() shouldEqual 4
       loadedGameState.getBlockInventory().getAllInventories() shouldEqual Array.fill(4)(List(1, 2, 3, 4))
       loadedGameState.getBlockInventory().getAllFirstBlock() shouldEqual Array.fill(4)(true)
-      loadedGameState.getBlockInventory().getAllPosPositions() shouldEqual Array.fill(4)(List((1, 1), (2, 2)))
+      loadedGameState.getBlockInventory().getAllPotPositions() shouldEqual Array.fill(4)(List((1, 1), (2, 2)))
 
       // Testdatei löschen
       new File(testFilePath).delete()
