@@ -29,6 +29,19 @@ class FieldSpec extends AnyWordSpec with Matchers {
       }
     }
 
+    "setFieldVector" should {
+      "set the new field vector correctly" in {
+        val width = 5
+        val height = 5
+
+        var field = Field(width, height)
+        val field6 = Field(6, 6)
+        field = field.setFieldVector(Vector(Vector(-1, -1, -1, -1, -1, -1), Vector(-1, -1, -1, -1, -1, -1), Vector(-1, -1, -1, -1, -1, -1), Vector(-1, -1, -1, -1, -1, -1), Vector(-1, -1, -1, -1, -1, -1), Vector(-1, -1, -1, -1, -1, -1)))
+
+        field.getFieldVector shouldBe field6.getFieldVector
+      }
+    }
+
     "isCorner" should {
       "return true for the corner coordinates" in {
         val field = Field(5, 5)
