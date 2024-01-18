@@ -4,7 +4,9 @@ import de.htwg.se.blokus.controller
 
 import de.htwg.se.blokus.models.blockInvImpl.*
 import scala.util.Try
-
+/* BlockInventory store infomations of Potansial Place Posions, 
+    if its the Player first Place
+    and what Blocks a Player has in his inventory */
 trait BlockInventoryInterface {
     def getAllInventories(): Array[List[Int]]
     def getAllFirstBlock(): Array[Boolean]

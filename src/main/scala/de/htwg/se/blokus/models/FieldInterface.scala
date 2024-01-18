@@ -9,10 +9,19 @@ trait FieldInterface {
     def setFieldVector(newFieldVector: Vector[Vector[Int]]): FieldInterface
     def getBlockAmount(blockType: Int): Int
     def isInBounds(x: Int, y : Int): Boolean
-    def cornerCheck(hoverBlock: HoverBlockInterface): Boolean
+
+    /* checks all checks if a block can be placed in any way on a given position */
+    def posPositionsCheck(hoverBlock: HoverBlockInterface): Boolean
+
+    /* checks if a block is in a Corner */
     def isInCorner(hoverBlock: HoverBlockInterface): Boolean
+
+    /* checks if a Block is Game Rule Confirm */
     def isGameRuleConfirm(hoverBlock: HoverBlockInterface): Boolean
+
+    /* checks if a Block is in the Field */
     def isInsideField(hoverBlock: HoverBlockInterface): Boolean
+    
     def placeBlock(hoverBlock: HoverBlockInterface, firstPlace: Boolean): FieldInterface
     def copy(): FieldInterface
 }

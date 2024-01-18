@@ -5,7 +5,6 @@ import de.htwg.se.blokus.models.HoverBlockInterface
 import de.htwg.se.blokus.models.Block
 import de.htwg.se.blokus.models.hoverBlockImpl.HoverBlock
 
-
 class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface {
     val width: Int = fieldVector.headOption.map(_.size).getOrElse(0)
     val height: Int = fieldVector.size
@@ -34,7 +33,7 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
         }
     }
 
-    def cornerCheck(hoverBlock: HoverBlockInterface): Boolean = {
+    def posPositionsCheck(hoverBlock: HoverBlockInterface): Boolean = {
         val block = Block.createBlock(hoverBlock.getBlockType, hoverBlock.getRotation, hoverBlock.getMirrored)
         val x = hoverBlock.getX
         val y = hoverBlock.getY
@@ -69,7 +68,6 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
             fieldVector(hoverBlock.getY + dy)(hoverBlock.getX + dx) != hoverBlock.getPlayer &&
             block.corners.exists { case (dx, dy) => isInBounds(hoverBlock.getX + dx, hoverBlock.getY + dy) &&
             fieldVector(hoverBlock.getY + dy)(hoverBlock.getX + dx) == hoverBlock.getPlayer}
-
         }
     }
 

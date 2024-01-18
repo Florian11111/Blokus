@@ -28,6 +28,10 @@ class Controller extends GameController with Observable[Event] {
     val fileIoJson: FileIOInterface = FileIOInterface.getInstanceJson()
     val fileIoXml: FileIOInterface = FileIOInterface.getInstanceXml()
 
+    private var undoStack: List[Command] = List()
+    private var redoStack: List[Command] = List()
+
+
     def exit(): Unit = {
         notifyObservers(ExitEvent)
     }
@@ -51,6 +55,8 @@ class Controller extends GameController with Observable[Event] {
         }
         hoverBlock = HoverBlockInterface.getInstance(width / 2, height / 2, playerAmount, 0, 0, 0, false)
         field = FieldInterface.getInstance(width, height)
+        undoStack = List()
+        redoStack = List()
         notifyObservers(StartGameEvent)
     }
 
@@ -106,6 +112,7 @@ class Controller extends GameController with Observable[Event] {
 
     def place(): Boolean = {
         if (canPlace() && blockInventory.isAvailable(hoverBlock.getPlayer, hoverBlock.getBlockType)) {
+            redoStack = List()
             field = field.placeBlock(hoverBlock, blockInventory.firstBlock(getCurrentPlayer()))
             blockInventory = blockInventory.withUsedBlock(getCurrentPlayer(), hoverBlock.getBlockType)
             blockInventory = blockInventory.withPosPositions(getCurrentPlayer(), addPotentialPositionsToInventory(getCurrentPlayer()))
@@ -135,7 +142,7 @@ class Controller extends GameController with Observable[Event] {
                     (0 to 3).exists { i =>
                         List(false, true).exists { j =>
                             val tempHoverBlock =  HoverBlock.createInstance(ecke._1, ecke._2, playerAmount, player, block, i, j)
-                            val ergebenis = field.cornerCheck(tempHoverBlock)
+                            val ergebenis = field.posPositionsCheck(tempHoverBlock)
                             ergebenis
                         }
                     }
@@ -289,9 +296,6 @@ class Controller extends GameController with Observable[Event] {
         }
     }
 
-    private var undoStack: List[Command] = List()
-    private var redoStack: List[Command] = List()
-
     private def execute(command: Command): Try[Unit] = {
 		undoStack = command :: undoStack
 		redoStack = List()
@@ -331,21 +335,17 @@ class Controller extends GameController with Observable[Event] {
 	}
 
 
-    private class SetBlockCommand(controller: Controller, blockInventory: BlockInventoryInterface, newField: FieldInterface, player: Int, currentBlock: Int) extends Command {
-        private val originalField = controller.field
-        private val originalBlocksBefore = blockInventory
-        private val originalCurrentBlock = controller.hoverBlock.getBlockType
-
+    private class SetBlockCommand(val originalController: Controller, val originalBlockInventory: BlockInventoryInterface, val originalField: FieldInterface, val originalPlayer: Int, val originalBlockType: Int) extends Command {
         override def execute(): Try[Unit] = Try {
-            controller.place()
+            originalController.place()
         }
 
         override def undo(): Unit = {
-            controller.field = originalField
-            controller.hoverBlock = controller.hoverBlock.newInstance(controller.hoverBlock.getX, controller.hoverBlock.getY,
-                controller.playerAmount, controller.hoverBlock.getPlayer, originalCurrentBlock, controller.hoverBlock.getRotation, controller.hoverBlock.getMirrored)
-            controller.blockInventory = originalBlocksBefore
-            controller.changeBlock(currentBlock)
+            originalController.field = originalField
+
+            originalController.blockInventory = originalBlockInventory
+            originalController.hoverBlock = originalController.hoverBlock.newInstance(originalController.hoverBlock.getX, originalController.hoverBlock.getY, originalController.playerAmount, 
+                originalPlayer, originalBlockType, originalController.hoverBlock.getRotation, originalController.hoverBlock.getMirrored)
             notifyObservers(PlaceBlockEvent)
         }
         override def redo(): Try[Unit] = execute()

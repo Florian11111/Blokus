@@ -84,6 +84,17 @@ class ControllerSpec extends AnyWordSpec with Matchers {
       }
     }
 
+    "SetXandY" should {
+      val controller = new Controller
+      controller.start(2, 10, 10)
+      "return true if set was successful" in {
+        controller.setXandY(5,5) shouldBe true
+      }
+      "return false if set was unsuccessful" in {
+        controller.setXandY(11,11) shouldBe false
+      }
+    }
+
     "attempting to exit" should {
       val controller = new Controller
       "notify observers with ExitEvent" in {
