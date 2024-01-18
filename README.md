@@ -30,10 +30,10 @@ Ziel ist es, möglichst viele Spielsteine auf dem Brett abzulegen. Da das Spielf
 
 ## Installation
 
-install sbt https://www.scala-sbt.org/download.html
-install VSCode https://code.visualstudio.com
-git clone https://github.com/Florian11111/blokus.git
-dann Ordner in VSCode öffnen
+install <a href="https://www.scala-sbt.org/download.html" target="_blank">sbt</a><br>
+install <a href="https://code.visualstudio.com" target="_blank">VSCode</a><br>
+```git clone https://github.com/Florian11111/blokus.git<br>```
+dann Ordner in VSCode öffnen und ```sbt run```
 
 ## Testing
 
