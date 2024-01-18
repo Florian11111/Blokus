@@ -102,42 +102,46 @@ class BlockInventorySpec extends AnyWordSpec with Matchers {
       }
     }
 
-    "getRandomBlock" should {
-      "return a random block for a valid playerNumber" in {
-        val playerAmount = 4
-        val initialCount = 3
-        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
-        val rand = new Random(42)
+    "calling setNextBlock" should {
+      var blockInventory = BlockInventory.getInstance(4, 1)
 
-        val playerNumber = 1
-        val availableBlocks = blockInventory.getAllInventories()(playerNumber)
-
-        val randomBlock = blockInventory.getRandomBlock(playerNumber, rand)
-
-        randomBlock.isDefined shouldEqual true
-        availableBlocks.contains(randomBlock.get) shouldEqual true
+      "return the next available block for a player" in {
+        val playerNumber = 0
+        val currentBlock = 0
+        val nextBlock = blockInventory.setNextBLock(playerNumber, currentBlock)
+        nextBlock should be >= 0
+        nextBlock should be < 21
+        blockInventory.isAvailable(playerNumber, nextBlock) shouldBe true
       }
 
-      "throw an exception if no blocks are available for the player" in {
-        val playerAmount = 4
-        val initialCount = 0
-        val blockInventory = new BlockInventory(playerAmount,Array.fill(playerAmount)(List.empty[Int]),Array.fill(playerAmount)(false), Array.fill(playerAmount)(List.empty[(Int, Int)]))
-        val rand = new Random(42)
-
+      "throw an exception when no blocks are left for a player" in {
         val playerNumber = 1
+        val currentBlock = 0
 
-        an[RuntimeException] should be thrownBy blockInventory.getRandomBlock(playerNumber, rand)
+        val updatedInventory = BlockInventory.getInstance(4,0)
+
+        an[IllegalArgumentException] should be thrownBy {
+          updatedInventory.setNextBLock(playerNumber, currentBlock)
+        }
       }
 
-      "throw an exception for an invalid playerNumber" in {
-        val playerAmount = 4
-        val initialCount = 3
-        val blockInventory = BlockInventory.getInstance(playerAmount, initialCount)
-        val rand = new Random(42)
+      "cycle through blocks if the current block is the last one" in {
+        val playerNumber = 2
+        val currentBlock = 20
 
-        val playerNumber = 5
+        val nextBlock = blockInventory.setNextBLock(playerNumber, currentBlock)
+        nextBlock shouldEqual 0
+      }
 
-        an[IllegalArgumentException] should be thrownBy blockInventory.getRandomBlock(playerNumber, rand)
+      "cycle through not available blocks if the current block is the last one" in {
+        val playerNumber = 2
+        val currentBlock = 18
+
+        blockInventory = blockInventory.withUsedBlock(playerNumber, 19)
+        blockInventory = blockInventory.withUsedBlock(playerNumber, 20)
+
+        val nextBlock = blockInventory.setNextBLock(playerNumber, currentBlock)
+        nextBlock shouldEqual 0
       }
     }
 
