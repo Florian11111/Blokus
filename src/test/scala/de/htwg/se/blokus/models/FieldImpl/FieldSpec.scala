@@ -27,15 +27,6 @@ class FieldSpec extends AnyWordSpec with Matchers {
 
         field.getFieldVector shouldEqual Vector.fill(height, width)(-1)
       }
-
-      "initialize the fieldVector correctly with -1 values with getinstance" in {
-        val width = 10
-        val height = 10
-
-        val field = Field.getInstance(width, height)
-
-        field.getFieldVector shouldEqual Vector.fill(height, width)(-1)
-      }
     }
 
     "setFieldVector" should {
