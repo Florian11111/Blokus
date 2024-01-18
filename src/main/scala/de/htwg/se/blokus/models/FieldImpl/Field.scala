@@ -5,7 +5,6 @@ import de.htwg.se.blokus.models.HoverBlockInterface
 import de.htwg.se.blokus.models.Block
 import de.htwg.se.blokus.models.hoverBlockImpl.HoverBlock
 
-
 class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface {
     val width: Int = fieldVector.headOption.map(_.size).getOrElse(0)
     val height: Int = fieldVector.size
