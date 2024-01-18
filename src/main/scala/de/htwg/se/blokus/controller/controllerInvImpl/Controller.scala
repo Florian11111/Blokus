@@ -105,7 +105,7 @@ class Controller extends GameController with Observable[Event] {
     }
 
     def place(): Boolean = {
-        if (canPlace()) {
+        if (canPlace() && blockInventory.isAvailable(hoverBlock.getPlayer, hoverBlock.getBlockType)) {
             field = field.placeBlock(hoverBlock, blockInventory.firstBlock(getCurrentPlayer()))
             blockInventory = blockInventory.withUsedBlock(getCurrentPlayer(), hoverBlock.getBlockType)
             blockInventory = blockInventory.withPosPositions(getCurrentPlayer(), addPotentialPositionsToInventory(getCurrentPlayer()))
@@ -115,8 +115,8 @@ class Controller extends GameController with Observable[Event] {
             switchPlayerAndCheckGameOver()
             val newBlock = blockInventory.getRandomBlock(hoverBlock.getPlayer, Random).get
             hoverBlock = hoverBlock.newInstance((field.width / 2) - 1, (field.height / 2) - 1, playerAmount, getCurrentPlayer(),
-                newBlock, 0, false)
-
+                hoverBlock.getBlockType, 0, false)
+            setNextBLock()
             notifyObservers(PlaceBlockEvent)
             true
         } else {
