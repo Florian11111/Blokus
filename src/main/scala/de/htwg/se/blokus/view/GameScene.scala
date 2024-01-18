@@ -35,8 +35,7 @@ class GameScene(gui: Gui,
 
     controller.addObserver(this)
 
-    // True if the pot should be shown
-    private val showPotPos = true
+    private var showPotPos = false
 
     private var names = namesList
     private var oldField = controller.getField().map(_.map(_ => -2)).transpose
@@ -92,9 +91,27 @@ class GameScene(gui: Gui,
         loadbutton.margin = scalafx.geometry.Insets(5, 5, 5, 5)
         loadbutton.onAction = _ => loadGame()
 
+        val togglePotPos = new Button(s"")
+        if (showPotPos) {
+            togglePotPos.text = "Hide Help"
+        } else {
+            togglePotPos.text = "Show Help"
+        }
+        styleButton(togglePotPos)
+        togglePotPos.margin = scalafx.geometry.Insets(5, 5, 5, 5)
+        togglePotPos.onAction = _ => {
+            showPotPos = !showPotPos
+            if (showPotPos) {
+                togglePotPos.text = "Hide Help"
+            } else {
+                togglePotPos.text = "Show Help"
+            }
+            updateBoard()
+        }
+
         val box = new HBox()
         box.margin = scalafx.geometry.Insets(10, 0, 0, 0)
-        box.children.addAll(undobutton, savebutton, loadbutton)
+        box.children.addAll(undobutton, savebutton, loadbutton, togglePotPos)
         box.alignment = scalafx.geometry.Pos.Center
 
         val scene = new Scene {
@@ -244,7 +261,7 @@ class GameScene(gui: Gui,
         var merged = field
 
         if (showPotPos) {
-            val corner = controller.getPosPositions(controller.getCurrentPlayer())
+            val corner = controller.getPotPositions(controller.getCurrentPlayer())
             merged = merged.indices.map { y =>
                 if (corner.exists(_._2 == y)) {
                     merged(y).indices.map { x =>
@@ -312,7 +329,7 @@ class GameScene(gui: Gui,
 
     def handleMouseHover(x: Int, y: Int): Unit = {
         if (x == hoverX && y == hoverY)
-            return // do nothing
+            return
         hoverX = x
         hoverY = y
         controller.setXandY(x, y)
@@ -357,23 +374,23 @@ class GameScene(gui: Gui,
 
     def getFillColor(value: Int): String = {
         value match {
-            case -1 => "#101010" // Dunkelgrau
-            case 0 => "#FF0000" // Rot
-            case 1 => "#00B000" // Grün
-            case 2 => "#0000FF" // Blau
-            case 3 => "#FFFF00" // Gelb
-            case 10 => "#808080" // Grau
-            case 11 => "#D3D3D3" // Hellgrau
-            case 20 => "#8B0000" // Dunkelrot
-            case 21 => "#006400" // Dunkelgrün
-            case 22 => "#00008B" // Dunkelblau
-            case 23 => "#9B870C" // Dunkelgelb
-            case 30 => "#4B0000" // Sehr dunkelrot
-            case 31 => "#003200" // Sehr dunkelgrün
-            case 32 => "#00004B" // Sehr dunkelblau
-            case 33 => "#4B470C" // Sehr dunkelgelb
-            case 70 => "#00FFFF" // Dunkelgelb
-            case _ => "#000000" // Schwarz
+            case -1 => "#101010" // Dark Grey
+            case 0 => "#FF0000" // Red
+            case 1 => "#00B000" // Green
+            case 2 => "#0000FF" // Blue
+            case 3 => "#FFFF00" // Yellow
+            case 10 => "#808080" // Grey
+            case 11 => "#D3D3D3" // Light Grey
+            case 20 => "#8B0000" // Dark Red
+            case 21 => "#006400" // Dark Green
+            case 22 => "#00008B" // Dark Blue
+            case 23 => "#9B870C" // Dark Yellow
+            case 30 => "#4B0000" // Very dark red
+            case 31 => "#003200" // Very dark green
+            case 32 => "#00004B" // Very dark blue
+            case 33 => "#4B470C" // Very dark yellow
+            case 70 => "#00FFFF" // Cyan
+            case _ => "#000000" // Black
         }
     }
 

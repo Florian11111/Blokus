@@ -27,7 +27,7 @@ trait GameController extends Observer[Event] with Observable[Event] {
     def canPlace(): Boolean
 
     /* return all Potansial Positions of a given player */
-    def getPosPositions(player: Int): List[(Int, Int)]
+    def getPotPositions(player: Int): List[(Int, Int)]
 
     def changeCurrentBlock(newBlock: Int): Try[Unit]
     def setNextBLock(): Try[Unit]

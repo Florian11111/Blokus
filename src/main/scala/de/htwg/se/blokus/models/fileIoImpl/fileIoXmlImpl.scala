@@ -82,7 +82,7 @@ class fileIoXmlImpl extends FileIOInterface {
             <playerAmount>{blockInventory.getPlayerAmount()}</playerAmount>
             {inventoryToXml(blockInventory.getAllInventories())}
             <firstBlocks>{blockInventory.getAllFirstBlock().map(x => <player>{x}</player>)}</firstBlocks>
-            {posPositionsToXml(blockInventory.getAllPosPositions())}
+            {posPositionsToXml(blockInventory.getAllPotPositions())}
         </blockInventory>
     }
 
