@@ -16,66 +16,63 @@ class BlockInventory(val playerAmount: Int,
 
     def getPlayerAmount(): Int = playerAmount
 
-    def getPosPositions(playerNumber: Int): List[(Int, Int)] = {
-        if (playerNumber >= 0 && playerNumber < posPositions.length) {
-            posPositions(playerNumber)
+    def getPosPositions(player: Int): List[(Int, Int)] = {
+        if (player >= 0 && player < posPositions.length) {
+            posPositions(player)
         } else {
-            throw new IllegalArgumentException(s"Invalid player number: $playerNumber")
+            throw new IllegalArgumentException(s"Invalid player number: $player")
         }
     }
 
-    def withPosPositions(playerNumber: Int, posPositionsList: List[(Int, Int)]): BlockInventory = {
-        if (playerNumber >= 0 && playerNumber < posPositions.length) {
-            val newPosPositions = posPositions.updated(playerNumber, posPositionsList)
+    def withPosPositions(player: Int, posPositionsList: List[(Int, Int)]): BlockInventory = {
+        if (player >= 0 && player < posPositions.length) {
+            val newPosPositions = posPositions.updated(player, posPositionsList)
             new BlockInventory(playerAmount, inventories, isFirstBlock, newPosPositions)
         } else {
-            throw new IllegalArgumentException(s"Invalid player number: $playerNumber")
+            throw new IllegalArgumentException(s"Invalid player number: $player")
         }
     }
     
-    def getBlocks(playerNumber: Int): List[Int] = {
-        if (playerNumber >= 0 && playerNumber < inventories.length) {
-            inventories(playerNumber).toList
+    def getBlocks(player: Int): List[Int] = {
+        if (player >= 0 && player < inventories.length) {
+            inventories(player).toList
         } else {
-            throw new IllegalArgumentException(s"Invalid player number: $playerNumber")
+            throw new IllegalArgumentException(s"Invalid player number: $player")
         }
     }
 
-    def getRandomBlock(playerNumber: Int, rand: Random): Option[Int] = {
-        if (playerNumber >= 0 && playerNumber < inventories.length) {
-        val availableBlocks = getAllInventories()(playerNumber)
-        if (availableBlocks.nonEmpty) {
-            val randomIndex = rand.nextInt(availableBlocks.length)
-            val randomBlock = availableBlocks(randomIndex)
-            Some(randomBlock)
-        } else {
-            throw new RuntimeException(s"No Block is available for Player $playerNumber.")
+    def setNextBLock(player: Int, currentBlock: Int): Int = {
+        if (inventories(player).forall(_ <= 0)) {
+            throw new IllegalArgumentException("No blocks left!")
         }
-        } else {
-            throw new IllegalArgumentException(s"Invalid player number: $playerNumber")
+        val current = currentBlock
+        var next = (current + 1) % 21
+        while (inventories(player)(next) <= 0) {
+            next = (next + 1) % 21
         }
+        next
     }
 
-    def firstBlock(playerNumber: Int): Boolean = {
-        isFirstBlock(playerNumber)
+    def firstBlock(player: Int): Boolean = {
+        isFirstBlock(player)
     }
 
-    def isAvailable(playerNumber: Int, blockType: Int): Boolean = {
-        if (playerNumber >= 0 && playerNumber < inventories.length) {
-            inventories(playerNumber)(blockType) > 0
+    def isAvailable(player: Int, blockType: Int): Boolean = {
+        if (player >= 0 && player < inventories.length) {
+            inventories(player)(blockType) > 0
         } else {
-            throw new IllegalArgumentException(s"Invalid player number: $playerNumber")
+            throw new IllegalArgumentException(s"Invalid player number: $player")
         }
     }
 
     
-    def withUsedBlock(playerNumber: Int, blockType: Int): BlockInventory = {
-        if (isAvailable(playerNumber, blockType)) {
-            val newIsFirstBlock = isFirstBlock.updated(playerNumber, false)
-            val newInventories = inventories(playerNumber).updated(blockType, inventories(playerNumber)(blockType) - 1)
-            new BlockInventory(playerAmount, inventories.updated(playerNumber, newInventories), newIsFirstBlock, posPositions)
+    def withUsedBlock(player: Int, blockType: Int): BlockInventory = {
+        if (isAvailable(player, blockType)) {
+            val newIsFirstBlock = isFirstBlock.updated(player, false)
+            val newInventories = inventories(player).updated(blockType, inventories(player)(blockType) - 1)
+            new BlockInventory(playerAmount, inventories.updated(player, newInventories), newIsFirstBlock, posPositions)
         } else {
-            throw new RuntimeException(s"Block $blockType is not available for Player $playerNumber.")
+            throw new RuntimeException(s"Block $blockType is not available for Player $player.")
         }
     }
 

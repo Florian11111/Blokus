@@ -105,7 +105,7 @@ class Controller extends GameController with Observable[Event] {
     }
 
     def place(): Boolean = {
-        if (canPlace()) {
+        if (canPlace() && blockInventory.isAvailable(hoverBlock.getPlayer, hoverBlock.getBlockType)) {
             field = field.placeBlock(hoverBlock, blockInventory.firstBlock(getCurrentPlayer()))
             blockInventory = blockInventory.withUsedBlock(getCurrentPlayer(), hoverBlock.getBlockType)
             blockInventory = blockInventory.withPosPositions(getCurrentPlayer(), addPotentialPositionsToInventory(getCurrentPlayer()))
@@ -113,10 +113,9 @@ class Controller extends GameController with Observable[Event] {
                 blockInventory = blockInventory.withPosPositions(i, filterPotentialPositions(i))
             }
             switchPlayerAndCheckGameOver()
-            val newBlock = blockInventory.getRandomBlock(hoverBlock.getPlayer, Random).get
+            val nextBlock = blockInventory.setNextBLock(getCurrentPlayer(), hoverBlock.getBlockType)
             hoverBlock = hoverBlock.newInstance((field.width / 2) - 1, (field.height / 2) - 1, playerAmount, getCurrentPlayer(),
-                newBlock, 0, false)
-
+                nextBlock, 0, false)
             notifyObservers(PlaceBlockEvent)
             true
         } else {
@@ -184,17 +183,9 @@ class Controller extends GameController with Observable[Event] {
     }
 
     def setNextBLock(): Try[Unit] = Try {
-        val blocks = blockInventory.getBlocks(getCurrentPlayer())
-        if (blocks.forall(_ <= 0)) {
-            throw new IllegalArgumentException("No blocks left!")
-        }
-        val current = hoverBlock.getBlockType
-        var next = (current + 1) % 21
-        while (blocks(next) <= 0) {
-            next = (next + 1) % 21
-        }
+        val nextBlock = blockInventory.setNextBLock(getCurrentPlayer(), hoverBlock.getBlockType)
         hoverBlock = hoverBlock.newInstance(hoverBlock.getX, hoverBlock.getY, playerAmount, hoverBlock.getPlayer,
-            next, hoverBlock.getRotation, hoverBlock.getMirrored)
+            nextBlock, hoverBlock.getRotation, hoverBlock.getMirrored)
         notifyObservers(UpdateEvent)
     }
 

@@ -62,15 +62,21 @@ class Gui(controller: GameController, windowsWidth: Int, windowsHeight: Int) ext
     def switchToStartScene(): Unit = {
         gameSceneSwitched = false
         myStage.scene = new StartScene(this, controller).createScene()
+        myStage.width = windowsWidth + 20
+        myStage.height = windowsHeight + 20
     }
 
     def switchToGameScene(names: List[String], highPerformanceMode: Boolean, info: Boolean): Unit = {
         setNames(names)
         gameSceneSwitched = true
         myStage.scene = new GameScene(this, controller, windowsWidth, windowsHeight, names, highPerformanceMode, info).createScene()
+        myStage.width = windowsWidth + 20
+        myStage.height = windowsHeight + 19
     }
 
     def switchToEndScene(): Unit = {
         myStage.scene = new EndScene(this, controller, nameList).createScene()
+        myStage.width = windowsWidth + 20
+        myStage.height = windowsHeight + 18
     }
 }

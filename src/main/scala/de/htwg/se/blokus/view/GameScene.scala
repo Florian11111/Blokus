@@ -266,7 +266,6 @@ class GameScene(gui: Gui,
     }
 
     def updateHoleBoard(): Unit = {
-        // clear old board
         boardPane.children.clear()
         buttons = Array.ofDim[Button](controller.getWidth(), controller.getHeight())
 
@@ -323,7 +322,6 @@ class GameScene(gui: Gui,
         if (controller.canPlace()) {
             controller.placeBlock()
         } else {
-            // TODO: error label
             println("Kann nicht an dieser Stelle Platziert werden!")
         }
     }
@@ -391,7 +389,6 @@ class GameScene(gui: Gui,
             if (blocks(blockNumber) > 0) {
                 controller.changeCurrentBlock(blockNumber)
             } else {
-                // TODO error label
                 print("Block not avalibel!")
             }
         } else {
