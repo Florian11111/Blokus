@@ -39,13 +39,13 @@ class FileIoJsonImplSpec extends AnyWordSpec with Matchers {
       new File(testFilePath).delete()
     }
     "convert Field to Json correctly" in {
-      val fieldVector = Vector(Vector(1, 2), Vector(3, 4))
+      val fieldVector = Vector(Vector(1, 2, 3), Vector(3, 4, 5), Vector())
       val field = new Field(fieldVector)
       val fileIo = new fileIoJsonImpl
 
       val json = fileIo.FieldToJson(field)
 
-      val expectedJson = Json.obj("field" -> Json.arr(Json.arr(1, 2), Json.arr(3, 4)))
+      val expectedJson = Json.obj("field" -> Json.arr(Json.arr(1, 2, 3), Json.arr(3, 4, 5), Json.arr()))
       json shouldEqual expectedJson
     }
   }
