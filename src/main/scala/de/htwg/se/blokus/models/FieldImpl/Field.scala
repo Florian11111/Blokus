@@ -11,7 +11,7 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
 
     def getFieldVector: Vector[Vector[Int]] = fieldVector
 
-    def setFieldVector(newFieldVector: Vector[Vector[Int]]): FieldInterface = new Field(newFieldVector)
+    def setFieldVector(newFieldVector: Vector[Vector[Int]]): Field = new Field(newFieldVector)
 
     def isCorner(x: Int, y: Int): Boolean = {
         (x == 0 && y == 0) || (x == width - 1 && y == 0) || (x == 0 && y == height - 1) || (x == width - 1 && y == height - 1)
@@ -28,7 +28,7 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
         block.baseForm.forall { case (dx, dy) =>
             val newX = hoverBlock.getX + dx
             val newY = hoverBlock.getY + dy
-            
+
             newY >= 0 && newY < height && newX >= 0 && newX < width
         }
     }
@@ -38,7 +38,7 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
         val x = hoverBlock.getX
         val y = hoverBlock.getY
         block.baseForm.exists { blockcords =>
-            val hoverBlock2 = hoverBlock.newInstance(x + blockcords._1, y + blockcords._2, hoverBlock.getPlayer, hoverBlock.getBlockType, 
+            val hoverBlock2 = hoverBlock.newInstance(x + blockcords._1, y + blockcords._2, hoverBlock.getPlayer, hoverBlock.getBlockType,
                 hoverBlock.getPlayer, hoverBlock.getRotation, hoverBlock.getMirrored)
             isGameRuleConfirm(hoverBlock)
         }
@@ -55,7 +55,7 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
 
     def isInCorner(hoverBlock: HoverBlockInterface): Boolean = {
         val block = Block.createBlock(hoverBlock.getBlockType, hoverBlock.getRotation, hoverBlock.getMirrored)
-        isInsideField(hoverBlock) && 
+        isInsideField(hoverBlock) &&
         isNoBlocksOnTop(hoverBlock) &&
         block.baseForm.exists {case (dx, dy) => isCorner(hoverBlock.getX + dx, hoverBlock.getY + dy)}
     }
@@ -64,11 +64,11 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
         val block = Block.createBlock(hoverBlock.getBlockType, hoverBlock.getRotation, hoverBlock.getMirrored)
         isInsideField(hoverBlock) && isNoBlocksOnTop(hoverBlock) &&
             block.edges.forall { case (dx, dy) => !isInBounds(hoverBlock.getX + dx, hoverBlock.getY + dy) ||
-            isInBounds(hoverBlock.getX + dx, hoverBlock.getY + dy) && 
+            isInBounds(hoverBlock.getX + dx, hoverBlock.getY + dy) &&
             fieldVector(hoverBlock.getY + dy)(hoverBlock.getX + dx) != hoverBlock.getPlayer &&
-            block.corners.exists { case (dx, dy) => isInBounds(hoverBlock.getX + dx, hoverBlock.getY + dy) && 
+            block.corners.exists { case (dx, dy) => isInBounds(hoverBlock.getX + dx, hoverBlock.getY + dy) &&
             fieldVector(hoverBlock.getY + dy)(hoverBlock.getX + dx) == hoverBlock.getPlayer}
-        } 
+        }
     }
 
     def placeBlock(hoverBlock: HoverBlockInterface, firstPlace: Boolean): Field = {
@@ -87,7 +87,7 @@ class Field(private val fieldVector: Vector[Vector[Int]]) extends FieldInterface
             throw new IllegalArgumentException("Invalid position for block placement.")
         }
     }
-    
+
     def copy(): Field = {
         val copiedVector = fieldVector.map(_.toVector).toVector
         new Field(copiedVector)

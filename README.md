@@ -26,12 +26,14 @@ Ziel ist es, möglichst viele Spielsteine auf dem Brett abzulegen. Da das Spielf
 <div align="center">
   <img src="https://upload.wikimedia.org/wikipedia/commons/1/16/BlockusFinalBoardCloseUp.jpg" height=200px>
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Blokus_starting_in_Tampere.jpg/2560px-Blokus_starting_in_Tampere.jpg" height=200px>
-  <img src="https://github.com/Florian11111/blokus/blob/main/DALL·E%202023-11-02%2016.04.51%20-%20Photo%20of%20a%20muscular%20man%20in%20his%2030s%20with%20a%20bald%20head%20and%20pilot%20sunglasses,%20sitting%20at%20a%20table%20playing%20Blokus.%20He%20has%20a%20confident%20smile%20and%20is%20holding%20a.png?raw=true" height=200px>
 </div>
 
 ## Installation
 
-sbt und so
+install <a href="https://www.scala-sbt.org/download.html" target="_blank">sbt</a><br>
+install <a href="https://code.visualstudio.com" target="_blank">VSCode</a><br>
+```git clone https://github.com/Florian11111/blokus.git```<br>
+dann Ordner in VSCode öffnen und ```sbt run```
 
 ## Testing
 
