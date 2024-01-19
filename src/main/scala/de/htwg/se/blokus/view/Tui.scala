@@ -99,7 +99,6 @@ class Tui(controller: GameController) extends Observer[Event] {
         println("Close? (x)")
     }
 
-
     def inputLoop(): Unit = {
         var continue = true
         while (continue) {

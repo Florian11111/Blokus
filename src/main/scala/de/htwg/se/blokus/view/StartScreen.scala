@@ -72,7 +72,6 @@ class StartScene(gui: Gui, controller: GameController) {
     }
 
     def createScene(): Scene = {
-        //stage.setOnCloseRequest(_ => controller.exit())
         val rootPane = new BorderPane {
             right = new VBox {
                 spacing = 6
@@ -114,7 +113,6 @@ class StartScene(gui: Gui, controller: GameController) {
                             inputFields += newField
                             vbox.children = inputFields ++ Seq(buttons)
 
-                            // Request focus on the new TextField
                             Platform.runLater(() => newTextField.requestFocus())
                         }
 
@@ -136,7 +134,6 @@ class StartScene(gui: Gui, controller: GameController) {
                     margin = scalafx.geometry.Insets(0, 25, 0, 0)
                 }
             )
-            // use the first element of the inputFields list to request focus
             Platform.runLater(() => inputFields.head.children(0).requestFocus())
             vbox.children = inputFields ++ Seq(buttons)
             bottom = new StackPane {
@@ -157,8 +154,6 @@ class StartScene(gui: Gui, controller: GameController) {
                                     errorLabel.text = "Error: X and Y must be numbers."
                                     
                                 } else {
-                                    // convert x and y to Numbers
-
                                     controller.start(names.size, x.toInt, y.toInt)
                                     gui.switchToGameScene(names.toList, performanceCheckBox.isSelected, infoCheckBox.isSelected)
                                 }
