@@ -76,22 +76,28 @@ class GameScene(gui: Gui,
     }
 
     def createScene(): Scene = {
+        //Platform.runLater(() => inputFields.head.children(0).requestFocus())
+
         val undobutton = new Button(s"Undo")
         styleButton(undobutton)
         undobutton.margin = scalafx.geometry.Insets(5, 5, 5, 5)
+        undobutton.focusTraversable = false
         undobutton.onAction = _ => controller.undo()
 
         val savebutton = new Button(s"Save")
         styleButton(savebutton)
         savebutton.margin = scalafx.geometry.Insets(5, 5, 5, 5)
+        savebutton.focusTraversable = false
         savebutton.onAction = _ => saveGame()
 
         val loadbutton = new Button(s"Load")
         styleButton(loadbutton)
         loadbutton.margin = scalafx.geometry.Insets(5, 5, 5, 5)
+        loadbutton.focusTraversable = false
         loadbutton.onAction = _ => loadGame()
 
         val togglePotPos = new Button(s"")
+        togglePotPos.focusTraversable = false
         if (showPotPos) {
             togglePotPos.text = "Hide Help"
         } else {
@@ -173,6 +179,7 @@ class GameScene(gui: Gui,
                 }
             }
             onKeyPressed = (event: KeyEvent) => {
+                // event spacebar
                 if (event.code == KeyCode.M) {
                     controller.mirror()
                 } else if (event.code == KeyCode.R) {
@@ -187,7 +194,8 @@ class GameScene(gui: Gui,
                     controller.move(1, 0)
                 } else if (event.code == KeyCode.Q) {
                     controller.setNextBLock()
-                } else if (event.code == KeyCode.E) {
+                } else if (event.code == KeyCode.E || event.code == KeyCode.SPACE) {
+                    print("Undo")
                     controller.placeBlock()
                 } else if (event.code == KeyCode.U) {
                     controller.undo()
