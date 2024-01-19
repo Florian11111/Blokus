@@ -38,7 +38,6 @@ object Block {
         var ecken = List[(Int, Int)]()
         var kanten = List[(Int, Int)]()
 
-        // Erstelle die Eckenliste
         for ((x, y) <- liste) {
             for (xCord <- List(-1, 1)) {
             for (yCord <- List(-1, 1)) {
