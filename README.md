@@ -35,6 +35,8 @@ install <a href="https://code.visualstudio.com" target="_blank">VSCode</a><br>
 ```git clone https://github.com/Florian11111/blokus.git```<br>
 dann Ordner in VSCode öffnen und ```sbt run```
 
+(Für Mac mit M1/M2/M3 chips bitte Branch "mac-arm" auswählen)
+
 ## Testing
 
 [![Scala CI](https://github.com/Florian11111/blokus/actions/workflows/scala.yml/badge.svg)](https://github.com/Florian11111/blokus/actions/workflows/scala.yml)
