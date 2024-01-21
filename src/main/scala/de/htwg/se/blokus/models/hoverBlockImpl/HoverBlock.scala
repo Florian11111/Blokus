@@ -4,7 +4,13 @@ import de.htwg.se.blokus.models.HoverBlockInterface
 import de.htwg.se.blokus.models.FieldInterface
 import de.htwg.se.blokus.models.Block
 
-class HoverBlock(val currentX: Int, val currentY: Int, val playerAmount: Int, val currentPlayer: Int, val blockType: Int, val rotation: Int, val mirrored: Boolean) extends HoverBlockInterface {
+class HoverBlock(val currentX: Int, 
+    val currentY: Int, 
+    val playerAmount: Int, 
+    val currentPlayer: Int, 
+    val blockType: Int, 
+    val rotation: Int, 
+    val mirrored: Boolean) extends HoverBlockInterface {
 
     def getX: Int = currentX
     def getY: Int = currentY
