@@ -48,7 +48,7 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
       newHoverBlock.getX shouldEqual newX
       newHoverBlock.getY shouldEqual newY
       newHoverBlock.getPlayer shouldEqual newPlayer
-      newHoverBlock.getplayerAmount shouldEqual playerAmount
+      newHoverBlock.getplayerAmount shouldEqual newPlayerAmount
       newHoverBlock.getBlockType shouldEqual newBlockType
       newHoverBlock.getRotation shouldEqual newRotation
       newHoverBlock.getMirrored shouldEqual newMirrored
