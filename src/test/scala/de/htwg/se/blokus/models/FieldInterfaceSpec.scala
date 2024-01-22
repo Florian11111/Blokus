@@ -1,7 +1,6 @@
 package de.htwg.se.blokus.models
 
 import de.htwg.se.blokus.models.FieldInterface
-import de.htwg.se.blokus.models.fieldImpl.Field
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -16,6 +15,7 @@ class FieldInterfaceSpec extends AnyWordSpec with Matchers {
       fieldInterface shouldBe a[FieldInterface]
       fieldInterface.width shouldBe width
       fieldInterface.height shouldBe height
+      fieldInterface.getFieldVector shouldBe a [Vector[_]]
     }
 
     "initialize the field with default values (-1)" in {
