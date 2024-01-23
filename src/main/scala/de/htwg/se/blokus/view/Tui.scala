@@ -51,18 +51,18 @@ class Tui(controller: GameController) extends Observer[Event] {
     }
 
     def displayControlls(): Unit = {
-        println("\nBloecke:")
+        println("\nBlocks:")
         print(controller.getBlocks())
         println("\nPlayer:")
         print(controller.getCurrentPlayer() + 1)
-        println("\nSteuerung:")
-        println("w/a/s/d: Block bewegen")
-        println("r: Block rotieren")
-        println("m: Block spiegeln")
-        println("s: Block platzieren")
-        println("n: Neuer Block")
+        println("\nControlls:")
+        println("w/a/s/d: move Block")
+        println("r: rotate Block")
+        println("m: mirror Block")
+        println("s: place Block")
+        println("n: next Block")
         println("u: Undo")
-        println("x: Beenden")   
+        println("x: Exit")   
     }
 
     override def update(event: Event): Unit = {
@@ -113,13 +113,13 @@ class Tui(controller: GameController) extends Observer[Event] {
         
         if (!gameisStarted) {
             println("Blokus")
-            println("Anzahl Spieler: ")
+            println("Player amout: ")
             try {
                 val playerCount = scala.io.StdIn.readInt()
                 assert(playerCount >= 1 && playerCount <= 4)
-                println("Spielfeldgroesse X: ")
+                println("Field Wight X: ")
                 val fieldSizeX = scala.io.StdIn.readInt()
-                println("Spielfeldgroesse Y: ")
+                println("Field Height Y: ")
                 val fieldSizeY = scala.io.StdIn.readInt()
                 controller.start(playerCount, fieldSizeX, fieldSizeY)
             } catch {
@@ -144,7 +144,7 @@ class Tui(controller: GameController) extends Observer[Event] {
                     if (controller.canPlace()) {
                         controller.placeBlock()
                     } else {
-                        println("Kann nicht an dieser Stelle Platziert werden!")
+                        println("Block cant be placed here!")
                     }
                 }
                 case _ =>

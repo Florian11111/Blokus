@@ -179,7 +179,7 @@ class FieldSpec extends AnyWordSpec with Matchers {
         field.isGameRuleConfirm(hoverBlock2) shouldEqual true
       }
 
-      "return an IllegalArgumentException for an invalid hoverBlock placement not following game rules" in {
+      "return false for an invalid hoverBlock placement not following game rules" in {
         val field = Field(5, 5)
         val hoverBlock = HoverBlock(0, 0, 0, 3, 0, 0, false)
         field.placeBlock(hoverBlock, firstPlace = true)
