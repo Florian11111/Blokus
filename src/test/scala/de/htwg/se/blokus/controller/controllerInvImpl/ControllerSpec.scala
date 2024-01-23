@@ -280,9 +280,8 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         val result: Try[Unit] = controller.changeCurrentBlock(newBlockType)
         result shouldBe a [Success[Unit]]
         controller.hoverBlock.getBlockType should be(newBlockType)
-        controller.hoverBlock.getX should be < 10 // Ensure getOutOfCorner was called
+        controller.hoverBlock.getX should be < 10
         }
-      }
 
       "return a Try.Failure when changing to an invalid block type" in {
         val controller = new Controller
@@ -351,137 +350,137 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         val result = controller.getBlock()
         result shouldBe goal
       }
-  }
-
-  "isValidPotentialPositions()" should {
-    val controller = new Controller
-    controller.start(2,10,10)
-    "return true if its a valid position" in {
-      controller.setXandY(0,0)
-      controller.place()
-      controller.setXandY(0,9)
-      controller.place()
-      controller.isValidPotentialPositions(1,1,0) shouldBe true
     }
 
-    "return false if its an invalid position" in {
-      controller.isValidPotentialPositions(1,-1,1) shouldBe false
-      controller.isValidPotentialPositions(-1,1,1) shouldBe false
-      controller.isValidPotentialPositions(15,1,1) shouldBe false
-      controller.isValidPotentialPositions(1,15,1) shouldBe false
-      controller.isValidPotentialPositions(0,0,0) shouldBe false
-    }
-  }
-
-  "move(richtung)" should {
-    val controller = new Controller
-    controller.start(2, 10, 10)
-
-    "return true if the move 0 is valid" in {
-      val result = controller.move(0, 1)
-      result shouldBe true
-    }
-
-    "return true if the move 1 is valid" in {
-      val result = controller.move(1, 0)
-      result shouldBe true
-    }
-
-    "return true if the move 2 is valid" in {
-      val result = controller.move(0, -1)
-      result shouldBe true
-    }
-
-    "return true if the move 3 is valid" in {
-      val result = controller.move(-1, 0)
-      result shouldBe true
-    }
-
-    "return false if the move is invalid" in {
-      controller.move(0, 1)
-      controller.move(0, 1)
-      controller.move(0, 1)
-      controller.move(0, 1)
-      controller.move(0, 1)
-      controller.move(0, 1)
-      controller.move(0, 1)
-      controller.move(0, 1)
-      controller.move(0, 1)
-      val result = controller.move(0, 1)
-      result shouldBe false
-    }
-  }
-
-  "rotate()" should {
-    "return true if the rotation is valid" in {
+    "isValidPotentialPositions()" should {
       val controller = new Controller
-      controller.start(2, 10, 10)
-      val result = controller.rotate()
-      result shouldBe true
-    }
-
-    "return false if the rotation is invalid" in {
-      val controller = new Controller
-      controller.start(2, 10, 10)
-      controller.changeBlock(2)
-      controller.move(0, 1)
-      controller.move(0, 1)
-      controller.move(0, 1)
-      controller.move(0, 1)
-      controller.move(0, 1)
-      val result = controller.rotate()
-      result shouldBe false
-    }
-  }
-
-  "mirror()" should {
-    "return true if the mirroring is valid" in {
-      val controller = new Controller
-      controller.start(2, 10, 10)
-      val result = controller.mirror()
-      result shouldBe true
-    }
-
-    "return false if the mirroring is invalid" in {
-      val controller = new Controller
-      controller.start(2, 5, 5)
-      controller.changeBlock(3)
-      controller.setXandY(3,0)
-      val result = controller.mirror()
-      result shouldBe false
-    }
-  }
-
-  "performing undo" should {
-      "return a Failure if the undoStack is empty" in {
-        val controller = new Controller
-        controller.start(2,10,10)
-        val result = controller.undo()
-        result shouldBe a[Failure[_]]
-        result.failed.get shouldBe a[NoSuchElementException]
-        result.failed.get.getMessage shouldBe "Nothing to undo!"
+      controller.start(2,10,10)
+      "return true if its a valid position" in {
+        controller.setXandY(0,0)
+        controller.place()
+        controller.setXandY(0,9)
+        controller.place()
+        controller.isValidPotentialPositions(1,1,0) shouldBe true
       }
 
-       "execute the undo operation if the undoStack is not empty" in {
+      "return false if its an invalid position" in {
+        controller.isValidPotentialPositions(1,-1,1) shouldBe false
+        controller.isValidPotentialPositions(-1,1,1) shouldBe false
+        controller.isValidPotentialPositions(15,1,1) shouldBe false
+        controller.isValidPotentialPositions(1,15,1) shouldBe false
+        controller.isValidPotentialPositions(0,0,0) shouldBe false
+      }
+    }
+
+    "move(richtung)" should {
+      val controller = new Controller
+      controller.start(2, 10, 10)
+
+      "return true if the move 0 is valid" in {
+        val result = controller.move(0, 1)
+        result shouldBe true
+      }
+
+      "return true if the move 1 is valid" in {
+        val result = controller.move(1, 0)
+        result shouldBe true
+      }
+
+      "return true if the move 2 is valid" in {
+        val result = controller.move(0, -1)
+        result shouldBe true
+      }
+
+      "return true if the move 3 is valid" in {
+        val result = controller.move(-1, 0)
+        result shouldBe true
+      }
+
+      "return false if the move is invalid" in {
+        controller.move(0, 1)
+        controller.move(0, 1)
+        controller.move(0, 1)
+        controller.move(0, 1)
+        controller.move(0, 1)
+        controller.move(0, 1)
+        controller.move(0, 1)
+        controller.move(0, 1)
+        controller.move(0, 1)
+        val result = controller.move(0, 1)
+        result shouldBe false
+      }
+    }
+
+    "rotate()" should {
+      "return true if the rotation is valid" in {
+        val controller = new Controller
+        controller.start(2, 10, 10)
+        val result = controller.rotate()
+        result shouldBe true
+      }
+
+      "return false if the rotation is invalid" in {
+        val controller = new Controller
+        controller.start(2, 10, 10)
+        controller.changeBlock(2)
+        controller.move(0, 1)
+        controller.move(0, 1)
+        controller.move(0, 1)
+        controller.move(0, 1)
+        controller.move(0, 1)
+        val result = controller.rotate()
+        result shouldBe false
+      }
+    }
+
+    "mirror()" should {
+      "return true if the mirroring is valid" in {
+        val controller = new Controller
+        controller.start(2, 10, 10)
+        val result = controller.mirror()
+        result shouldBe true
+      }
+
+      "return false if the mirroring is invalid" in {
         val controller = new Controller
         controller.start(2, 5, 5)
-        controller.changeCurrentBlock(0)
-        controller.setXandY(0, 0)
-        controller.placeBlock()
-
-        val initialGameState = controller.getField()
-
-        controller.changeCurrentBlock(0)
-        controller.setXandY(4, 4)
-        controller.placeBlock()
-
-        val result = controller.undo()
-        result shouldBe a[Success[_]]
-
-        val currentState = controller.getField()
-        currentState shouldEqual initialGameState
+        controller.changeBlock(3)
+        controller.setXandY(3,0)
+        val result = controller.mirror()
+        result shouldBe false
       }
     }
+
+    "performing undo" should {
+        "return a Failure if the undoStack is empty" in {
+          val controller = new Controller
+          controller.start(2,10,10)
+          val result = controller.undo()
+          result shouldBe a[Failure[_]]
+          result.failed.get shouldBe a[NoSuchElementException]
+          result.failed.get.getMessage shouldBe "Nothing to undo!"
+        }
+
+        "execute the undo operation if the undoStack is not empty" in {
+          val controller = new Controller
+          controller.start(2, 5, 5)
+          controller.changeCurrentBlock(0)
+          controller.setXandY(0, 0)
+          controller.placeBlock()
+
+          val initialGameState = controller.getField()
+
+          controller.changeCurrentBlock(0)
+          controller.setXandY(4, 4)
+          controller.placeBlock()
+
+          val result = controller.undo()
+          result shouldBe a[Success[_]]
+
+          val currentState = controller.getField()
+          currentState shouldEqual initialGameState
+        }
+      }
 
     "performing redo" should {
       "return a Failure if the redoStack is empty" in {
@@ -690,4 +689,5 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         result.failed.get.getMessage shouldBe "File type not supported!"
       }
     }
+  }
 }

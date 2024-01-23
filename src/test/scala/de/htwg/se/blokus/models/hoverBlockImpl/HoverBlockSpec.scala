@@ -19,6 +19,7 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
       hoverBlock.getX shouldEqual currentX
       hoverBlock.getY shouldEqual currentY
       hoverBlock.getPlayer shouldEqual currentPlayer
+      hoverBlock.getplayerAmount shouldEqual playerAmount
       hoverBlock.getBlockType shouldEqual blockType
       hoverBlock.getRotation shouldEqual rotation
       hoverBlock.getMirrored shouldEqual mirrored
@@ -47,23 +48,10 @@ class HoverBlockSpec extends AnyWordSpec with Matchers {
       newHoverBlock.getX shouldEqual newX
       newHoverBlock.getY shouldEqual newY
       newHoverBlock.getPlayer shouldEqual newPlayer
+      newHoverBlock.getplayerAmount shouldEqual newPlayerAmount
       newHoverBlock.getBlockType shouldEqual newBlockType
       newHoverBlock.getRotation shouldEqual newRotation
       newHoverBlock.getMirrored shouldEqual newMirrored
-    }
-
-    "return the correct player amount" in {
-      val currentX = 2
-      val currentY = 3
-      val playerAmount = 4
-      val currentPlayer = 1
-      val blockType = 0
-      val rotation = 2
-      val mirrored = true
-
-      val hoverBlock = HoverBlock.createInstance(currentX, currentY, playerAmount, currentPlayer, blockType, rotation, mirrored)
-
-      hoverBlock.getplayerAmount shouldEqual playerAmount
     }
   }
 }
